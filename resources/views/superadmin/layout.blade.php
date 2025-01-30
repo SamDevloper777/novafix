@@ -37,7 +37,7 @@
             <!-- Content Area -->
             <main class="p-6">
                 @section('content')
-
+                    
                 @show
             </main>
         </div>
