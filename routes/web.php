@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Support\Facades\Storage; //This is for image upload, 
 
 
@@ -154,5 +155,11 @@ Route::prefix("crm")->group(function(){
         Route::get('/logout', 'receptionerlogout')->name('receptioner.logout');
        });
    });
+});
+
+Route::prefix("superadmin")->group(function(){
+  Route::controller(SuperAdminController::class)->group(function(){
+    Route::get('/', 'index')->name('superadmin.panel');
+  });
 });
 
