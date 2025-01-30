@@ -1,6 +1,7 @@
-#composer i
-#go to AppServiceProvider.php
-# comment this line  // view()->share('dateFilter','All');
+#novafix
+step:1-composer i
+step:2-go to AppServiceProvider.php
+comment this line  // view()->share('dateFilter','All');
         // view()->share('search_value','');
         // view()->share('Types',Type::all());
         // view()->share('NewCountReq',RequestModel::where('technician_id',NULL)->get()->count());
