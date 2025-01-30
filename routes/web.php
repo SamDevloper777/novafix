@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\ReceptionerController;
 use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
@@ -162,4 +163,4 @@ Route::prefix("superadmin")->group(function(){
     Route::get('/', 'index')->name('superadmin.panel');
   });
 });
-
+Route::get('/franchise/insert', [FranchiseController::class, 'index'])->name('franchise.insert');
