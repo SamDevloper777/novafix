@@ -166,7 +166,8 @@ Route::prefix("superadmin")->group(function(){
 
   });
 });
-Route::get('/franchise/insert', [FranchiseController::class, 'index'])->name('franchise.insert');
+Route::get('/franchise', [FranchiseController::class, 'index'])->name('franchise.insert');
+Route::get('/franchise/insert', [FranchiseController::class, 'store'])->name('franchise.insert');
 
 // Route::get('/franchises', [FranchiseController::class, 'index']);
 // Route::post('/franchises', [FranchiseController::class, 'store']);

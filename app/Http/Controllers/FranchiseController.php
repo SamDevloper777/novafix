@@ -58,7 +58,7 @@ class FranchiseController extends Controller
             'status' => $request->status,
         ]);
 
-        return response()->json(['message' => 'Franchise added successfully', 'data' => $franchise]);
+        return redirect('/dashboard')->with('success', 'Franchise added successfully');
     }
 
     public function show($id)
