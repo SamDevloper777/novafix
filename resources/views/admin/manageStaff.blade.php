@@ -63,7 +63,7 @@
                                     <td>{{ $item->email }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">{{ $item->contact }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">{{ $item->salary }}</td>
-                                    <td class="border border-slate-700 p-1.5 pl-10">{{ $item->type->typename }}</td>
+                                    <td class="border border-slate-700 p-1.5 pl-10">{{ $item->type->name }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">{{ $item->status }}</td>
                                     <td class="border border-slate-700 p-1.5  items-center justify-center flex btn-group"
                                         role="group">

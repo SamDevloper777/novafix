@@ -104,7 +104,7 @@
                                     <td>{{ $item->problem }}</td>
                                     <td><span class="font-weight-bold   rounded px-2 py-1
                                         " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span></td>
-                                    <td>{{ $item->type->typename }}</td>
+                                    <td>{{ $item->type->name }}</td>
                                     <td>{{ $item->remark }}</td>
 
                                     <td class="border border-slate-700 p-1.5  items-center justify-center flex btn-group"
