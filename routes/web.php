@@ -167,3 +167,10 @@ Route::prefix("superadmin")->group(function(){
   });
 });
 Route::get('/franchise/insert', [FranchiseController::class, 'index'])->name('franchise.insert');
+
+// Route::get('/franchises', [FranchiseController::class, 'index']);
+// Route::post('/franchises', [FranchiseController::class, 'store']);
+// Route::get('/franchises/{id}', [FranchiseController::class, 'show']);
+// Route::put('/franchises/{id}', [FranchiseController::class, 'update']);
+// Route::delete('/franchises/{id}', [FranchiseController::class, 'destroy']);
+
