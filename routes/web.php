@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\ReceptionerController;
 use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SuperAdminController;
 use Illuminate\Support\Facades\Storage; //This is for image upload, 
 
 
@@ -156,3 +158,12 @@ Route::prefix("crm")->group(function(){
    });
 });
 
+Route::prefix("superadmin")->group(function(){
+  Route::controller(SuperAdminController::class)->group(function(){
+    Route::get('/', 'index')->name('superadmin.panel');
+    Route::get('/insert-franchises', 'insertFranchises')->name('superadmin.insertFranchises');
+    Route::get('/manage-franchises', 'manageFranchises')->name('superadmin.manageFranchises');
+
+  });
+});
+Route::get('/franchise/insert', [FranchiseController::class, 'index'])->name('franchise.insert');
