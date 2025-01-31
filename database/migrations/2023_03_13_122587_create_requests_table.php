@@ -20,12 +20,12 @@ return new class extends Migration
             $table->string("service_code")->unique();
             $table->string("owner_name");
             $table->string("product_name");
-            $table->string("email");
+            $table->string("email")->nullable();
             $table->string("contact");
             $table->string("brand");
             $table->foreignId("type_id")->constrained();
             $table->string("serial_no")->nullable();
-            $table->string("MAC")->nullable();
+            $table->string("MAC")->nullable()->nullable();
             $table->string("color");
             $table->string("problem");
             $table->string("remark")->nullable();
