@@ -161,6 +161,9 @@ Route::prefix("crm")->group(function(){
 Route::prefix("superadmin")->group(function(){
   Route::controller(SuperAdminController::class)->group(function(){
     Route::get('/', 'index')->name('superadmin.panel');
+    Route::get('/insert-franchises', 'insertFranchises')->name('superadmin.insertFranchises');
+    Route::get('/manage-franchises', 'manageFranchises')->name('superadmin.manageFranchises');
+
   });
 });
 Route::get('/franchise/insert', [FranchiseController::class, 'index'])->name('franchise.insert');
