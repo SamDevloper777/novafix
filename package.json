@@ -10,6 +10,9 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@tailwindcss/forms": "^0.5.10",
+        "apexcharts": "^3.46.0",
+        "flowbite": "^3.0.0",
         "lottie-web": "^5.10.2",
         "print-this": "^1.16.0"
     }
