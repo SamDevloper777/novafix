@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
+    public function index()
+    {
     public function dashboard(){
         return view('superadmin.dashboard');
     }
@@ -17,6 +19,24 @@ class SuperAdminController extends Controller
     {
         return view('superadmin.Franchises.insertFranchises');
     }
+
+    public function manageFranchises(Request $request)
+    {
+        $search = $request->get('search');
+
+        $franchises = Franchises::query();
+
+        if ($search) {
+            $franchises->where(function ($query) use ($search) {
+                $query->where('franchise_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('contact_no', 'like', '%' . $search . '%')
+                    ->orWhere('state', 'like', '%' . $search . '%')
+                    ->orWhere('city', 'like', '%' . $search . '%');
+            });
+        }
+        $franchises = $franchises->get();
+        return view('superadmin.manageFranchises', compact('franchises', 'search'));
 
     public function storeFranchises(Request $request)
     {
@@ -49,6 +69,9 @@ class SuperAdminController extends Controller
         $franchises = Franchises::all();
         return view('superadmin.Franchises.manageFranchises', compact('franchises'));
     }
+
+
+
 
 
     public function deleteFranchises($id)
