@@ -65,9 +65,11 @@
     </div>
   </nav>
   @include('superadmin.sidebar')
+ <div class="md:ml-64 mt-8">
   @section('content')
       
   @show
+ </div>
    
 </body>
 </html>
