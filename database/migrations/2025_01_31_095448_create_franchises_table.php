@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->date('doc')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

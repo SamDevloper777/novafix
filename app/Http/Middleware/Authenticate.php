@@ -25,6 +25,9 @@ class Authenticate extends Middleware
             elseif($request->is('crm') || $request->is('crm/*')){
                 return route('receptioner.login');
             }
+            elseif($request->is('franchise') || $request->is('franchise/*')){
+                return route('franchise.login');
+            }
             else{
                 return route('login');
             }

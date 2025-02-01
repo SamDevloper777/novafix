@@ -41,7 +41,7 @@ Route::controller(RequestController::class)->group(function () {
 Route::prefix("admin")->group(function () {
     Route::controller(AdminController::class)->group(function () {
         //without auth middleware
-        Route::match(["post", "get"], '/login', 'adminlogin')->name('admin.login');
+        Route::match(["post", "get"], '/login', action: 'adminlogin')->name('admin.login');
 
         // routes with middleware
         Route::middleware('auth:admin')->group(function () {
@@ -165,11 +165,14 @@ Route::prefix('superadmin')->group(function () {
 
 Route::prefix('franchise')->group(function () {
     Route::controller(FranchiseController::class)->group(function () {
+        Route::match(["post", "get"], '/login', action: 'franchiseLogin')->name('franchise.login');
+        // Route::middleware('auth:franchise')->group(function(){
         Route::get('/insert-franchises', 'insertFranchises')->name('franchises.insertFranchises');
         Route::get('/manage-franchises', 'manageFranchises')->name('franchises.manageFranchises');
         Route::post('/store-franchises', 'storeFranchises')->name('franchises.store');
         Route::delete('/franchises/{id}', 'deleteFranchises')->name('franchises.delete');
         Route::get('/edit-franchises/{id}', 'editFranchises')->name('franchises.edit');
         Route::put('/update-franchises/{id}', 'updateFranchises')->name('franchises.update');
-    });
+        });
+    // });
 });

@@ -52,6 +52,10 @@ return [
             'driver' => 'session',
             'provider' => 'receptioners',
         ],
+        'franchise' => [
+            'driver' => 'session',
+            'provider' => 'franchises',
+        ],
     ],
 
     /*
@@ -87,6 +91,10 @@ return [
         'receptioners' => [
             'driver' => 'eloquent',
             'model' => App\Models\Receptioner::class,
+        ],
+        'franchises' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Franchises::class,
         ],
     ],
 
@@ -134,6 +142,13 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'franchises' =>[
+            'provider' => 'franchises',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ]
+      
     ],
 
 
