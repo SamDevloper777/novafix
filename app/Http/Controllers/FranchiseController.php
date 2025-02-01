@@ -4,12 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Franchises;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
 
 
 class FranchiseController extends Controller
-{
+{   
+    
+   
+    public function franchiseLogin(Request $req){
+        if($req->method() == "POST"){
+           $data = $req->only(["email","password"]);
+           
+           if(Auth::guard("franchise")->attempt($data)){
+                $franchise =  Auth::guard('franchise')->user();
+                if($franchise->status){
+                    return redirect()->route("superadmin.panel");
+                }
+                else{
+                    return redirect()->back()->with("alert","your account is disabled");
+                }
+           }
+           else{
+                return redirect()->route("franchise.login")->with("alert","Please enter valid email or password");;
+           }
+        }
+        return view('franchises.loginFranchises');
+    }
     public function insertFranchises()
     {
         return view('franchises.insertFranchises');
@@ -85,22 +107,22 @@ class FranchiseController extends Controller
         return redirect()->route('franchises.manageFranchises')->with('success', 'Franchise created successfully.');
     }
 
-  
+
 
 
     public function deleteFranchises($id)
     {
         // Retrieve a single franchise by ID
         $franchise = Franchises::find($id);
-    
+
         // Check if the franchise exists
         if (!$franchise) {
             return redirect()->route('franchises.manageFranchises')->with('error', 'Franchise not found.');
         }
-    
+
         // Delete the franchise
         $franchise->delete();
-    
+
         return redirect()->route('franchises.manageFranchises')->with('success', 'Franchise deleted successfully.');
     }
     public function editFranchises($id)
@@ -108,11 +130,11 @@ class FranchiseController extends Controller
         $franchise = Franchises::findOrFail($id);
         return view('franchises.editFranchises', compact('franchise'));
     }
-    
+
     public function updateFranchises(Request $request, $id)
     {
         $franchise = Franchises::findOrFail($id);
-    
+
         $validatedData = $request->validate([
             'franchise_name' => 'required|string|max:255',
             'contact_no' => 'required|string|max:15|unique:franchises,contact_no,' . $franchise->id,
@@ -132,16 +154,16 @@ class FranchiseController extends Controller
             'status' => 'required|in:Active,Inactive',
 
         ]);
-    
+
         // Hash password only if provided
         if ($request->filled('password')) {
             $validatedData['password'] = Hash::make($request->password);
         } else {
             unset($validatedData['password']);
         }
-    
+
         $franchise->update($validatedData);
-    
+
         return redirect()->route('franchises.manageFranchises')
             ->with('success', 'franchise updated successfully');
     }
