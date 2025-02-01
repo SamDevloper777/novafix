@@ -3,6 +3,23 @@
 @section('content')
 
 <div class="container mx-auto px-4 py-8">
+    @if (session('success'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+        <strong>Success!</strong> {{ session('success') }}
+    </div>
+@endif
+
+    @if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <strong>Whoops! Something went wrong.</strong>
+        <ul class="mt-2">
+            @foreach ($errors->all() as $error)
+                <li class="text-sm">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Create Franchise</h1>
     <form action="{{ route('franchises.store') }}" method="POST" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
         @csrf
