@@ -16,18 +16,18 @@ return new class extends Migration
             $table->string('franchise_name');
             $table->string('contact_no')->unique();
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('aadhaar_no')->unique();
             $table->string('pan_no')->unique();
-            $table->string('ifsc_code');
-            $table->string('account_no');
-            $table->string('street');
-            $table->string('city');
-            $table->string('district');
-            $table->string('pincode');
-            $table->string('state');
-            $table->string('country');
-            $table->date('doc'); // Date of Creation
+            $table->string('ifsc_code')->nullable();
+            $table->string('account_no')->nullable();
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('district')->nullable();
+            $table->string('pincode')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->date('doc')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

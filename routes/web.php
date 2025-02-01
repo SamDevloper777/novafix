@@ -157,21 +157,11 @@ Route::prefix("crm")->group(function(){
        });
    });
 });
-
-Route::prefix("superadmin")->group(function(){
-  Route::controller(SuperAdminController::class)->group(function(){
-    Route::get('/', 'index')->name('superadmin.panel');
-    Route::get('/insert-franchises', 'insertFranchises')->name('superadmin.insertFranchises');
-    Route::get('/manage-franchises', 'manageFranchises')->name('superadmin.manageFranchises');
-
-  });
+Route::prefix('superadmin')->group(function () {
+    Route::controller(SuperAdminController::class)->group(function () {
+        Route::get('/', 'index')->name('superadmin.panel');
+        Route::get('/insert-franchises', 'insertFranchises')->name('superadmin.insertFranchises');
+        Route::get('/manage-franchises', 'manageFranchises')->name('superadmin.manageFranchises');
+    });
 });
-Route::get('/franchise', [FranchiseController::class, 'index'])->name('franchise.insert');
-Route::get('/franchise/insert', [FranchiseController::class, 'store'])->name('franchise.insert');
-
-// Route::get('/franchises', [FranchiseController::class, 'index']);
-// Route::post('/franchises', [FranchiseController::class, 'store']);
-// Route::get('/franchises/{id}', [FranchiseController::class, 'show']);
-// Route::put('/franchises/{id}', [FranchiseController::class, 'update']);
-// Route::delete('/franchises/{id}', [FranchiseController::class, 'destroy']);
-
+Route::post('/insert-franchises', [FranchiseController::class, 'store'])->name('franchises.store');

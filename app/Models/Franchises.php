@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Franchises extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'franchise_name',
         'contact_no',
@@ -26,9 +27,4 @@ class Franchises extends Model
         'doc',
         'status',
     ];
-
-    protected $hidden = [
-        'password',
-    ];
-
 }
