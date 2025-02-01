@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class SuperAdminController extends Controller
 {
-    public function index()
-    {
+    
     public function dashboard(){
         return view('superadmin.dashboard');
     }
@@ -36,8 +35,8 @@ class SuperAdminController extends Controller
             });
         }
         $franchises = $franchises->get();
-        return view('superadmin.manageFranchises', compact('franchises', 'search'));
-
+        return view('superadmin.franchises.manageFranchises', compact('franchises', 'search'));
+    }
     public function storeFranchises(Request $request)
     {
         $validatedData = $request->validate([
@@ -65,13 +64,7 @@ class SuperAdminController extends Controller
         return redirect()->route('franchises.manageFranchises')->with('success', 'Franchise created successfully.');
     }
 
-    public function manageFranchises(){
-        $franchises = Franchises::all();
-        return view('superadmin.Franchises.manageFranchises', compact('franchises'));
-    }
-
-
-
+  
 
 
     public function deleteFranchises($id)

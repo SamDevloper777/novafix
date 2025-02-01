@@ -4,7 +4,7 @@
 
 
 <div class="mt-20 p-5">
-    <form action="{{ route('superadmin.manageFranchises') }}" class="max-w-md mx-auto mb-5">
+    <form action="{{ route('franchises.manageFranchises') }}" class="max-w-md mx-auto mb-5">
         <label for="default-search"
             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div class="relative">
