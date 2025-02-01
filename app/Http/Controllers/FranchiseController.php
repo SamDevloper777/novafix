@@ -41,6 +41,20 @@ class FranchiseController extends Controller
 
         return redirect()->route('superadmin.manageFranchises')->with('success', 'Franchise created successfully.');
     }
-
+    public function delete($id)
+    {
+        // Retrieve a single franchise by ID
+        $franchise = Franchises::find($id);
+    
+        // Check if the franchise exists
+        if (!$franchise) {
+            return redirect()->route('superadmin.manageFranchises')->with('error', 'Franchise not found.');
+        }
+    
+        // Delete the franchise
+        $franchise->delete();
+    
+        return redirect()->route('superadmin.manageFranchises')->with('success', 'Franchise deleted successfully.');
+    }
 
 }

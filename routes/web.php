@@ -165,3 +165,4 @@ Route::prefix('superadmin')->group(function () {
     });
 });
 Route::post('/insert-franchises', [FranchiseController::class, 'store'])->name('franchises.store');
+Route::delete('/franchises/{id}', [FranchiseController::class, 'delete'])->name('franchises.delete');

@@ -41,7 +41,7 @@
                 <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                     Email
                 </th>
-               
+
                 <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                     Addhar No
                 </th>
@@ -99,7 +99,7 @@
                     <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                         {{$item->email}}
                     </td>
-                    
+
                     <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                         {{$item->aadhaar_no}}
                     </td>
@@ -140,9 +140,19 @@
                             {{$item->status}}
                         </span>
                     </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                    <td class="px-4 flex py-4 items-center gap-2  sm:px-6 whitespace-nowrap">
                         <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                        <form action="{{ route('franchises.delete', $item->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this franchise?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="text-red-500 font-bold rounded">
+                                X
+                            </button>
+                        </form>
                     </td>
+
                     {{-- <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                         <span
                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-green-800 dark:bg-green-900 dark:text-green-300">
