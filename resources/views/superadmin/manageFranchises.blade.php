@@ -3,10 +3,7 @@
 @section('content')
 
 
-
-<div class="mt-20 mx-4 md:ml-64 lg:ml-72 xl:ml-80 overflow-x-auto">
-
-
+<div class="mt-20 p-5">
     <form class="max-w-md mx-auto mb-5">
         <label for="default-search"
             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -25,150 +22,141 @@
                 class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
         </div>
     </form>
-
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Franchises Id
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Franchises name
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Contact No
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Email
-                </th>
-
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Addhar No
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    PAN No
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    IFSC Code
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Account No
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Street
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    City
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    District
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Pincode
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    State
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Country
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    DOC
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Status
-                </th>
-                <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        @foreach ($franchises as $item)
-
-            <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-4 py-4 sm:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{$item->id}}
+    <div class="mx-4 overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Franchises Id
                     </th>
-                    <th scope="row" class="px-4 py-4 sm:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{$item->franchise_name}}
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Franchises name
                     </th>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->contact_no}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->email}}
-                    </td>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Contact No
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Email
+                    </th>
 
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->aadhaar_no}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->pan_no}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->ifsc_code}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->account_no}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->street}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->city}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->district}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->pincode}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->state}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->country}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        {{$item->doc}}
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-
-                            {{$item->status}}
-                        </span>
-                    </td>
-                    <td class="px-4 flex py-4 items-center gap-2  sm:px-6 whitespace-nowrap">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                        <form action="{{ route('franchises.delete', $item->id) }}" method="POST"
-                            onsubmit="return confirm('Are you sure you want to delete this franchise?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="text-red-500 font-bold rounded">
-                                X
-                            </button>
-                        </form>
-                    </td>
-
-                    {{-- <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-
-                            InActive
-                        </span>
-                    </td>
-                    <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-
-                    </td> --}}
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Addhar No
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        PAN No
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        IFSC Code
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Account No
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Street
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        City
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        District
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Pincode
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        State
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Country
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        DOC
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Status
+                    </th>
+                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                        Action
+                    </th>
                 </tr>
+            </thead>
+            @foreach ($franchises as $item)
 
-            </tbody>
+                <tbody>
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row"
+                            class="px-4 py-4 sm:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{$item->id}}
+                        </th>
+                        <th scope="row"
+                            class="px-4 py-4 sm:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{$item->franchise_name}}
+                        </th>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->contact_no}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->email}}
+                        </td>
 
-        @endforeach
-    </table>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->aadhaar_no}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->pan_no}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->ifsc_code}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->account_no}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->street}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->city}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->district}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->pincode}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->state}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->country}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            {{$item->doc}}
+                        </td>
+                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+
+                                {{$item->status}}
+                            </span>
+                        </td>
+                        <td class="px-4 flex py-4 items-center gap-2  sm:px-6 whitespace-nowrap">
+                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <form action="{{ route('franchises.delete', $item->id) }}" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this franchise?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 font-bold rounded">
+                                    X
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            @endforeach
+        </table>
+    </div>
 </div>
+
 @endsection
