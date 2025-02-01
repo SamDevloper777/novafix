@@ -160,14 +160,16 @@ Route::prefix("crm")->group(function(){
 Route::prefix('superadmin')->group(function () {
     Route::controller(SuperAdminController::class)->group(function () {
         Route::get('/', 'dashboard')->name('superadmin.panel');
+    });
+});
+
+Route::prefix('franchise')->group(function () {
+    Route::controller(FranchiseController::class)->group(function () {
         Route::get('/insert-franchises', 'insertFranchises')->name('franchises.insertFranchises');
         Route::get('/manage-franchises', 'manageFranchises')->name('franchises.manageFranchises');
         Route::post('/store-franchises', 'storeFranchises')->name('franchises.store');
         Route::delete('/franchises/{id}', 'deleteFranchises')->name('franchises.delete');
         Route::get('/edit-franchises/{id}', 'editFranchises')->name('franchises.edit');
         Route::put('/update-franchises/{id}', 'updateFranchises')->name('franchises.update');
-
     });
 });
-// Route::post('/insert-franchises', [FranchiseController::class, 'store'])->name('franchises.store');
-// Route::delete('/franchises/{id}', [FranchiseController::class, 'deleteFranchises'])->name('franchises.delete');
