@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Franchises;
-use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
+
 
 class FranchiseController extends Controller
 {
@@ -40,6 +42,8 @@ class FranchiseController extends Controller
             'aadhaar_no' => 'required|string|unique:franchises|max:20',
             'pan_no' => 'required|string|unique:franchises|max:20',
             'ifsc_code' => 'required|string|max:20',
+            'branch_name'=>'required|string',
+            'bank_name'=>'required|string',
             'account_no' => 'required|string|max:20',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -50,6 +54,30 @@ class FranchiseController extends Controller
             'doc' => 'required|date',
             'status' => 'required|in:Active,Inactive',
         ]);
+        $pincode = $validatedData['pincode'];
+    $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
+
+    if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
+        $pinData = $pinResponse->json()[0]['PostOffice'][0];
+        $validatedData['city'] = $pinData['City'] ?? 'NULL';
+        $validatedData['state'] = $pinData['State'] ?? 'NULL';
+        $validatedData['country'] = $pinData['Country'] ?? 'NULL';
+        $validatedData['district'] = $pinData['District'] ?? 'NULL';
+    } else {
+        return back()->withErrors(['pincode' => 'Invalid Pincode']);
+    }
+
+    $ifsc = $validatedData['ifsc_code'];
+    $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
+
+    if ($response->successful()) {
+        $branchData = $response->json();
+        $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
+        $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
+    } else {
+        return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
+    }
+
         $validatedData['password'] = Hash::make($validatedData['password']);
         // dd($validatedData);
         Franchises::create($validatedData);
@@ -117,5 +145,9 @@ class FranchiseController extends Controller
         return redirect()->route('franchises.manageFranchises')
             ->with('success', 'franchise updated successfully');
     }
+
+
+
+
     
 }

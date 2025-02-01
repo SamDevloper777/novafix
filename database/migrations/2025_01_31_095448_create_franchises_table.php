@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('aadhaar_no')->unique();
             $table->string('pan_no')->unique();
             $table->string('ifsc_code')->nullable();
+            $table->string('branch_name')->nullable();
+            $table->string('bank_name')->nullable();
             $table->string('account_no')->nullable();
             $table->string('street')->nullable();
             $table->string('city')->nullable();

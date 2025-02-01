@@ -1,7 +1,6 @@
 @extends('superadmin.layout')
 @section('title', 'Create Franchise')
 @section('content')
-div class="container mx-auto px-4 py-8">
 
 <div class="container mx-auto px-4 py-8">
     @if (session('success'))
@@ -82,33 +81,53 @@ div class="container mx-auto px-4 py-8">
             <!-- IFSC Code -->
             <div class="mb-4">
                 <label for="ifsc_code" class="block text-gray-700 text-sm font-semibold mb-2">IFSC Code</label>
-                <input type="text" name="ifsc_code" id="ifsc_code" value="{{ old('ifsc_code') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" name="ifsc_code" id="ifsc_code" value="{{ old('ifsc_code') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required onblur="fetchBranchDetails()">
                 @error('ifsc_code')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Account No -->
+            
+            <!-- branch_name No -->
+
             <div class="mb-4">
+                <label for="branch_name" class="block text-gray-700 text-sm font-semibold mb-2">branch_name</label>
+                <input type="text" name="branch_name" id="branch_name" value="{{ old('branch_name') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500  bg-gray-100" readonly>
+                @error('branch_name')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+ <!-- bank_name No -->
+
+            <div class="mb-4">
+                <label for="bank_name" class="block text-gray-700 text-sm font-semibold mb-2">bank_name </label>
+                <input type="text" name="bank_name" id="bank_name" value="{{ old('bank_name') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500  bg-gray-100" readonly>
+                @error('bank_name')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+             <!-- Account No -->
+             <div class="mb-4">
                 <label for="account_no" class="block text-gray-700 text-sm font-semibold mb-2">Account No</label>
                 <input type="text" name="account_no" id="account_no" value="{{ old('account_no') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
                 @error('account_no')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
-            <!-- Street -->
-            <div class="mb-4">
-                <label for="street" class="block text-gray-700 text-sm font-semibold mb-2">Street</label>
-                <input type="text" name="street" id="street" value="{{ old('street') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
-                @error('street')
+             <!-- Pincode -->
+             <div class="mb-4">
+                <label for="pincode" class="block text-gray-700 text-sm font-semibold mb-2">Pincode</label>
+                <input type="text" name="pincode"  id="pincode" value="{{old('pincode')}}"  class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"  required onblur="fetchLocation()">
+                @error('pincode')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
+           
             <!-- City -->
             <div class="mb-4">
                 <label for="city" class="block text-gray-700 text-sm font-semibold mb-2">City</label>
-                <input type="text" name="city" value="{{old('city')}}" id="city" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                <input type="text" name="city" value="{{old('city')}}" id="city" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500  bg-gray-100" readonly >
                 @error('city')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
@@ -117,38 +136,40 @@ div class="container mx-auto px-4 py-8">
             <!-- District -->
             <div class="mb-4">
                 <label for="district" class="block text-gray-700 text-sm font-semibold mb-2">District</label>
-                <input type="text" name="district" value="{{old('district')}}" id="district" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                <input type="text" name="district" value="{{old('district')}}" id="district" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500  bg-gray-100" readonly>
                 @error('district')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
-            <!-- Pincode -->
-            <div class="mb-4">
-                <label for="pincode" class="block text-gray-700 text-sm font-semibold mb-2">Pincode</label>
-                <input type="text" name="pincode"  id="pincode" value="{{old('pincode')}}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" >
-                @error('pincode')
-                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+           
 
             <!-- State -->
             <div class="mb-4">
                 <label for="state" class="block text-gray-700 text-sm font-semibold mb-2">State</label>
-                <input type="text" name="state" value="{{old('state')}}" id="state" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                <input type="text" name="state" value="{{old('state')}}" id="state" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500  bg-gray-100" readonly>
                 @error('state')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
-
+           
             <!-- Country -->
             <div class="mb-4">
                 <label for="country" class="block text-gray-700 text-sm font-semibold mb-2">Country</label>
-                <input type="text" name="country" value="{{old('value')}}" id="country" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" >
+                <input type="text" name="country" value="{{old('value')}}" id="country" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" readonly >
                 @error('country')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
+              <!-- Street -->
+              <div class="mb-4">
+                <label for="street" class="block text-gray-700 text-sm font-semibold mb-2">Street</label>
+                <input type="text" name="street" id="street" value="{{ old('street') }}" class="shadow-sm appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('street')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
 
             <!-- Date of Creation (DOC) -->
             <div class="mb-4">
@@ -180,5 +201,42 @@ div class="container mx-auto px-4 py-8">
         </div>
     </form>
 </div>
+
+<script>
+    function fetchLocation() {
+        let pincode = document.getElementById("pincode").value;
+    
+        fetch(`https://api.postalpincode.in/pincode/${pincode}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data[0].Status === "Success") {
+                document.getElementById("city").value = data[0].PostOffice[0].District || "NULL";
+                document.getElementById("state").value = data[0].PostOffice[0].State || "NULL";
+                document.getElementById("country").value = data[0].PostOffice[0].Country || "NULL";
+                document.getElementById("district").value = data[0].PostOffice[0].District || "NULL";
+            } else {
+                alert("Invalid Pincode");
+            }
+        })
+        .catch(error => console.error("Error fetching location:", error));
+    }
+    
+    function fetchBranchDetails() {
+        let ifsc = document.getElementById("ifsc_code").value;
+    
+        fetch(`https://ifsc.razorpay.com/${ifsc}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.BANK && data.BRANCH) {
+                document.getElementById("bank_name").value = data.BANK || "NULL";
+                document.getElementById("branch_name").value = data.BRANCH || "NULL";
+            } else {
+                alert("Invalid IFSC Code");
+            }
+        })
+        .catch(error => console.error("Error fetching IFSC details:", error));
+    }
+    </script>
+    
 
 @endsection
