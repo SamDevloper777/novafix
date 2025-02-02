@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receptioner;
+use App\Services\RequestService;
 use PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -261,40 +262,41 @@ class ReceptionerController extends Controller
 
 
     //get all request by status according to receptioner
-    private function getRequestsByStatus($status, $title)
+    protected $requestService;
+
+    public function __construct(RequestService $requestService)
     {
-        $receptionerId = Auth::guard('receptioner')->id();
-        $data['allRequests'] = RequestModel::where('reciptionist_id', $receptionerId)
-            ->where('status', $status)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(8);
-        $data['title'] = $title;
-        return view("receptioner.requests", $data);
+        $this->requestService = $requestService;
     }
 
     public function confirmedRequest(Request $req)
     {
-        return $this->getRequestsByStatus(1, "Confirm Requests");
+        $data = $this->requestService->getRequestsByStatus(1, "Confirm Requests");
+        return view("receptioner.requests", $data);
     }
 
     public function rejectedRequest(Request $req)
     {
-        return $this->getRequestsByStatus(3, "Rejected Requests");
+        $data = $this->requestService->getRequestsByStatus(3, "Rejected Requests");
+        return view("receptioner.requests", $data);
     }
 
     public function pendingRequest(Request $req)
     {
-        return $this->getRequestsByStatus(0, "Pending Requests");
+        $data = $this->requestService->getRequestsByStatus(0, "Pending Requests");
+        return view("receptioner.requests", $data);
     }
 
     public function deliveredRequest(Request $req)
     {
-        return $this->getRequestsByStatus(5, "Delivered Requests");
+        $data = $this->requestService->getRequestsByStatus(5, "Delivered Requests");
+        return view("receptioner.requests", $data);
     }
 
     public function workDoneRequests(Request $req)
     {
-        return $this->getRequestsByStatus(4, "Total WorkDoneRequests");
+        $data = $this->requestService->getRequestsByStatus(4, "Total WorkDoneRequests");
+        return view("receptioner.requests", $data);
     }
 
     public function allRequest(Request $req)

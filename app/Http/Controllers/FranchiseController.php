@@ -437,6 +437,8 @@ class FranchiseController extends Controller
         return view('franchises/allnewRequest', $data);
 
     }
+
+
     public function filterByInput(Request $req)
     {
 
@@ -448,48 +450,46 @@ class FranchiseController extends Controller
     }
 
     // show datas 
+
+    private function getRequestsByStatus($status, $title)
+    {
+        $receptionerId = Auth::guard('receptioner')->id();
+
+        $data['new'] = RequestModel::where('reciptionist_id', $receptionerId)
+            ->where('status', $status)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8);
+        $data['title'] = $title;
+
+        return view("franchises.requests", $data);
+    }
+
     public function confirmedRequest(Request $req)
     {
-
-        $data['new'] = RequestModel::where('status', 1)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Confirm Requests";
-        return view("franchises.requests", $data);
+        return $this->getRequestsByStatus(1, "Confirm Requests");
     }
+
     public function rejectedRequest(Request $req)
     {
-
-        $data['new'] = RequestModel::where('status', 3)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "rejected Requests";
-        return view("franchises.requests", $data);
+        return $this->getRequestsByStatus(3, "Rejected Requests");
     }
+
     public function pendingRequest(Request $req)
     {
-
-        $data['new'] = RequestModel::where('status', 0)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "pending Requests";
-        return view("franchises.requests", $data);
+        return $this->getRequestsByStatus(0, "Pending Requests");
     }
+
     public function deliveredRequest(Request $req)
     {
-
-        $data['new'] = RequestModel::where('status', 5)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Delivered Requests";
-        return view("franchises.requests", $data);
+        return $this->getRequestsByStatus(5, "Delivered Requests");
     }
 
-    // show Work Done Request
-    public function workDoneRequests()
+    public function workDoneRequests(Request $req)
     {
-
-        $data['new'] = RequestModel::where('status', 4)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total WorkDoneRequests";
-        return view("franchises.requests", $data);
-
+        return $this->getRequestsByStatus(4, "Work Done Requests");
     }
+
+
     public function globalSearch(Request $req)
     {
         $data['search_value'] = "";
