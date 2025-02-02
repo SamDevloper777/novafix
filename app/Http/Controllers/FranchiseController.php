@@ -243,14 +243,14 @@ class FranchiseController extends Controller
             $data['image'] = $imageName;
         }
         Staff::create($data);
-        return redirect()->route('franchise.staff.manage');
+        return redirect()->route('franchises.staff.manage');
 
     }
 
     public function delete($id): RedirectResponse
     {
         Staff::where('id', $id)->delete();
-        return redirect()->route('franchise.staff.manage');
+        return redirect()->route('franchises.staff.manage');
     }
     public function crmDelete($id): RedirectResponse
     {
@@ -261,31 +261,31 @@ class FranchiseController extends Controller
     public function deleteRequest($id): RedirectResponse
     {
         RequestModel::where('id', $id)->delete();
-        return redirect()->route('franchise.newRequest.manage');
+        return redirect()->route('franchises.newRequest.manage');
     }
 
     public function manageStaff(Request $req)
     {
         $data['staffs'] = Staff::all();
-        return view('franchise/manageStaff', $data);
+        return view('franchises/manageStaff', $data);
     }
 
     public function insertStaff(Request $req)
     {
         $data['Types'] = Type::all();
-        return view("franchise.insertStaff", $data);
+        return view("franchises.insertStaff", $data);
     }
 
     public function editStaff($id)
     {
         $data = Staff::where('id', $id)->first();
-        return view("franchise.editStaff", compact('data'));
+        return view("franchises.editStaff", compact('data'));
     }
 
     public function viewStaff($id)
     {
         $data = Staff::where('id', $id)->first();
-        return view("franchise.viewStaff", compact('data'));
+        return view("franchises.viewStaff", compact('data'));
     }
 
 
@@ -305,7 +305,7 @@ class FranchiseController extends Controller
         $data['status'] = ($req->status) ? 1 : 0;
         $id = $req->id;
         Staff::where('id', $id)->update($data);
-        return redirect()->route('franchise.staff.manage');
+        return redirect()->route('franchises.staff.manage');
     }
 
 
@@ -313,14 +313,14 @@ class FranchiseController extends Controller
     {
         $search = $req->search;
         $data = Staff::where('name', 'LIKE', "%$search%")->paginate(8);
-        return view('franchise/manageStaff', ['staffs' => $data]);
+        return view('franchises/manageStaff', ['staffs' => $data]);
     }
 
     public function searchRequest(Request $req): View
     {
         $search = $req->search;
         $data = RequestModel::where('name', 'LIKE', "%$search%")->paginate(8);
-        return view('franchise.newRequest.manage', ['new' => $data]);
+        return view('franchises.newRequest.manage', ['new' => $data]);
     }
 
 
@@ -339,12 +339,12 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('technician_id', NULL)->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "All New Request";
         $data['dateFilter'] = "all";
-        return view('franchise/allnewRequest', $data);
+        return view('franchises/allnewRequest', $data);
     }
     public function manageRequest()
     {
 
-        return view('franchise.manageRequest');
+        return view('franchises.manageRequest');
     }
     public function filterRequest(Request $req)
     {
@@ -358,7 +358,7 @@ class FranchiseController extends Controller
         $data['staffs'] = Staff::all();
         // dd($req->search);
 
-        return view('franchise.manageRequest', $data);
+        return view('franchises.manageRequest', $data);
 
     }
 
@@ -370,7 +370,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::select("*")->whereBetween('created_at', [$req->startAt, $formattedDate])
             ->paginate(8);
         $data['title'] = "Date between Request";
-        return view('franchise/allnewRequest', $data);
+        return view('franchises/allnewRequest', $data);
     }
     public function filterBySelect(Request $req)
     {
@@ -422,7 +422,7 @@ class FranchiseController extends Controller
                 break;
 
         }
-        return view('franchise/allnewRequest', $data);
+        return view('franchises/allnewRequest', $data);
 
     }
     public function filterByInput(Request $req)
@@ -432,7 +432,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('owner_name', "LIKE", "%" . $req->search . "%")->paginate(8);
         $data['title'] = 'Search Record';
         $data['dateFilter'] = 'All';
-        return view('franchise/allnewRequest', $data);
+        return view('franchises/allnewRequest', $data);
     }
 
     // show datas 
@@ -442,7 +442,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('status', 1)
             ->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "Confirm Requests";
-        return view("franchise.requests", $data);
+        return view("franchises.requests", $data);
     }
     public function rejectedRequest(Request $req)
     {
@@ -450,7 +450,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('status', 3)
             ->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "rejected Requests";
-        return view("franchise.requests", $data);
+        return view("franchises.requests", $data);
     }
     public function pendingRequest(Request $req)
     {
@@ -458,7 +458,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('status', 0)
             ->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "pending Requests";
-        return view("franchise.requests", $data);
+        return view("franchises.requests", $data);
     }
     public function deliveredRequest(Request $req)
     {
@@ -466,7 +466,7 @@ class FranchiseController extends Controller
         $data['new'] = RequestModel::where('status', 5)
             ->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "Delivered Requests";
-        return view("franchise.requests", $data);
+        return view("franchises.requests", $data);
     }
 
     // show Work Done Request
@@ -475,7 +475,7 @@ class FranchiseController extends Controller
 
         $data['new'] = RequestModel::where('status', 4)->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "Total WorkDoneRequests";
-        return view("franchise.requests", $data);
+        return view("franchises.requests", $data);
 
     }
     public function globalSearch(Request $req)
@@ -486,20 +486,20 @@ class FranchiseController extends Controller
             ->orWhere('owner_name', 'like', '%' . $req->search . '%')->paginate(8);
         $data['title'] = 'Search Record';
         $data['dateFilter'] = 'All';
-        return view('franchise/requests', $data);
+        return view('franchises/requests', $data);
     }
 
     public function messages()
     {
         $data['touch_with_us'] = touch_with_us::paginate(10);
-        return view('franchise.messages', $data);
+        return view('franchises.messages', $data);
     }
     public function messagesRead($id)
     {
         $item = touch_with_us::where('id', $id)->first();
         $item->isRead = 1;
         $item->save();
-        return view('franchise.messagesView', compact("item"));
+        return view('franchises.messagesView', compact("item"));
 
     }
 

@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('franchises.layout.base')
 
 @section('title')
     Manage Requests

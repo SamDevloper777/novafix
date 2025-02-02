@@ -55,7 +55,7 @@
                     <a href="/admin" class="nav-link">Home</a>
                 </li>
                 {{-- <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('admin.messages.req') }}" class="nav-link">Messages {{messageCounting()}}</a>
+                    <a href="{{ route('franchise.messages.req') }}" class="nav-link">Messages {{messageCounting()}}</a>
                 </li> --}}
             </ul>
 

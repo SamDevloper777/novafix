@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('franchises.layout.base')
 @section('title')
     Requests
 @endsection
@@ -12,7 +12,7 @@
                     <h3 class="card-title mb-3">{{ $title }}</h3>
                     <div class="d-flex justify-content-between align-items-center" style="gap:15px">
 
-                        <form action="{{ route('admin.request.filterbyinput') }}">
+                        <form action="{{ route('franchise.request.filterbyinput') }}">
                             <div class="input-group" style="width: 300px;">
                                 <input type="text" name="search" value="{{ $search_value }}"
                                     class="form-control float-right w-25"placeholder="Search">
@@ -29,7 +29,7 @@
                         {{-- date and time filter --}}
 
                         <div class=" d-flex" style="gap:10px">
-                            <form action="{{ route('admin.request.filterbydate') }}" method="get" class="">
+                            <form action="{{ route('franchise.request.filterbydate') }}" method="get" class="">
                                 <div class="d-flex justify-centent-center" style="gap:10px">
                                     <div class="input-group" inline="true">
                                         <div class="input-group-prepend">
@@ -52,7 +52,7 @@
                                 </div>
                             </form>
                             {{-- select to filter  --}}
-                            <form action="{{ route('admin.request.filterbyselect') }}" method="get">
+                            <form action="{{ route('franchise.request.filterbyselect') }}" method="get">
                                 <select onchange="this.form.submit();" class="form-control" name='dateFilter'>
                                     <option selected>All</option>
                                     <option {{ $dateFilter == 'today' ? 'selected' : '' }} value="today">Today</option>
@@ -236,7 +236,7 @@
                                             </div>
                                         </div>
                                         {{-- Delete button  --}}
-                                        <a href="{{ route('admin.request.delete', $item->id) }}" role="button"
+                                        <a href="{{ route('franchise.request.delete', $item->id) }}" role="button"
                                             class="btn btn-danger">
                                             <i class="fas fa-trash"></i>
                                         </a>

@@ -177,7 +177,7 @@ Route::prefix('franchise')->group(function () {
             Route::get("/staff/edit/{id}","editStaff")->name('franchise.staff.edit');
             Route::get("/staff/view/{id}","viewStaff")->name('franchise.staff.view');
             Route::post("/staff/update/{id}","update")->name('franchise.staff.update');
-            Route::get('/logout', 'adminlogout')->name('franchise.logout');
+            Route::get('/logout', 'franchiselogout')->name('franchise.logout');
 
             Route::get('/staff/search',"search")->name('franchise.staff.search');
             Route::get('/request/search',"searchRequest")->name(' ');
@@ -219,6 +219,11 @@ Route::prefix('franchise')->group(function () {
         Route::get('/edit-franchises/{id}', 'editFranchises')->name('franchises.edit');
         Route::put('/update-franchises/{id}', 'updateFranchises')->name('franchises.update');
         Route::get('/view-franchises/{id}', 'viewFranchises')->name('franchises.view');
+        Route::get('/Allreceptioner',[ReceptionerController::class, 'showAllreceptioner'])->name('receptioner.showAllreceptioner');
+                    Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
+                    Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
+                    Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
+                    Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
 
         });
 });

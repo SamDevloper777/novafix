@@ -209,7 +209,7 @@ class ReceptionerController extends Controller
 
     public function showAllreceptioner(){
         $data['receptioner'] = Receptioner::all();
-        return view('admin/receptioner/manageReceptioner', $data);  
+        return view('franchises/receptioner/manageReceptioner', $data);  
     }
 
     public function status(Request $req, Receptioner $receptioner)
@@ -241,7 +241,7 @@ class ReceptionerController extends Controller
             return redirect()->route("receptioner.showAllreceptioner");       
 
         }
-        return view('admin.receptioner.addReceptioner');
+        return view('franchises.receptioner.addReceptioner');
         
     }
   
@@ -292,7 +292,7 @@ class ReceptionerController extends Controller
     public function EditReceptioner($id)
     {
         $data = Receptioner::where('id', $id)->first();
-        return view("admin.receptioner.editReceptioner", compact('data'));
+        return view("franchises.receptioner.editReceptioner", compact('data'));
     }
 
     public function UpdateReceptioner(Request $req)
