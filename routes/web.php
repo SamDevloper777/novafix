@@ -38,60 +38,60 @@ Route::controller(RequestController::class)->group(function () {
 });
 
 
-Route::prefix("admin")->group(function () {
-    Route::controller(AdminController::class)->group(function () {
-        //without auth middleware
-        Route::match(["post", "get"], '/login', action: 'adminlogin')->name('admin.login');
+// Route::prefix("admin")->group(function () {
+//     // Route::controller(controller: AdminController::class)->group(function () {
+//         //without auth middleware
+//         Route::match(["post", "get"], '/login', action: 'adminlogin')->name('admin.login');
 
-        // routes with middleware
-        Route::middleware('auth:admin')->group(function () {
-            Route::get('/', 'index')->name('admin.panel');
-            Route::get("/staff/manage","manageStaff")->name("admin.staff.manage");
-            Route::get("/staff/create","insertStaff")->name("admin.staff.create");
+//         // routes with middleware
+//         Route::middleware('auth:admin')->group(function () {
+//             Route::get('/', 'index')->name('admin.panel');
+//             Route::get("/staff/manage","manageStaff")->name("admin.staff.manage");
+//             Route::get("/staff/create","insertStaff")->name("admin.staff.create");
            
       
-            Route::post("/staff/create","staffUpload")->name("admin.staff.store");
-            Route::get("/staff/delete/{id}","delete")->name("admin.staff.delete");
-            Route::get("/staff/Crmdelete/{id}","crmDelete")->name("admin.crm.delete");
-            Route::get("/staff/edit/{id}","editStaff")->name('admin.staff.edit');
-            Route::get("/staff/view/{id}","viewStaff")->name('admin.staff.view');
-            Route::post("/staff/update/{id}","update")->name('admin.staff.update');
+//             Route::post("/staff/create","staffUpload")->name("admin.staff.store");
+//             Route::get("/staff/delete/{id}","delete")->name("admin.staff.delete");
+//             Route::get("/staff/Crmdelete/{id}","crmDelete")->name("admin.crm.delete");
+//             Route::get("/staff/edit/{id}","editStaff")->name('admin.staff.edit');
+//             Route::get("/staff/view/{id}","viewStaff")->name('admin.staff.view');
+//             Route::post("/staff/update/{id}","update")->name('admin.staff.update');
             
-            Route::get('/logout', 'adminlogout')->name('admin.logout');
-            Route::get('/staff/search',"search")->name('admin.staff.search');
-            Route::get('/request/search',"searchRequest")->name(' ');
-            Route::get('/staff/status/{staff}',"status")->name('admin.staff.status');
-            Route::get("/staff/newRequest","allnewRequest")->name("admin.newRequest.manage");
-            Route::get("/request/delete/{id}","deleteRequest")->name("admin.request.delete");
-            Route::get("/request/manage","manageRequest")->name("admin.request.manageRequest");
-            Route::get("/request/filter","filterRequest")->name("admin.request.filterRequest");
-            Route::get("/request/datefilter","dateFilter")->name("admin.request.filterbydate");
-            Route::get("/request/filterbyselect","filterBySelect")->name("admin.request.filterbyselect");
-            Route::get("/request/filterbyinput","filterByInput")->name("admin.request.filterbyinput");
-            Route::get('/request/global/search/', 'globalSearch')->name('admin.request.globalSearch');
-            //show
+//             Route::get('/logout', 'adminlogout')->name('admin.logout');
+//             Route::get('/staff/search',"search")->name('admin.staff.search');
+//             Route::get('/request/search',"searchRequest")->name(' ');
+//             Route::get('/staff/status/{staff}',"status")->name('admin.staff.status');
+//             Route::get("/staff/newRequest","allnewRequest")->name("admin.newRequest.manage");
+//             Route::get("/request/delete/{id}","deleteRequest")->name("admin.request.delete");
+//             Route::get("/request/manage","manageRequest")->name("admin.request.manageRequest");
+//             Route::get("/request/filter","filterRequest")->name("admin.request.filterRequest");
+//             Route::get("/request/datefilter","dateFilter")->name("admin.request.filterbydate");
+//             Route::get("/request/filterbyselect","filterBySelect")->name("admin.request.filterbyselect");
+//             Route::get("/request/filterbyinput","filterByInput")->name("admin.request.filterbyinput");
+//             Route::get('/request/global/search/', 'globalSearch')->name('admin.request.globalSearch');
+//             //show
             
-        Route::get('/listRequest/confirm','confirmedRequest')->name('admin.confirmed.req');
-        Route::get('/listRequest/pending','pendingRequest')->name('admin.pending.req');
-        Route::get('/listRequest/rejected','rejectedRequest')->name('admin.rejected.req');
-        Route::get('/listRequest/workDone','workDoneRequests')->name('admin.workDone.req');
-        Route::get('/listRequest/delivered','deliveredRequest')->name('admin.delivered.req');
-        Route::get('/listRequest/messages','messages')->name('admin.messages.req');
-        Route::get('/listRequest/{id}/readmessages','messagesRead')->name('admin.messagesRead.req');
+//         Route::get('/listRequest/confirm','confirmedRequest')->name('admin.confirmed.req');
+//         Route::get('/listRequest/pending','pendingRequest')->name('admin.pending.req');
+//         Route::get('/listRequest/rejected','rejectedRequest')->name('admin.rejected.req');
+//         Route::get('/listRequest/workDone','workDoneRequests')->name('admin.workDone.req');
+//         Route::get('/listRequest/delivered','deliveredRequest')->name('admin.delivered.req');
+//         Route::get('/listRequest/messages','messages')->name('admin.messages.req');
+//         Route::get('/listRequest/{id}/readmessages','messagesRead')->name('admin.messagesRead.req');
 
-         // filter 
-         Route::get("/request/datefilter","dateFilter")->name("admin.request.filterbydate");
-         Route::get("/request/filterbyselect","filterBySelect")->name("admin.request.filterbyselect");
-         Route::get("/request/filterbyinput","filterByInput")->name("admin.request.filterbyinput");
+//          // filter 
+//          Route::get("/request/datefilter","dateFilter")->name("admin.request.filterbydate");
+//          Route::get("/request/filterbyselect","filterBySelect")->name("admin.request.filterbyselect");
+//          Route::get("/request/filterbyinput","filterByInput")->name("admin.request.filterbyinput");
 
-            Route::get('/Allreceptioner',[ReceptionerController::class, 'showAllreceptioner'])->name('receptioner.showAllreceptioner');
-            Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
-            Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
-            Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
-            Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
-        });
-    });
-});
+//             Route::get('/Allreceptioner',[ReceptionerController::class, 'showAllreceptioner'])->name('receptioner.showAllreceptioner');
+//             Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
+//             Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
+//             Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
+//             Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
+//         });
+//     });
+// });
 Route::prefix("staff")->group(function () {
     Route::controller(StaffController::class)->group(function () {
         // without auth middleware 
@@ -160,13 +160,58 @@ Route::prefix("crm")->group(function(){
 Route::prefix('superadmin')->group(function () {
     Route::controller(SuperAdminController::class)->group(function () {
         Route::get('/', 'dashboard')->name('superadmin.panel');
+        Route::get("/staff/manage","manageStaff")->name("admin.staff.manage");
+
     });
 });
 
 Route::prefix('franchise')->group(function () {
     Route::controller(FranchiseController::class)->group(function () {
         Route::match(["post", "get"], '/login', action: 'franchiseLogin')->name('franchise.login');
-        // Route::middleware('auth:franchise')->group(function(){
+        Route::middleware('auth:franchise')->group(function(){
+            Route::get('/', 'index')->name('franchise.panel');
+           Route::get("/staff/create","insertStaff")->name("franchise.staff.create");
+            Route::post("/staff/create","staffUpload")->name("franchise.staff.store");
+            Route::get("/staff/delete/{id}","delete")->name("franchise.staff.delete");
+            Route::get("/staff/Crmdelete/{id}","crmDelete")->name("franchise.crm.delete");
+            Route::get("/staff/edit/{id}","editStaff")->name('franchise.staff.edit');
+            Route::get("/staff/view/{id}","viewStaff")->name('franchise.staff.view');
+            Route::post("/staff/update/{id}","update")->name('franchise.staff.update');
+            Route::get('/logout', 'adminlogout')->name('franchise.logout');
+
+            Route::get('/staff/search',"search")->name('franchise.staff.search');
+            Route::get('/request/search',"searchRequest")->name(' ');
+            Route::get('/staff/status/{staff}',"status")->name('franchise.staff.status');
+            Route::get("/staff/newRequest","allnewRequest")->name("franchise.newRequest.manage");
+            Route::get("/request/delete/{id}","deleteRequest")->name("franchise.request.delete");
+            Route::get("/request/manage","manageRequest")->name("franchise.request.manageRequest");
+            Route::get("/request/filter","filterRequest")->name("franchise.request.filterRequest");
+            Route::get("/request/datefilter","dateFilter")->name("franchise.request.filterbydate");
+            Route::get("/request/filterbyselect","filterBySelect")->name("franchise.request.filterbyselect");
+            Route::get("/request/filterbyinput","filterByInput")->name("franchise.request.filterbyinput");
+            Route::get('/request/global/search/', 'globalSearch')->name('franchise.request.globalSearch');
+          //show
+            
+        Route::get('/listRequest/confirm','confirmedRequest')->name('franchise.confirmed.req');
+        Route::get('/listRequest/pending','pendingRequest')->name('franchise.pending.req');
+        Route::get('/listRequest/rejected','rejectedRequest')->name('franchise.rejected.req');
+        Route::get('/listRequest/workDone','workDoneRequests')->name('franchise.workDone.req');
+        Route::get('/listRequest/delivered','deliveredRequest')->name('franchise.delivered.req');
+        Route::get('/listRequest/messages','messages')->name('franchise.messages.req');
+        Route::get('/listRequest/{id}/readmessages','messagesRead')->name('franchise.messagesRead.req');
+
+//          // filter 
+         Route::get("/request/datefilter","dateFilter")->name("franchise.request.filterbydate");
+         Route::get("/request/filterbyselect","filterBySelect")->name("franchise.request.filterbyselect");
+         Route::get("/request/filterbyinput","filterByInput")->name("franchise.request.filterbyinput");
+
+            Route::get('/Allreceptioner',[ReceptionerController::class, 'showAllreceptioner'])->name('receptioner.showAllreceptioner');
+            Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
+            Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
+            Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
+            Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
+        });
+
         Route::get('/insert-franchises', 'insertFranchises')->name('franchises.insertFranchises');
         Route::get('/manage-franchises', 'manageFranchises')->name('franchises.manageFranchises');
         Route::post('/store-franchises', 'storeFranchises')->name('franchises.store');
@@ -176,5 +221,4 @@ Route::prefix('franchise')->group(function () {
         Route::get('/view-franchises/{id}', 'viewFranchises')->name('franchises.view');
 
         });
-    // });
 });

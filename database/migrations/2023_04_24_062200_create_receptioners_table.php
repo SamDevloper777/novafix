@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('receptioners', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->nullable();
+            $table->foreignId('franchise_id')->nullable();
             $table->string("name");
             $table->string("contact");
             $table->string("email");

@@ -16,17 +16,14 @@ class Authenticate extends Middleware
             return null;
         } 
         else{
-            if($request->is('admin') || $request->is('admin/*')){
-                return route('admin.login');
+            if($request->is('franchise') || $request->is('franchise/*')){
+                return route('franchise.login');
             }
             elseif($request->is('staff') || $request->is('staff/*')){
                 return route('staff.login');
             }
             elseif($request->is('crm') || $request->is('crm/*')){
                 return route('receptioner.login');
-            }
-            elseif($request->is('franchise') || $request->is('franchise/*')){
-                return route('franchise.login');
             }
             else{
                 return route('login');
