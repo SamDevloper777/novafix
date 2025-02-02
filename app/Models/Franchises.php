@@ -21,6 +21,8 @@ class Franchises extends Authenticatable
         'account_no',
         'street',
         'city',
+        'bank_name',
+        'branch_name',
         'district',
         'pincode',
         'state',
