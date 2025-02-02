@@ -39,18 +39,18 @@
                         Email
                     </th>
 
-                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                    {{-- <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Addhar No
                     </th>
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         PAN No
-                    </th>
-                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                    </th> --}}
+                    {{-- <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         IFSC Code
                     </th>
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Account No
-                    </th>
+                    </th> --}}
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Street
                     </th>
@@ -60,7 +60,7 @@
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         District
                     </th>
-                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                    {{-- <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Pincode
                     </th>
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
@@ -68,10 +68,10 @@
                     </th>
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Country
-                    </th>
-                    <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
+                    </th> --}}
+                    {{-- <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         DOC
-                    </th>
+                    </th> --}}
                     <th scope="col" class="px-4 py-3 sm:px-6 whitespace-nowrap">
                         Status
                     </th>
@@ -99,7 +99,7 @@
                             {{$item->email}}
                         </td>
 
-                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                        {{-- <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->aadhaar_no}}
                         </td>
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
@@ -110,7 +110,7 @@
                         </td>
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->account_no}}
-                        </td>
+                        </td> --}}
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->street}}
                         </td>
@@ -120,7 +120,7 @@
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->district}}
                         </td>
-                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                        {{-- <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->pincode}}
                         </td>
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
@@ -128,10 +128,10 @@
                         </td>
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->country}}
-                        </td>
-                        <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
+                        </td> --}}
+                        {{-- <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             {{$item->doc}}
-                        </td>
+                        </td> --}}
                         <td class="px-4 py-4 sm:px-6 whitespace-nowrap">
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-green-800 dark:bg-green-900 dark:text-green-300">
