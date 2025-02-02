@@ -25,6 +25,9 @@ class Request extends Model
     {
         return $this->belongsTo(Receptioner::class, 'reciptionist_id');
     }
+    public function franchise(){
+        return $this->belongsTo(Franchises::class,'franchise_id');
+    }
     public function getStatus()
     {
         $status = $this->status;

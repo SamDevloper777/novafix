@@ -13,35 +13,36 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\touch_with_us;
 use App\Models\Type;
 use Carbon\Carbon;
-use App\Models\Request as RequestModel; 
+use App\Models\Request as RequestModel;
 use Illuminate\View\View;
 
 
 
 
 class FranchiseController extends Controller
-{   
-    public function index(){
+{
+    public function index()
+    {
         return view('franchises.dashboard');
     }
-    
-   
-    public function franchiseLogin(Request $req){
-        if($req->method() == "POST"){
-           $data = $req->only(["email","password"]);
-           
-           if(Auth::guard("franchise")->attempt($data)){
-                $franchise =  Auth::guard('franchise')->user();
-                if($franchise->status){
-                return redirect()->route("franchise.panel");
+
+
+    public function franchiseLogin(Request $req)
+    {
+        if ($req->method() == "POST") {
+            $data = $req->only(["email", "password"]);
+
+            if (Auth::guard("franchise")->attempt($data)) {
+                $franchise = Auth::guard('franchise')->user();
+                if ($franchise->status) {
+                    return redirect()->route("franchise.panel");
+                } else {
+                    return redirect()->back()->with("alert", "your account is disabled");
                 }
-                else{
-                    return redirect()->back()->with("alert","your account is disabled");
-                }
-           }
-           else{
-                return redirect()->route("franchise.login")->with("alert","Please enter valid email or password");;
-           }
+            } else {
+                return redirect()->route("franchise.login")->with("alert", "Please enter valid email or password");
+                ;
+            }
         }
         return view('franchises.loginFranchises');
     }
@@ -77,8 +78,8 @@ class FranchiseController extends Controller
             'aadhaar_no' => 'required|string|unique:franchises|max:20',
             'pan_no' => 'required|string|unique:franchises|max:20',
             'ifsc_code' => 'required|string|max:20',
-            'branch_name'=>'required|string',
-            'bank_name'=>'required|string',
+            'branch_name' => 'required|string',
+            'bank_name' => 'required|string',
             'account_no' => 'required|string|max:20',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -90,28 +91,28 @@ class FranchiseController extends Controller
             'status' => 'required|in:Active,Inactive',
         ]);
         $pincode = $validatedData['pincode'];
-    $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
+        $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
 
-    if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
-        $pinData = $pinResponse->json()[0]['PostOffice'][0];
-        $validatedData['city'] = $pinData['City'] ?? 'NULL';
-        $validatedData['state'] = $pinData['State'] ?? 'NULL';
-        $validatedData['country'] = $pinData['Country'] ?? 'NULL';
-        $validatedData['district'] = $pinData['District'] ?? 'NULL';
-    } else {
-        return back()->withErrors(['pincode' => 'Invalid Pincode']);
-    }
+        if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
+            $pinData = $pinResponse->json()[0]['PostOffice'][0];
+            $validatedData['city'] = $pinData['City'] ?? 'NULL';
+            $validatedData['state'] = $pinData['State'] ?? 'NULL';
+            $validatedData['country'] = $pinData['Country'] ?? 'NULL';
+            $validatedData['district'] = $pinData['District'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['pincode' => 'Invalid Pincode']);
+        }
 
-    $ifsc = $validatedData['ifsc_code'];
-    $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
+        $ifsc = $validatedData['ifsc_code'];
+        $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
 
-    if ($response->successful()) {
-        $branchData = $response->json();
-        $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
-        $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
-    } else {
-        return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
-    }
+        if ($response->successful()) {
+            $branchData = $response->json();
+            $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
+            $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
+        }
 
         $validatedData['password'] = Hash::make($validatedData['password']);
         // dd($validatedData);
@@ -156,8 +157,8 @@ class FranchiseController extends Controller
             'aadhaar_no' => 'required|string|max:20|unique:franchises,aadhaar_no,' . $franchise->id,
             'pan_no' => 'required|string|max:20|unique:franchises,pan_no,' . $franchise->id,
             'ifsc_code' => 'required|string|max:20',
-            'branch_name'=>'required|string',
-            'bank_name'=>'required|string',
+            'branch_name' => 'required|string',
+            'bank_name' => 'required|string',
             'account_no' => 'required|string|max:20',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -172,7 +173,7 @@ class FranchiseController extends Controller
 
         $pincode = $validatedData['pincode'];
         $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
-    
+
         if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
             $pinData = $pinResponse->json()[0]['PostOffice'][0];
             $validatedData['city'] = $pinData['City'] ?? 'NULL';
@@ -182,10 +183,10 @@ class FranchiseController extends Controller
         } else {
             return back()->withErrors(['pincode' => 'Invalid Pincode']);
         }
-    
+
         $ifsc = $validatedData['ifsc_code'];
         $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
-    
+
         if ($response->successful()) {
             $branchData = $response->json();
             $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
@@ -236,7 +237,7 @@ class FranchiseController extends Controller
             'password' => 'required',
         ]);
         $data['status'] = 1;
-        $data['franchise_id']=Auth::guard("franchise")->id();
+        $data['franchise_id'] = Auth::guard("franchise")->id();
         if ($request->image != null) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->storeAs('public/images', $imageName);
@@ -266,7 +267,7 @@ class FranchiseController extends Controller
 
     public function manageStaff(Request $req)
     {
-        $data['staffs'] = Staff::where('franchise_id',Auth::id())->get();
+        $data['staffs'] = Staff::where('franchise_id', Auth::id())->get();
         return view('franchises/manageStaff', $data);
     }
 
@@ -278,8 +279,8 @@ class FranchiseController extends Controller
 
     public function editStaff($id)
     {
-        $data = Staff::where('id', $id)->where('franchise_id',Auth::guard('franchise')->id())->first();
-        if(!$data){
+        $data = Staff::where('id', $id)->where('franchise_id', Auth::guard('franchise')->id())->first();
+        if (!$data) {
             return redirect()->route('franchise.staff.manage')->with('alert', 'You not have proper Right to Edit!');
 
         }
@@ -340,9 +341,16 @@ class FranchiseController extends Controller
 
     public function allnewRequest(Request $req)
     {
-        $data['new'] = RequestModel::where('technician_id', NULL)->orderBy('created_at', 'DESC')->paginate(8);
+        $receptionerId = Auth::guard('receptioner')->id();
+        $data['new'] = RequestModel::where('reciptionist_id', $receptionerId)
+            ->whereNull('technician_id')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8);
+
+        // Additional data for the view
         $data['title'] = "All New Request";
         $data['dateFilter'] = "all";
+
         return view('franchises/allnewRequest', $data);
     }
     public function manageRequest()
@@ -508,5 +516,5 @@ class FranchiseController extends Controller
     }
 
 
-    
+
 }

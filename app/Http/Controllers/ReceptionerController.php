@@ -18,7 +18,8 @@ class ReceptionerController extends Controller
 {
     public function index(Request $req): View
     {
-        $data['allRequests'] = RequestModel::orderBy("id", "DESC")->where('technician_id', null)->take(10)->get();
+        $reciptionistId = Auth::guard('receptioner')->id();
+        $data['allRequests'] = RequestModel::where('reciptionist_id', $reciptionistId)->orderBy("id", "DESC")->where('technician_id', null)->take(10)->get();
         return view('receptioner.dashboard', $data);
     }
     public function receptionerlogin(Request $req)
@@ -258,52 +259,48 @@ class ReceptionerController extends Controller
 
     }
 
+
+    //get all request by status according to receptioner
+    private function getRequestsByStatus($status, $title)
+    {
+        $receptionerId = Auth::guard('receptioner')->id();
+        $data['allRequests'] = RequestModel::where('reciptionist_id', $receptionerId)
+            ->where('status', $status)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8);
+        $data['title'] = $title;
+        return view("receptioner.requests", $data);
+    }
+
     public function confirmedRequest(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::where('status', 1)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Confirm Requests";
-        return view("receptioner.requests", $data);
+        return $this->getRequestsByStatus(1, "Confirm Requests");
     }
+
     public function rejectedRequest(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::where('status', 3)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "rejected Requests";
-        return view("receptioner.requests", $data);
+        return $this->getRequestsByStatus(3, "Rejected Requests");
     }
+
     public function pendingRequest(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::where('status', 0)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "pending Requests";
-        return view("receptioner.requests", $data);
+        return $this->getRequestsByStatus(0, "Pending Requests");
     }
+
     public function deliveredRequest(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::where('status', 5)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Delivered Requests";
-        return view("receptioner.requests", $data);
+        return $this->getRequestsByStatus(5, "Delivered Requests");
     }
 
-    // show Work Done Request
-    public function workDoneRequests()
+    public function workDoneRequests(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::where('status', 4)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total WorkDoneRequests";
-        return view("receptioner.requests", $data);
-
+        return $this->getRequestsByStatus(4, "Total WorkDoneRequests");
     }
+
     public function allRequest(Request $req)
     {
-
-        $data['allRequests'] = RequestModel::orderBy('created_at', 'DESC')->paginate(8);
+        $receptionerId = Auth::guard('receptioner')->id();
+        $data['allRequests'] = RequestModel::where('reciptionist_id', $receptionerId)->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "all Requests";
         return view("receptioner.requests", $data);
     }
