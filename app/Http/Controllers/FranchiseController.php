@@ -278,7 +278,11 @@ class FranchiseController extends Controller
 
     public function editStaff($id)
     {
-        $data = Staff::where('id', $id)->first();
+        $data = Staff::where('id', $id)->where('franchise_id',Auth::guard('franchise')->id())->first();
+        if(!$data){
+            return redirect()->route('franchise.staff.manage')->with('alert', 'You not have proper Right to Edit!');
+
+        }
         return view("franchises.editStaff", compact('data'));
     }
 

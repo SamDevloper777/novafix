@@ -292,6 +292,12 @@ class ReceptionerController extends Controller
     public function EditReceptioner($id)
     {
         $data = Receptioner::where('id', $id)->where('franchise_id',Auth::guard('franchise')->id())->first();
+
+        if(!$data)
+        {
+            return redirect()->route('receptioner.showAllreceptioner')->with('alert', 'You not have proper Right to Edit!');
+
+        }
         return view("franchises.receptioner.editReceptioner", compact('data'));
     }
 
