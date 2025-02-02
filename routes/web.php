@@ -173,6 +173,8 @@ Route::prefix('franchise')->group(function () {
         Route::delete('/franchises/{id}', 'deleteFranchises')->name('franchises.delete');
         Route::get('/edit-franchises/{id}', 'editFranchises')->name('franchises.edit');
         Route::put('/update-franchises/{id}', 'updateFranchises')->name('franchises.update');
+        Route::get('/view-franchises/{id}', 'viewFranchises')->name('franchises.view');
+
         });
     // });
 });

@@ -195,7 +195,11 @@ class FranchiseController extends Controller
     }
 
 
-
+    public function viewFranchises($id)
+    {
+        $franchise = Franchises::findOrFail($id);
+        return view('franchises.viewFranchises', compact('franchise'));
+    }
 
     
 }

@@ -141,6 +141,7 @@
                         </td>
                         <td class="px-4 flex py-4 items-center gap-2  sm:px-6 whitespace-nowrap">
                             <a href="{{route('franchises.edit',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <a href="{{route('franchises.view',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
                             <form action="{{ route('franchises.delete', $item->id) }}" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this franchise?');">
                                 @csrf
