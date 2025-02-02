@@ -102,7 +102,7 @@
                                     <td>{{ $item->owner_name }}</td>
                                     <td>{{ $item->product_name }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">{{ $item->contact }}</td>
-                                    <td class="border border-slate-700 p-1.5 pl-10">{{ $item->type->typename }}</td>
+                                    <td class="border border-slate-700 p-1.5 pl-10">{{ $item->type->name }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">{{ $item->problem }}</td>
                                     <td class="border border-slate-700 p-1.5 pl-10">
                                         {{ date('d M Y', strtotime($item->created_at)) }}
