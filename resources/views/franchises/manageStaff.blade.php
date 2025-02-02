@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('franchises.layout.base')
 
 @section('title')
     Manage Staffs
@@ -12,10 +12,10 @@
                     <h3 class="card-title">All Staffs</h3>
 
                     <div class="card-tools">
-                        <form action="{{ route('admin.staff.search') }}">
+                        <form action="{{ route('franchise.staff.search') }}">
 
                             <div class="input-group input-group-sm" style="width: 300px;">
-                                <a href="{{ route('admin.staff.create') }}"
+                                <a href="{{ route('franchise.staff.create') }}"
                                     role="button"class="mr-12 btn btn-secondary btn-sm">Staff Add</a>
 
                                 <input type="text" name="search"
@@ -73,7 +73,7 @@
                                             data-bs-target="#ban{{ $item->id }}">{{ $item->status == 0 ? 'Active' : 'DeActive' }}</a>
                                         {{-- edit button --}}
                                         <a role="button" class="btn btn-warning"
-                                            href="{{ route('admin.staff.edit', $item->id) }}">Edit</a>
+                                            href="{{ route('franchise.staff.edit', $item->id) }}">Edit</a>
                                         {{-- View button  --}}
                                         <a data-toggle="modal" data-target="#view{{ $item->id }}" role="button"
                                             class=" btn btn-info">View</a>
@@ -152,7 +152,7 @@
                                         </div>
 
                                         {{-- Delete button  --}}
-                                        <a href="{{ route('admin.staff.delete', $item->id) }}" role="button"
+                                        <a href="{{ route('franchise.staff.delete', $item->id) }}" role="button"
                                             class="btn btn-danger"><svg width="20" height="20" viewBox="0 0 24 24"
                                                 class="NSy2Hd cdByRd RTiFqe undefined">
                                                 <path fill='#b8c2cc'
@@ -189,7 +189,7 @@
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-bs-dismiss="modal">no</button>
-                                                <a href="{{ route('admin.staff.status', $item) }}" type="button"
+                                                <a href="{{ route('franchise.staff.status', $item) }}" type="button"
                                                     class="btn btn-primary">yes</a>
                                             </div>
                                         </div>

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\touch_with_us;
 use App\Models\Type;
 use Carbon\Carbon;
-use App\Models\Request as RequestModel;
+use App\Models\Request as RequestModel; 
 use Illuminate\View\View;
 
 
@@ -236,21 +236,21 @@ class FranchiseController extends Controller
             'password' => 'required',
         ]);
         $data['status'] = 1;
-        $data['franchise_id']=Auth::id();
+        $data['franchise_id']=Auth::guard("franchise")->id();
         if ($request->image != null) {
             $imageName = time() . '.' . $request->image->extension();
             $request->image->storeAs('public/images', $imageName);
             $data['image'] = $imageName;
         }
         Staff::create($data);
-        return redirect()->route('franchises.staff.manage');
+        return redirect()->route('franchise.staff.manage');
 
     }
 
     public function delete($id): RedirectResponse
     {
         Staff::where('id', $id)->delete();
-        return redirect()->route('franchises.staff.manage');
+        return redirect()->route('franchise.staff.manage');
     }
     public function crmDelete($id): RedirectResponse
     {
@@ -261,12 +261,12 @@ class FranchiseController extends Controller
     public function deleteRequest($id): RedirectResponse
     {
         RequestModel::where('id', $id)->delete();
-        return redirect()->route('franchises.newRequest.manage');
+        return redirect()->route('franchise.newRequest.manage');
     }
 
     public function manageStaff(Request $req)
     {
-        $data['staffs'] = Staff::all();
+        $data['staffs'] = Staff::where('franchise_id',Auth::id())->get();
         return view('franchises/manageStaff', $data);
     }
 
@@ -305,7 +305,7 @@ class FranchiseController extends Controller
         $data['status'] = ($req->status) ? 1 : 0;
         $id = $req->id;
         Staff::where('id', $id)->update($data);
-        return redirect()->route('franchises.staff.manage');
+        return redirect()->route('franchise.staff.manage');
     }
 
 

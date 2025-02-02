@@ -110,8 +110,6 @@ class ReceptionerController extends Controller
                 'MAC' => 'required',
                 'remark' => 'required',
                 'estimate_delivery' => 'required',
-                
-               
             ]);
             
            if($req->image!=null){
@@ -208,7 +206,7 @@ class ReceptionerController extends Controller
     }
 
     public function showAllreceptioner(){
-        $data['receptioner'] = Receptioner::all();
+        $data['receptioner'] = Receptioner::where('franchise_id',Auth::guard('franchise')->id())->get();
         return view('franchises/receptioner/manageReceptioner', $data);  
     }
 
@@ -236,6 +234,8 @@ class ReceptionerController extends Controller
                 'password' => 'required',
             ]);
             $data['status']=1;
+            $data['franchise_id']=Auth::guard("franchise")->id();
+           
             
             Receptioner::create($data);
             return redirect()->route("receptioner.showAllreceptioner");       
@@ -291,7 +291,7 @@ class ReceptionerController extends Controller
 
     public function EditReceptioner($id)
     {
-        $data = Receptioner::where('id', $id)->first();
+        $data = Receptioner::where('id', $id)->where('franchise_id')->first();
         return view("franchises.receptioner.editReceptioner", compact('data'));
     }
 

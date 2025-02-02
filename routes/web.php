@@ -160,7 +160,7 @@ Route::prefix("crm")->group(function(){
 Route::prefix('superadmin')->group(function () {
     Route::controller(SuperAdminController::class)->group(function () {
         Route::get('/', 'dashboard')->name('superadmin.panel');
-        Route::get("/staff/manage","manageStaff")->name("franchise.staff.manage");
+        
 
     });
 });
@@ -171,6 +171,7 @@ Route::prefix('franchise')->group(function () {
         Route::middleware('auth:franchise')->group(function(){
             Route::get('/', 'index')->name('franchise.panel');
            Route::get("/staff/create","insertStaff")->name("franchise.staff.create");
+           Route::get("/staff/manage","manageStaff")->name("franchise.staff.manage");
             Route::post("/staff/create","staffUpload")->name("franchise.staff.store");
             Route::get("/staff/delete/{id}","delete")->name("franchise.staff.delete");
             Route::get("/staff/Crmdelete/{id}","crmDelete")->name("franchise.crm.delete");
