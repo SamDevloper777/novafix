@@ -291,7 +291,7 @@ class ReceptionerController extends Controller
 
     public function EditReceptioner($id)
     {
-        $data = Receptioner::where('id', $id)->where('franchise_id')->first();
+        $data = Receptioner::where('id', $id)->where('franchise_id',Auth::guard('franchise')->id())->first();
         return view("franchises.receptioner.editReceptioner", compact('data'));
     }
 
