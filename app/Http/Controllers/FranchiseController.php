@@ -143,6 +143,8 @@ class FranchiseController extends Controller
             'aadhaar_no' => 'required|string|max:20|unique:franchises,aadhaar_no,' . $franchise->id,
             'pan_no' => 'required|string|max:20|unique:franchises,pan_no,' . $franchise->id,
             'ifsc_code' => 'required|string|max:20',
+            'branch_name'=>'required|string',
+            'bank_name'=>'required|string',
             'account_no' => 'required|string|max:20',
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -154,6 +156,30 @@ class FranchiseController extends Controller
             'status' => 'required|in:Active,Inactive',
 
         ]);
+
+        $pincode = $validatedData['pincode'];
+        $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
+    
+        if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
+            $pinData = $pinResponse->json()[0]['PostOffice'][0];
+            $validatedData['city'] = $pinData['City'] ?? 'NULL';
+            $validatedData['state'] = $pinData['State'] ?? 'NULL';
+            $validatedData['country'] = $pinData['Country'] ?? 'NULL';
+            $validatedData['district'] = $pinData['District'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['pincode' => 'Invalid Pincode']);
+        }
+    
+        $ifsc = $validatedData['ifsc_code'];
+        $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
+    
+        if ($response->successful()) {
+            $branchData = $response->json();
+            $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
+            $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
+        }
 
         // Hash password only if provided
         if ($request->filled('password')) {
