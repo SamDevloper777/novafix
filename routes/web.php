@@ -220,10 +220,10 @@ Route::prefix('franchise')->group(function () {
         Route::put('/update-franchises/{id}', 'updateFranchises')->name('franchises.update');
         Route::get('/view-franchises/{id}', 'viewFranchises')->name('franchises.view');
         Route::get('/Allreceptioner',[ReceptionerController::class, 'showAllreceptioner'])->name('receptioner.showAllreceptioner');
-                    Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
-                    Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
-                    Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
-                    Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
+        Route::match(['post','get'],'/AddReceptioner',[ReceptionerController::class,"AddReceptioner"])->name('receptioner.add');
+        Route::get('/EditReceptioner/{id}',[ReceptionerController::class,"EditReceptioner"])->name('receptioner.edit');
+        Route::post('/UpdateReceptioner/{id}',[ReceptionerController::class,"UpdateReceptioner"])->name('receptioner.update');
+        Route::get('/status/{receptioner}',[ReceptionerController::class,"status"])->name('receptioner.status');
 
         });
 });
