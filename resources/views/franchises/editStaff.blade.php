@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('franchises.layout.base')
 
 @section('title')
     Edit Staffs
@@ -15,11 +15,11 @@
                     <h2 class="text-black-100">Edit Staff</h2>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ route('admin.staff.manage') }}" role="button" class="btn btn-primary btn-sm">Go Back</a>
+                    <a href="{{ route('franchise.staff.manage') }}" role="button" class="btn btn-primary btn-sm">Go Back</a>
                 </div>
             </div>
 
-            <form action="{{ route('admin.staff.update', $data['id']) }}" method="post">
+            <form action="{{ route('franchise.staff.update', $data['id']) }}" method="post">
                 @csrf
                 <div class="row">
                     <div class="w-full px-3 mb-5 col">

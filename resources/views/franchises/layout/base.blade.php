@@ -147,7 +147,7 @@
                     </div>
                 </li> --}}
                 <!-- Notifications Dropdown Menu -->
-                <a class="nav-link"  href="{{ route('admin.messages.req') }}">
+                <a class="nav-link"  href="{{ route('franchise.messages.req') }}">
                     <i class="far fa-envelope"></i>
                     <span class="badge badge-warning navbar-badge">{{messageCounting()}}</span> 
                 </a>
@@ -192,9 +192,9 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="{{ route('admin.panel') }}" class="brand-link">
+            <a href="{{ route('franchise.panel') }}" class="brand-link">
                 {{-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
-                <span class="brand-text font-weight-light">Servicx Admin</span>
+                <span class="brand-text font-weight-light">Novafix Admin</span>
             </a>
 
             <!-- Sidebar -->
@@ -202,7 +202,7 @@
 
 
                 <div class="form-inline">
-                    <form action="{{ route('admin.request.globalSearch') }}" method="GET">
+                    <form action="{{ route('franchise.request.globalSearch') }}" method="GET">
                         <div class="input-group">
                             <input class="form-control form-control-sidebar" type="search" name="search"
                                 placeholder="Search">
@@ -222,14 +222,14 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
-                            <a href="{{ route('admin.panel') }}" class="nav-link active">
+                            <a href="{{ route('franchise.panel') }}" class="nav-link active">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.newRequest.manage') }}" class="nav-link">
+                            <a href="{{ route('franchise.newRequest.manage') }}" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     New Request
@@ -240,41 +240,41 @@
                         <li class="nav-header">Service Request</li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.request.manageRequest') }}" class="nav-link">
+                            <a href="{{ route('franchise.request.manageRequest') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Manage Request</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.confirmed.req') }}" class="nav-link">
+                            <a href="{{ route('franchise.confirmed.req') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p> Confirmed</p>
                                 <span class="badge badge-info right">{{ $ConformCountReq }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.pending.req') }}" class="nav-link">
+                            <a href="{{ route('franchise.pending.req') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p> pending</p>
                                 <span class="badge badge-info right">{{ $PendingCountReq }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.rejected.req') }}" class="nav-link">
+                            <a href="{{ route('franchise.rejected.req') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p> Rejected</p>
                                 <span class="badge badge-info right">{{ $RejectedCountReq }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.workDone.req') }}" class="nav-link">
+                            <a href="{{ route('franchise.workDone.req') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p> Work Done</p>
                                 <span class="badge badge-info right">{{ $WorkdoneCountReq }}</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.delivered.req') }}" class="nav-link">
+                            <a href="{{ route('franchise.delivered.req') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p> Delivered</p>
                                 <span class="badge badge-info right">{{ $DeliveredCountReq }}</span>
@@ -289,7 +289,7 @@
                         <li class="nav-header">Staffs</li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.staff.manage') }}" class="nav-link">
+                            <a href="{{ route('franchise.staff.manage') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Manage Staff</p>
                                 {{-- <P class='ml-4'>{{$staffs->count()}}</P> --}}
@@ -303,7 +303,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.staff.create') }}" class="nav-link">
+                            <a href="{{ route('franchise.staff.create') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Add Staff</p>
                             </a>
@@ -782,7 +782,7 @@
                         </li> --}}
                         <li class="nav-header">Accounts</li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.logout') }}" class="nav-link">
+                            <a href="{{ route('franchise.logout') }}" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p class="text">Logout</p>
                             </a>

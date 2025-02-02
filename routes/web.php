@@ -160,7 +160,7 @@ Route::prefix("crm")->group(function(){
 Route::prefix('superadmin')->group(function () {
     Route::controller(SuperAdminController::class)->group(function () {
         Route::get('/', 'dashboard')->name('superadmin.panel');
-        Route::get("/staff/manage","manageStaff")->name("admin.staff.manage");
+        Route::get("/staff/manage","manageStaff")->name("franchise.staff.manage");
 
     });
 });
