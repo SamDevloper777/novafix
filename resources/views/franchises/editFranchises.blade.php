@@ -27,7 +27,7 @@
     <!-- Stepper -->
     <div id="stepper" class="mb-6">
         <ol
-            class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+            class="flex items-center w-full gap-5 text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
             <li class="flex items-center stepper-item text-blue-600 dark:text-blue-500">
                 <span class="flex items-center justify-center w-10 h-10 border rounded-full shrink-0">
                     1

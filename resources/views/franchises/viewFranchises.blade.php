@@ -35,7 +35,7 @@
 
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-semibold mb-2">Date of Creation</label>
-                    {{-- <p class="text-gray-900">{{ $franchise->doc->format('d M Y') }}</p> --}}
+                    <p class="text-gray-900">{{ $franchise->doc }}</p>
                 </div>
 
                 <div class="mb-4">
