@@ -18,19 +18,20 @@ class ReceptionerController extends Controller
 {
     public function index(Request $req): View
     {
-        $data['allRequests'] = RequestModel::orderBy("id", "DESC")->where('technician_id',null)->take(10)->get();
-        return view('receptioner.dashboard',$data);
+        $data['allRequests'] = RequestModel::orderBy("id", "DESC")->where('technician_id', null)->take(10)->get();
+        return view('receptioner.dashboard', $data);
     }
     public function receptionerlogin(Request $req)
     {
         if ($req->method() == "POST") {
             $data = $req->only(["email", "password"]);
 
-            if (Auth::guard("receptioner")->attempt($data)) { 
-                
+            if (Auth::guard("receptioner")->attempt($data)) {
+
                 return redirect()->route("receptioner.panel");
             } else {
-                return redirect()->back()->with("alert","Please enter valid email or password");;
+                return redirect()->back()->with("alert", "Please enter valid email or password");
+                ;
             }
         }
         return view('receptioner.receptionerLogin');
@@ -38,15 +39,17 @@ class ReceptionerController extends Controller
     public function receptionerlogout(Request $req)
     {
         Auth::guard("receptioner")->logout();
-        return redirect()->back(); 
+        return redirect()->back();
     }
 
-    public function requestForm(Request $req){
-        if($req->method()=='POST'){
+    public function requestForm(Request $req)
+    {
+        if ($req->method() == 'POST') {
+            $receptionerId = Auth::guard('receptioner')->id();
             $date = \Carbon\Carbon::now();
             $service_code = Str::random(6);
-            
-            $data = $req -> validate([
+
+            $data = $req->validate([
                 'owner_name' => 'required',
                 'product_name' => 'required',
                 'email' => 'required',
@@ -55,31 +58,31 @@ class ReceptionerController extends Controller
                 'brand' => 'required',
                 'color' => 'required',
                 'problem' => 'required',
-                'serial_no'=>'required',
-                'MAC'=>'required',
-               
-               ]);
-    
-               $data['service_code'] = $service_code;
-               $data['date_of_delivery']=$date;
-               
-           if($req->image!=null){
-            $img = $req->image;
-            $folderPath = "uploads/";
-            
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-            
-            $file = $folderPath . $fileName;
-            Storage::put($file, $image_base64);
-            // dd($fileName);
-           $data['image'] = $fileName;
-           }
-    
+                'serial_no' => 'required',
+                'MAC' => 'required',
+
+            ]);
+
+            $data['service_code'] = $service_code;
+            $data['date_of_delivery'] = $date;
+            $data['reciptionist_id'] = $receptionerId;
+            if ($req->image != null) {
+                $img = $req->image;
+                $folderPath = "uploads/";
+
+                $image_parts = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = uniqid() . '.png';
+
+                $file = $folderPath . $fileName;
+                Storage::put($file, $image_base64);
+                // dd($fileName);
+                $data['image'] = $fileName;
+            }
+
             RequestModel::create($data);
 
             return redirect()->route("receptioner.all.request");
@@ -89,125 +92,134 @@ class ReceptionerController extends Controller
 
     }
 
-    public function allnewRequest(){
-        
-        $data['allRequests'] = RequestModel::where('technician_id',null)->orderBy('created_at', 'DESC')->paginate(8);
+    public function allnewRequest()
+    {
+        $receptionerId = Auth::guard('receptioner')->id();
+        $data['allRequests'] = RequestModel::where('reciptionist_id', $receptionerId)
+            ->orderBy('created_at', 'DESC')
+            ->paginate(8);
+
         $data['title'] = "All Request";
-        return view('receptioner.requests',$data);
+        return view('receptioner.requests', $data);
     }
-    public function viewRequest(Request $req, $id){
-        
+    public function viewRequest(Request $req, $id)
+    {
         $item = RequestModel::FindOrFail($id);
         $title = "View " . ucfirst($item->owner_name) . "'s Request";
-        return view('receptioner.viewRequests',compact("item","title"));
+        return view('receptioner.viewRequests', compact("item", "title"));
     }
 
-   
-    public function editRequest(Request $req, $id){
-        if($req->method()=='POST'){
+
+    public function editRequest(Request $req, $id)
+    {
+        if ($req->method() == 'POST') {
             $data = $req->validate([
                 'serial_no' => 'required',
                 'MAC' => 'required',
                 'remark' => 'required',
                 'estimate_delivery' => 'required',
             ]);
-            
-           if($req->image!=null){
-            $data['image']=$req->validate([
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-            $img = $req->image;
-            $folderPath = "public/uploads/";
-            
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-            
-            $file = $folderPath . $fileName;
-            Storage::put($file, $image_base64);
-            // dd($fileName);
-            $data['image'] = $fileName;
-           }
-            $id=$req->id;
-            RequestModel::where('id',$id)->update($data);
+
+            if ($req->image != null) {
+                $data['image'] = $req->validate([
+                    'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                ]);
+                $img = $req->image;
+                $folderPath = "public/uploads/";
+
+                $image_parts = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = uniqid() . '.png';
+
+                $file = $folderPath . $fileName;
+                Storage::put($file, $image_base64);
+                // dd($fileName);
+                $data['image'] = $fileName;
+            }
+            $id = $req->id;
+            RequestModel::where('id', $id)->update($data);
             return redirect()->back();
 
         }
-        $data=RequestModel::where('id',$id)->first();
-        return view("receptioner.requestEdit",compact('data'));
+        $data = RequestModel::where('id', $id)->first();
+        return view("receptioner.requestEdit", compact('data'));
     }
-   //dateFilter
-    public function dateFilter(Request $req){
+    //dateFilter
+    public function dateFilter(Request $req)
+    {
         $date = \Carbon\Carbon::createFromFormat('Y-m-d', $req->End);
         $date->addDays();
         $formattedDate = $date->format('Y-m-d');
-        $data['allRequests']= RequestModel::select("*")->whereBetween('created_at', [$req->startAt, $formattedDate])
-                                    ->paginate(8);
-        $data['title']="Date between Request";
+        $data['allRequests'] = RequestModel::select("*")->whereBetween('created_at', [$req->startAt, $formattedDate])
+            ->paginate(8);
+        $data['title'] = "Date between Request";
         return view('receptioner/requests', $data);
     }
-    public function filterBySelect(Request $req){
-        
-        
-        $data['dateFilter']=$req->dateFilter;
-        
+    public function filterBySelect(Request $req)
+    {
+
+
+        $data['dateFilter'] = $req->dateFilter;
+
 
         switch ($req->dateFilter) {
             case 'today':
-                $data['allRequests']=RequestModel::whereDate('created_at',Carbon::today())-> paginate(8);
-                $data['title']="Today Request";
-                
+                $data['allRequests'] = RequestModel::whereDate('created_at', Carbon::today())->paginate(8);
+                $data['title'] = "Today Request";
+
                 break;
             case 'yesterday':
-                $data['allRequests']=RequestModel::whereDate('created_at',Carbon::yesterday())-> paginate(8);
-                $data['title']="yesterday Request";
+                $data['allRequests'] = RequestModel::whereDate('created_at', Carbon::yesterday())->paginate(8);
+                $data['title'] = "yesterday Request";
                 break;
             case 'this_week':
-                $data['allRequests']=RequestModel::whereBetween('created_at',[Carbon::now()->startOfWeek(),Carbon::now()->endOfWeek()])-> paginate(8);
-                $data['title']="This Week Request";
+                $data['allRequests'] = RequestModel::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->paginate(8);
+                $data['title'] = "This Week Request";
                 break;
             case 'this_month':
-                $data['allRequests']=RequestModel::whereMonth('created_at',Carbon::now()->month)-> paginate(8);
-                $data['title']="This Month Request";
+                $data['allRequests'] = RequestModel::whereMonth('created_at', Carbon::now()->month)->paginate(8);
+                $data['title'] = "This Month Request";
                 break;
             case 'last_month':
-                $data['allRequests']=RequestModel::whereMonth('created_at',Carbon::now()->subMonth()->month)-> paginate(8);
-                $data['title']="Last Month Request";
+                $data['allRequests'] = RequestModel::whereMonth('created_at', Carbon::now()->subMonth()->month)->paginate(8);
+                $data['title'] = "Last Month Request";
                 break;
             case 'this_year':
-                $data['allRequests']=RequestModel::whereYear('created_at',Carbon::now()->year)-> paginate(8);
-                $data['title']="This Year Request";
+                $data['allRequests'] = RequestModel::whereYear('created_at', Carbon::now()->year)->paginate(8);
+                $data['title'] = "This Year Request";
                 break;
             case 'last_year':
-                $data['allRequests']=RequestModel::whereYear('created_at',Carbon::now()->subYear()->year)-> paginate(8);
-                $data['title']="Last Year Request";
+                $data['allRequests'] = RequestModel::whereYear('created_at', Carbon::now()->subYear()->year)->paginate(8);
+                $data['title'] = "Last Year Request";
                 break;
-            
+
             default:
                 $data['allRequests'] = RequestModel::all();
-                $data['title']="All New Request";
-            
+                $data['title'] = "All New Request";
+
                 break;
-        
-            }
-        return view('receptioner/requests',$data);
-       
+
+        }
+        return view('receptioner/requests', $data);
+
     }
-    public function filterByInput(Request $req){
-       
-        $data['search_value']=$req->search;
-        $data['allRequests']=RequestModel::where('owner_name',"LIKE","%".$req->search."%")->paginate(8);
-        $data['title']='Search Record';
-        $data['dateFilter']='All';
-        return view('receptioner/requests',$data);
+    public function filterByInput(Request $req)
+    {
+
+        $data['search_value'] = $req->search;
+        $data['allRequests'] = RequestModel::where('owner_name', "LIKE", "%" . $req->search . "%")->paginate(8);
+        $data['title'] = 'Search Record';
+        $data['dateFilter'] = 'All';
+        return view('receptioner/requests', $data);
     }
 
-    public function showAllreceptioner(){
-        $data['receptioner'] = Receptioner::where('franchise_id',Auth::guard('franchise')->id())->get();
-        return view('franchises/receptioner/manageReceptioner', $data);  
+    public function showAllreceptioner()
+    {
+        $data['receptioner'] = Receptioner::where('franchise_id', Auth::guard('franchise')->id())->get();
+        return view('franchises/receptioner/manageReceptioner', $data);
     }
 
     public function status(Request $req, Receptioner $receptioner)
@@ -218,11 +230,12 @@ class ReceptionerController extends Controller
         return redirect()->back();
 
     }
-   
-   
 
-    public function addReceptioner(Request $req){
-        if($req->method()=='POST'){
+
+
+    public function addReceptioner(Request $req)
+    {
+        if ($req->method() == 'POST') {
             $data = $req->validate([
                 'name' => 'required',
                 'email' => 'required|unique:App\Models\Receptioner,email|email',
@@ -233,68 +246,73 @@ class ReceptionerController extends Controller
                 'address' => 'required',
                 'password' => 'required',
             ]);
-            $data['status']=1;
-            $data['franchise_id']=Auth::guard("franchise")->id();
-           
-            
+            $data['status'] = 1;
+            $data['franchise_id'] = Auth::guard("franchise")->id();
+
+
             Receptioner::create($data);
-            return redirect()->route("receptioner.showAllreceptioner");       
+            return redirect()->route("receptioner.showAllreceptioner");
 
         }
         return view('franchises.receptioner.addReceptioner');
-        
-    }
-  
-    public function confirmedRequest(Request $req){
-      
-        $data['allRequests'] = RequestModel::where('status',1)
-                                            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Confirm Requests";                                    
-        return view("receptioner.requests",$data);   
-    }
-    public function rejectedRequest(Request $req){
-      
-        $data['allRequests'] = RequestModel::where('status',3)
-                                ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "rejected Requests";                                    
-        return view("receptioner.requests",$data);   
-    }
-    public function pendingRequest(Request $req){
-      
-        $data['allRequests'] = RequestModel::where('status',0)
-                                ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "pending Requests";                                    
-        return view("receptioner.requests",$data);   
-    }
-    public function deliveredRequest(Request $req){
-      
-        $data['allRequests'] = RequestModel::where('status',5)
-                                ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Delivered Requests";                                    
-        return view("receptioner.requests",$data);   
+
     }
 
-     // show Work Done Request
-     public function workDoneRequests(){
-        
-        $data['allRequests'] = RequestModel::where('status',4)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total WorkDoneRequests";
-        return view("receptioner.requests",$data);
-       
+    public function confirmedRequest(Request $req)
+    {
+
+        $data['allRequests'] = RequestModel::where('status', 1)
+            ->orderBy('created_at', 'DESC')->paginate(8);
+        $data['title'] = "Confirm Requests";
+        return view("receptioner.requests", $data);
     }
-    public function allRequest(Request $req){
-      
+    public function rejectedRequest(Request $req)
+    {
+
+        $data['allRequests'] = RequestModel::where('status', 3)
+            ->orderBy('created_at', 'DESC')->paginate(8);
+        $data['title'] = "rejected Requests";
+        return view("receptioner.requests", $data);
+    }
+    public function pendingRequest(Request $req)
+    {
+
+        $data['allRequests'] = RequestModel::where('status', 0)
+            ->orderBy('created_at', 'DESC')->paginate(8);
+        $data['title'] = "pending Requests";
+        return view("receptioner.requests", $data);
+    }
+    public function deliveredRequest(Request $req)
+    {
+
+        $data['allRequests'] = RequestModel::where('status', 5)
+            ->orderBy('created_at', 'DESC')->paginate(8);
+        $data['title'] = "Delivered Requests";
+        return view("receptioner.requests", $data);
+    }
+
+    // show Work Done Request
+    public function workDoneRequests()
+    {
+
+        $data['allRequests'] = RequestModel::where('status', 4)->orderBy('created_at', 'DESC')->paginate(8);
+        $data['title'] = "Total WorkDoneRequests";
+        return view("receptioner.requests", $data);
+
+    }
+    public function allRequest(Request $req)
+    {
+
         $data['allRequests'] = RequestModel::orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "all Requests";                                    
-        return view("receptioner.requests",$data);   
+        $data['title'] = "all Requests";
+        return view("receptioner.requests", $data);
     }
 
     public function EditReceptioner($id)
     {
-        $data = Receptioner::where('id', $id)->where('franchise_id',Auth::guard('franchise')->id())->first();
+        $data = Receptioner::where('id', $id)->where('franchise_id', Auth::guard('franchise')->id())->first();
 
-        if(!$data)
-        {
+        if (!$data) {
             return redirect()->route('receptioner.showAllreceptioner')->with('alert', 'You not have proper Right to Edit!');
 
         }
@@ -303,7 +321,7 @@ class ReceptionerController extends Controller
 
     public function UpdateReceptioner(Request $req)
     {
-       
+
         $data = $req->validate([
             'name' => 'required',
             'email' => 'required',
@@ -312,15 +330,15 @@ class ReceptionerController extends Controller
             'aadhar' => 'required',
             'pan' => 'required',
             'address' => 'required',
-            
+
         ]);
-        $data['status'] = ($req->status) ? 1 : 0 ;
+        $data['status'] = ($req->status) ? 1 : 0;
         $id = $req->id;
         Receptioner::where('id', $id)->update($data);
         return redirect()->route('receptioner.showAllreceptioner');
     }
 
-    
-   
+
+
 
 }
