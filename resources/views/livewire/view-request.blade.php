@@ -52,7 +52,7 @@
 
                             <td>{{ $item->contact }}</td>
                             <td>
-                                {{ $item->type->typename }}
+                                {{ $item->type->name }}
                                 <span class="font-weight-bold">({{ $item->technician->name }})</span>
                             </td>
                             <td>{{ $item->problem }}</td>

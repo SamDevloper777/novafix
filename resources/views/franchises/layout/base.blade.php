@@ -280,12 +280,12 @@
                                 <span class="badge badge-info right">{{ $DeliveredCountReq }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Daily Reports</p>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-header">Staffs</li>
 
                         <li class="nav-item">

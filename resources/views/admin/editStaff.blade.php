@@ -58,10 +58,10 @@
                         <div class="flex w-full">
                             {{-- <input type="text" name="type" class="form-control" placeholder=""> --}}
                             <select id="inputState" name="type_id" class="form-control">
-                                <option selected value="{{ $data->type_id }}">{{ $data->type->typename }}</option>
+                                <option selected value="{{ $data->type_id }}">{{ $data->type->name }}</option>
                                 <option disabled>Choose...</option>
                                 @foreach ($Types as $item)
-                                    <option value="{{ $item->id }}">{{ $item->typename }}</option>
+                                   <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
                         </div>

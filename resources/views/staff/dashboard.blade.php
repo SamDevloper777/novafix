@@ -103,7 +103,7 @@
               <div class="card-header border-0">
                 <h3 class="card-title">
                   <i class="fas fa-map-marker-alt mr-1"></i>
-                  latest <span class="font-weight-bold">{{ auth()->user()->type->typename }}</span> Request
+                  latest <span class="font-weight-bold">{{ auth()->user()->type->name }}</span> Request
                 </h3>
                 <!-- card tools -->
                 <div class="card-body table-responsive p-0"  >

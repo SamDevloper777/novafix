@@ -65,7 +65,7 @@
                             <select name="type_id" class="form-select font-semibold text-xs px-1">
                                 <option value="">Select Type</option>
                                 @foreach ($Types as $item)
-                                <option value="{{$item->id}}">{{$item->typename}}</option>
+                                <option value="{{$item->id}}">{{$item->name}}</option>
                                     
                                 @endforeach
                             

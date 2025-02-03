@@ -23,21 +23,21 @@ class AdminController extends Controller
 
     public function adminlogin(Request $req)
     {
-        if ($req->method() == "POST") {
-            $this->validate($req, [
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
+        // if ($req->method() == "POST") {
+        //     $this->validate($req, [
+        //         'email' => 'required|email',
+        //         'password' => 'required',
+        //     ]);
 
           
-            $credentials = $req->only('email', 'password');
-            if (Auth::guard('admin')->attempt($credentials)) {
-                return redirect()->route("admin.panel");
-            } else {
-                return redirect()->back()->with("alert", "Invalid email or password.");
-            }
-            dd($credentials);
-        }
+        //     $credentials = $req->only('email', 'password');
+        //     if (Auth::guard('admin')->attempt($credentials)) {
+        //         return redirect()->route("admin.panel");
+        //     } else {
+        //         return redirect()->back()->with("alert", "Invalid email or password.");
+        //     }
+        //     dd($credentials);
+        // }
 
         return view('admin.adminLogin');
     }

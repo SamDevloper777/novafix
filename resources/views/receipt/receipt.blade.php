@@ -141,7 +141,7 @@
                                             <tr>
 
                                                 <th scope="col">Type</th>
-                                                <td class="text-uppercase">{{ $item->type->typename }}</td>
+                                                <td class="text-uppercase">{{ $item->type->name }}</td>
                                                 <th scope="col">S.N</th>
                                                 <td class="text-uppercase">{{ $item->serial_no }}</td>
                                             </tr>

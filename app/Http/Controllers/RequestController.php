@@ -60,8 +60,9 @@ class RequestController extends Controller
     }
 
     public function newRequests(){
+        $recept = Auth::guard(('receptioner'))->id();
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)->where('technician_id',NULL)
+        $data['allRequests'] = RequestModel::where('reciptionist_id',$recept)->where('type_id',$user->type_id)->where('technician_id',NULL)
                                         ->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "New Request";
         return view("staff.requests",$data);

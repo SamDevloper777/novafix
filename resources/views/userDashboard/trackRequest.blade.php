@@ -62,7 +62,7 @@
                                     </tr>
                                     <tr>
                                         <th>Type</th>
-                                        <td>{{ $item->type->typename }}</td>
+                                        <td>{{ $item->type->name }}</td>
                                     </tr>
                                     <tr>
                                         <th>Estimate Delivery Date</th>
