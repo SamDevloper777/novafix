@@ -1,10 +1,10 @@
-@extends('superadmin.layout')
+@extends('admin.layout')
 @section('title', 'franchise')
 @section('content')
 
 
 <div class="mt-20 p-5">
-    <form action="{{ route('franchises.manageFranchises') }}" class="max-w-md mx-auto mb-5">
+    <form action="{{ route('admin.manageFranchises') }}" class="max-w-md mx-auto mb-5">
         <label for="default-search"
             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div class="relative">
@@ -140,9 +140,9 @@
                             </span>
                         </td>
                         <td class="px-4 flex py-4 items-center gap-2  sm:px-6 whitespace-nowrap">
-                            <a href="{{route('franchises.edit',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <a href="{{route('franchises.view',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                            <form action="{{ route('franchises.delete', $item->id) }}" method="POST"
+                            <a href="{{route('admin.edit',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <a href="{{route('admin.view',$item->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                            <form action="{{ route('admin.delete', $item->id) }}" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this franchise?');">
                                 @csrf
                                 @method('DELETE')

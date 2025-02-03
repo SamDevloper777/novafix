@@ -1,337 +1,197 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Receptioner;
-use App\Models\Staff;
-use App\Models\touch_with_us;
-use App\Models\Type;
-use Carbon\Carbon;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Franchises;
+use Hash;
+use Http;
 use Illuminate\Http\Request;
-use App\Models\Request as RequestModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Hash;
 class AdminController extends Controller
 {
-    public function index(Request $req): View
+    public function dashboard()
     {
-        return view('admin.dashboard');
+        $data['franchises'] = Franchises::all();
+        return view('admin.dashboard', $data);
     }
-    
 
+    public function insertFranchises()
+    {
+        return view('admin.insertFranchises');
+    }
     public function adminlogin(Request $req)
     {
-        // if ($req->method() == "POST") {
-        //     $this->validate($req, [
-        //         'email' => 'required|email',
-        //         'password' => 'required',
-        //     ]);
+        if ($req->method() == "POST") {
+            $this->validate($req, [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
 
-          
-        //     $credentials = $req->only('email', 'password');
-        //     if (Auth::guard('admin')->attempt($credentials)) {
-        //         return redirect()->route("admin.panel");
-        //     } else {
-        //         return redirect()->back()->with("alert", "Invalid email or password.");
-        //     }
-        //     dd($credentials);
-        // }
+            $credentials = $req->only('email', 'password');
+            if (Auth::guard('admin')->attempt($credentials)) {
+                return redirect()->route("admin.panel");
+            } else {
+                return redirect()->back()->with("alert", "Invalid email or password.");
+            }
+        }
 
         return view('admin.adminLogin');
     }
 
-
-
-    public function adminlogout(Request $req)
+    public function manageFranchises(Request $request)
     {
-        Auth::guard("admin")->logout();
-        return redirect()->back();
-    }
+        $search = $request->get('search');
 
-    public function staffUpload(Request $request)
-    {
+        $franchises = Franchises::query();
 
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:App\Models\Staff,email|email',
-            'contact' => 'required|integer|unique:App\Models\Staff,contact|digits:10',
-            'salary' => 'required',
-            'type_id' => 'required',
-            'aadhar' => 'required',
-            'pan' => 'required',
-            'address' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => 'required',
-        ]);
-        $data['status'] = 1;
-        if ($request->image != null) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->storeAs('public/images', $imageName);
-            $data['image'] = $imageName;
+        if ($search) {
+            $franchises->where(function ($query) use ($search) {
+                $query->where('franchise_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('contact_no', 'like', '%' . $search . '%')
+                    ->orWhere('state', 'like', '%' . $search . '%')
+                    ->orWhere('city', 'like', '%' . $search . '%');
+            });
         }
-        Staff::create($data);
-        return redirect()->route('admin.staff.manage');
-
+        $franchises = $franchises->get();
+        return view('admin.manageFranchises', compact('franchises', 'search'));
     }
-
-    public function delete($id): RedirectResponse
+    public function storeFranchises(Request $request)
     {
-        Staff::where('id', $id)->delete();
-        return redirect()->route('admin.staff.manage');
-    }
-    public function crmDelete($id): RedirectResponse
-    {
-        Receptioner::where('id', $id)->delete();
-        return redirect()->route('receptioner.showAllreceptioner');
-    }
-
-    public function deleteRequest($id): RedirectResponse
-    {
-        RequestModel::where('id', $id)->delete();
-        return redirect()->route('admin.newRequest.manage');
-    }
-
-    public function manageStaff(Request $req)
-    {
-        $data['staffs'] = Staff::all();
-        return view('admin/manageStaff', $data);
-    }
-
-    public function insertStaff(Request $req)
-    {
-        $data['Types'] = Type::all();
-        return view("admin.insertStaff", $data);
-    }
-
-    public function editStaff($id)
-    {
-        $data = Staff::where('id', $id)->first();
-        return view("admin.editStaff", compact('data'));
-    }
-
-    public function viewStaff($id)
-    {
-        $data = Staff::where('id', $id)->first();
-        return view("admin.viewStaff", compact('data'));
-    }
-
-
-    public function update(Request $req)
-    {
-        $data = $req->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'contact' => 'required',
-            'salary' => 'required',
-            'type_id' => 'required',
-            'aadhar' => 'required',
-            'pan' => 'required',
-            'address' => 'required',
-
+        $validatedData = $request->validate([
+            'franchise_name' => 'required|string|max:255',
+            'contact_no' => 'required|string|unique:franchises|max:15',
+            'email' => 'required|email|unique:franchises|max:255',
+            'password' => 'required|string|min:8',
+            'aadhaar_no' => 'required|string|unique:franchises|max:20',
+            'pan_no' => 'required|string|unique:franchises|max:20',
+            'ifsc_code' => 'required|string|max:20',
+            'branch_name' => 'required|string',
+            'bank_name' => 'required|string',
+            'account_no' => 'required|string|max:20',
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'pincode' => 'required|string|max:10',
+            'state' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'doc' => 'required|date',
+            'status' => 'required|in:Active,Inactive',
         ]);
-        $data['status'] = ($req->status) ? 1 : 0;
-        $id = $req->id;
-        Staff::where('id', $id)->update($data);
-        return redirect()->route('admin.staff.manage');
-    }
+        $pincode = $validatedData['pincode'];
+        $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
 
-
-    public function search(Request $req): View
-    {
-        $search = $req->search;
-        $data = Staff::where('name', 'LIKE', "%$search%")->paginate(8);
-        return view('admin/manageStaff', ['staffs' => $data]);
-    }
-
-    public function searchRequest(Request $req): View
-    {
-        $search = $req->search;
-        $data = RequestModel::where('name', 'LIKE', "%$search%")->paginate(8);
-        return view('admin.newRequest.manage', ['new' => $data]);
-    }
-
-
-
-    public function status(Request $req, Staff $staff)
-    {
-        $staff->status = !$staff->status;
-        $staff->save();
-
-        return redirect()->back();
-
-    }
-
-    public function allnewRequest(Request $req)
-    {
-        $data['new'] = RequestModel::where('technician_id', NULL)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "All New Request";
-        $data['dateFilter'] = "all";
-        return view('admin/allnewRequest', $data);
-    }
-    public function manageRequest()
-    {
-
-        return view('admin.manageRequest');
-    }
-    public function filterRequest(Request $req)
-    {
-        if ($req->search == "all") {
-
-            $data['totalRequest'] = RequestModel::where('technician_id', '<>', null)->paginate(8);
+        if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
+            $pinData = $pinResponse->json()[0]['PostOffice'][0];
+            $validatedData['city'] = $pinData['City'] ?? 'NULL';
+            $validatedData['state'] = $pinData['State'] ?? 'NULL';
+            $validatedData['country'] = $pinData['Country'] ?? 'NULL';
+            $validatedData['district'] = $pinData['District'] ?? 'NULL';
         } else {
-            $data['totalRequest'] = RequestModel::where('technician_id', $req->search)->paginate(8);
-
+            return back()->withErrors(['pincode' => 'Invalid Pincode']);
         }
-        $data['staffs'] = Staff::all();
-        // dd($req->search);
 
-        return view('admin.manageRequest', $data);
+        $ifsc = $validatedData['ifsc_code'];
+        $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
 
-    }
-
-    public function dateFilter(Request $req)
-    {
-        $date = \Carbon\Carbon::createFromFormat('Y-m-d', $req->End);
-        $date->addDays();
-        $formattedDate = $date->format('Y-m-d');
-        $data['new'] = RequestModel::select("*")->whereBetween('created_at', [$req->startAt, $formattedDate])
-            ->paginate(8);
-        $data['title'] = "Date between Request";
-        return view('admin/allnewRequest', $data);
-    }
-    public function filterBySelect(Request $req)
-    {
-        // $date = \Carbon\Carbon::now();
-        // $date->subDays(7);
-        // $formattedDate = $date->format('Y-m-d');
-        // dd($formattedDate);
-        // last month code 
-        // User::whereMonth('created_at', '=', Carbon::now()->subMonth()->month)->get(['name','created_at']);
-
-        $data['dateFilter'] = $req->dateFilter;
-
-
-        switch ($req->dateFilter) {
-            case 'today':
-                $data['new'] = RequestModel::whereDate('created_at', Carbon::today())->paginate(8);
-                $data['title'] = "Today Request";
-
-                break;
-            case 'yesterday':
-                $data['new'] = RequestModel::whereDate('created_at', Carbon::yesterday())->paginate(8);
-                $data['title'] = "yesterday Request";
-                break;
-            case 'this_week':
-                $data['new'] = RequestModel::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->paginate(8);
-                $data['title'] = "This Week Request";
-                break;
-            case 'this_month':
-                $data['new'] = RequestModel::whereMonth('created_at', Carbon::now()->month)->paginate(8);
-                $data['title'] = "This Month Request";
-                break;
-            case 'last_month':
-                $data['new'] = RequestModel::whereMonth('created_at', Carbon::now()->subMonth()->month)->paginate(8);
-                $data['title'] = "Last Month Request";
-                break;
-            case 'this_year':
-                $data['new'] = RequestModel::whereYear('created_at', Carbon::now()->year)->paginate(8);
-                $data['title'] = "This Year Request";
-                break;
-            case 'last_year':
-                $data['new'] = RequestModel::whereYear('created_at', Carbon::now()->subYear()->year)->paginate(8);
-                $data['title'] = "Last Year Request";
-                break;
-
-            default:
-                $data['new'] = RequestModel::all();
-                $data['title'] = "All New Request";
-
-                break;
-
+        if ($response->successful()) {
+            $branchData = $response->json();
+            $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
+            $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
         }
-        return view('admin/allnewRequest', $data);
 
+        $validatedData['password'] = Hash::make($validatedData['password']);
+        // dd($validatedData);
+        Franchises::create($validatedData);
+
+        return redirect()->route('admin.manageFranchises')->with('success', 'Franchise created successfully.');
     }
-    public function filterByInput(Request $req)
+    public function deleteFranchises($id)
     {
-
-        $data['search_value'] = $req->search;
-        $data['new'] = RequestModel::where('owner_name', "LIKE", "%" . $req->search . "%")->paginate(8);
-        $data['title'] = 'Search Record';
-        $data['dateFilter'] = 'All';
-        return view('admin/allnewRequest', $data);
+        $franchise = Franchises::find($id);
+        if (!$franchise) {
+            return redirect()->route('admin.manageFranchises')->with('error', 'Franchise not found.');
+        }
+        $franchise->delete();
+        return redirect()->route('admin.manageFranchises')->with('success', 'Franchise deleted successfully.');
     }
-
-    // show datas 
-    public function confirmedRequest(Request $req)
+    public function editFranchises($id)
     {
-
-        $data['new'] = RequestModel::where('status', 1)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Confirm Requests";
-        return view("admin.requests", $data);
+        $franchise = Franchises::findOrFail($id);
+        return view('admin.editFranchises', compact('franchise'));
     }
-    public function rejectedRequest(Request $req)
+
+    public function updateFranchises(Request $request, $id)
     {
+        $franchise = Franchises::findOrFail($id);
 
-        $data['new'] = RequestModel::where('status', 3)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "rejected Requests";
-        return view("admin.requests", $data);
+        $validatedData = $request->validate([
+            'franchise_name' => 'required|string|max:255',
+            'contact_no' => 'required|string|max:15|unique:franchises,contact_no,' . $franchise->id,
+            'email' => 'required|email|max:255|unique:franchises,email,' . $franchise->id,
+            'password' => 'nullable|string|min:8',
+            'aadhaar_no' => 'required|string|max:20|unique:franchises,aadhaar_no,' . $franchise->id,
+            'pan_no' => 'required|string|max:20|unique:franchises,pan_no,' . $franchise->id,
+            'ifsc_code' => 'required|string|max:20',
+            'branch_name' => 'required|string',
+            'bank_name' => 'required|string',
+            'account_no' => 'required|string|max:20',
+            'street' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'district' => 'required|string|max:255',
+            'pincode' => 'required|string|max:10',
+            'state' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'doc' => 'required|date',
+            'status' => 'required|in:Active,Inactive',
+
+        ]);
+
+        $pincode = $validatedData['pincode'];
+        $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
+
+        if ($pinResponse->successful() && isset($pinResponse->json()[0]['PostOffice'][0])) {
+            $pinData = $pinResponse->json()[0]['PostOffice'][0];
+            $validatedData['city'] = $pinData['City'] ?? 'NULL';
+            $validatedData['state'] = $pinData['State'] ?? 'NULL';
+            $validatedData['country'] = $pinData['Country'] ?? 'NULL';
+            $validatedData['district'] = $pinData['District'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['pincode' => 'Invalid Pincode']);
+        }
+
+        $ifsc = $validatedData['ifsc_code'];
+        $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
+
+        if ($response->successful()) {
+            $branchData = $response->json();
+            $validatedData['branch_name'] = $branchData['BRANCH'] ?? 'NULL';
+            $validatedData['bank_name'] = $branchData['BANK'] ?? 'NULL';
+        } else {
+            return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
+        }
+
+        // Hash password only if provided
+        if ($request->filled('password')) {
+            $validatedData['password'] = Hash::make($request->password);
+        } else {
+            unset($validatedData['password']);
+        }
+
+        $franchise->update($validatedData);
+
+        return redirect()->route('admin.manageFranchises')
+            ->with('success', 'franchise updated successfully');
     }
-    public function pendingRequest(Request $req)
+
+
+    public function viewFranchises($id)
     {
-
-        $data['new'] = RequestModel::where('status', 0)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "pending Requests";
-        return view("admin.requests", $data);
+        $franchise = Franchises::findOrFail($id);
+        return view('admin.viewFranchises', compact('franchise'));
     }
-    public function deliveredRequest(Request $req)
-    {
-
-        $data['new'] = RequestModel::where('status', 5)
-            ->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Delivered Requests";
-        return view("admin.requests", $data);
-    }
-
-    // show Work Done Request
-    public function workDoneRequests()
-    {
-
-        $data['new'] = RequestModel::where('status', 4)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total WorkDoneRequests";
-        return view("admin.requests", $data);
-
-    }
-    public function globalSearch(Request $req)
-    {
-        $data['search_value'] = "";
-        $data['new'] = RequestModel::where('service_code', "LIKE", "%" . $req->search . "%")
-            ->orWhere('contact', 'like', '%' . $req->search . '%')
-            ->orWhere('owner_name', 'like', '%' . $req->search . '%')->paginate(8);
-        $data['title'] = 'Search Record';
-        $data['dateFilter'] = 'All';
-        return view('admin/requests', $data);
-    }
-
-    public function messages()
-    {
-        $data['touch_with_us'] = touch_with_us::paginate(10);
-        return view('admin.messages', $data);
-    }
-    public function messagesRead($id)
-    {
-        $item = touch_with_us::where('id', $id)->first();
-        $item->isRead = 1;
-        $item->save();
-        return view('admin.messagesView', compact("item"));
-
-    }
-
 
 
 }

@@ -31,7 +31,7 @@
 
 <div class="login-box">
     <div class="login-logo">
-      <a href=""><b>Admin</b>Login</a>
+      <a href=""><b>Franchise</b>Login</a>
     </div>
     <!-- /.login-logo -->
     <div class="card">

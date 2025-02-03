@@ -1,4 +1,4 @@
-@extends('superadmin.layout')
+@extends('admin.layout')
 @section('title', 'Create Franchise')
 @section('content')
 
@@ -49,7 +49,7 @@
                 </ol>
             </div>
 
-            <form action="{{ route('franchises.store') }}" method="POST"
+            <form action="{{ route('admin.store') }}" method="POST"
                 class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
                 @csrf
                 <div id="step-1" class="step-content">
