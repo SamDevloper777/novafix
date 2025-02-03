@@ -267,7 +267,7 @@ class FranchiseController extends Controller
 
     public function manageStaff(Request $req)
     {
-        $data['staffs'] = Staff::where('franchise_id', Auth::id())->get();
+        $data['staffs'] = Staff::where('franchise_id', Auth::guard('franchise')->id())->get();
         return view('franchises/manageStaff', $data);
     }
 
