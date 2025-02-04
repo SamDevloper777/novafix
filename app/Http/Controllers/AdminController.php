@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Franchises;
+use App\Models\Staff;
 use Hash;
 use Http;
 use Illuminate\Http\Request;
@@ -193,5 +194,26 @@ class AdminController extends Controller
         return view('admin.viewFranchises', compact('franchise'));
     }
 
-
+    public function manageStaffs(Request $request)
+    {
+        $search = $request->get('search');    
+    
+        $staffQuery = Staff::query();
+    
+        if ($search) {
+            $staffQuery->where(function ($query) use ($search) {
+                $query->where('staff.name', 'like', '%' . $search . '%')
+                    ->orWhere('staff.email', 'like', '%' . $search . '%')
+                    ->orWhere('staff.contact', 'like', '%' . $search . '%')
+                    ->orWhereHas('franchise', function ($query) use ($search) {
+                        $query->where('franchise_name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+    
+        $data['staffs'] = $staffQuery->get();
+    
+        return view('admin.manageStaff', $data);
+    }
+    
 }

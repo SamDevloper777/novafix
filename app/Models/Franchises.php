@@ -30,4 +30,8 @@ class Franchises extends Authenticatable
         'doc',
         'status',
     ];
+    public function staffs()
+    {
+        return $this->hasMany(Staff::class);
+    }
 }
