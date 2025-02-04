@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Mail\FranchiseCreated;
 use App\Models\Franchises;
 use App\Models\Staff;
 use Hash;
@@ -8,6 +9,7 @@ use Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Mail;
 class AdminController extends Controller
 {
     public function dashboard()
@@ -59,6 +61,7 @@ class AdminController extends Controller
     }
     public function storeFranchises(Request $request)
     {
+        // Validate the request data
         $validatedData = $request->validate([
             'franchise_name' => 'required|string|max:255',
             'contact_no' => 'required|string|unique:franchises|max:15',
@@ -79,6 +82,8 @@ class AdminController extends Controller
             'doc' => 'required|date',
             'status' => 'required|in:Active,Inactive',
         ]);
+
+        // Handling the pincode to get location details
         $pincode = $validatedData['pincode'];
         $pinResponse = Http::get("https://api.postalpincode.in/pincode/{$pincode}");
 
@@ -92,6 +97,7 @@ class AdminController extends Controller
             return back()->withErrors(['pincode' => 'Invalid Pincode']);
         }
 
+        // Handling IFSC to get bank details
         $ifsc = $validatedData['ifsc_code'];
         $response = Http::get("https://ifsc.razorpay.com/{$ifsc}");
 
@@ -103,12 +109,17 @@ class AdminController extends Controller
             return back()->withErrors(['ifsc_code' => 'Invalid IFSC Code']);
         }
 
+        // Inside the controller method
         $validatedData['password'] = Hash::make($validatedData['password']);
-        // dd($validatedData);
-        Franchises::create($validatedData);
+        
+        $franchise = Franchises::create($validatedData); 
+
+        Mail::to($franchise->email)->send(new FranchiseCreated($franchise));
+
 
         return redirect()->route('admin.manageFranchises')->with('success', 'Franchise created successfully.');
     }
+
     public function deleteFranchises($id)
     {
         $franchise = Franchises::find($id);
@@ -196,11 +207,11 @@ class AdminController extends Controller
 
     public function manageStaffs(Request $request)
     {
-        $search = $request->get('search');    
-        $franchise_id = $request->get('franchise_id');    
-    
+        $search = $request->get('search');
+        $franchise_id = $request->get('franchise_id');
+
         $staffQuery = Staff::query();
-    
+
         if ($search) {
             $staffQuery->where(function ($query) use ($search) {
                 $query->where('staff.name', 'like', '%' . $search . '%')
@@ -216,8 +227,8 @@ class AdminController extends Controller
         }
         $data['staffs'] = $staffQuery->get();
         $data['franchises'] = Franchises::all();
-    
+
         return view('admin.manageStaff', $data);
     }
-    
+
 }
