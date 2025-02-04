@@ -197,6 +197,7 @@ class AdminController extends Controller
     public function manageStaffs(Request $request)
     {
         $search = $request->get('search');    
+        $franchise_id = $request->get('franchise_id');    
     
         $staffQuery = Staff::query();
     
@@ -210,8 +211,11 @@ class AdminController extends Controller
                     });
             });
         }
-    
+        if ($franchise_id) {
+            $staffQuery->where('franchise_id', $franchise_id);
+        }
         $data['staffs'] = $staffQuery->get();
+        $data['franchises'] = Franchises::all();
     
         return view('admin.manageStaff', $data);
     }
