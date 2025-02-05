@@ -1,4 +1,4 @@
-@extends('admin.layout.base')
+@extends('franchises.layout.base')
 @section('title')
     Touch with us request 
 @endsection
@@ -16,7 +16,7 @@
                     <th>id</th>
                     <th>Name</th>
                     <th>Contact</th>
-    
+
                     <th>Email</th>
                     <th>Refferal</th>
                 </tr>
@@ -55,21 +55,7 @@
                                              </div>
                                             @endif
                                         </div>
-                                        <div class="modal-body">
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+                                        <div class="modal-body"> 
                                             {{-- <div class="flex-row col-12">
                                                 <table class="table">
                                                     <tr>
