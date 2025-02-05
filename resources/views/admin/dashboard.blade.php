@@ -160,18 +160,26 @@
                                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <td class="px-3 py-4">
                                         <div class="flex items-center space-x-3">
-                                            <div class="font-medium text-gray-900 dark:text-white">{{$item->franchise_name}}</div>
+                                            <div class="font-medium text-gray-900 dark:text-white">{{$item->franchise_name}}
+                                            </div>
                                         </div>
 
                                     </td>
                                     <td class="px-3 py-4 ">{{$item->district}}</td>
-                                    <td class="px-3 py-4">
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                            <span class="w-2 h-2 mr-1 bg-green-500 rounded-full"></span>
-                                            {{$item->status}}
-                                        </span>
+                                    <td>
+                                        <form action="{{ route('admin.toggleStatus', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+
+                                            <!-- Button with dynamic classes based on the current status -->
+                                            <button type="submit"
+                                                class="p-2 rounded text-white {{ $item->status === 'Active' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' }}">
+                                                {{ $item->status === 'Active' ? 'Deactivate' : 'Activate' }}
+                                            </button>
+                                        </form>
                                     </td>
+
+
                                     <td class="px-3 py-4">
                                         Rs.4500
                                     </td>

@@ -52,8 +52,9 @@ Route::controller(RequestController::class)->group(function () {
 
 Route::prefix('admin')->group(function () {
     Route::match(['get', 'post'], '/login', [AdminController::class, 'adminlogin'])->name('admin.login');
+    
     Route::middleware('auth:admin')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.panel');
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.panel'); // Name is admin.panel
         Route::get('/insert-franchises', [AdminController::class, 'insertFranchises'])->name('admin.insertFranchises');
         Route::get('/manage-franchises', [AdminController::class, 'manageFranchises'])->name('admin.manageFranchises');
         Route::post('/store-franchises', [AdminController::class, 'storeFranchises'])->name('admin.store');
@@ -63,8 +64,12 @@ Route::prefix('admin')->group(function () {
         Route::get('/view-franchises/{id}', [AdminController::class, 'viewFranchises'])->name('admin.view');
         Route::get('/manageStaffs', [AdminController::class, 'manageStaffs'])->name('admin.manageStaff');
         Route::get('/manageReceptioners', [AdminController::class, 'manageReceptioners'])->name('admin.manageReceptioner');
+        Route::patch('/dashboard/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggleStatus');
+        Route::patch('/manage-franchises/{id}/toggle-status', [AdminController::class, 'managetoggleStatus'])->name('admin.mangaetoggleStatus');
+
     });
 });
+
 
 Route::prefix("staff")->group(function () {
     Route::controller(StaffController::class)->group(function () {

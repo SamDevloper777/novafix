@@ -5,6 +5,7 @@ use App\Mail\FranchiseCreated;
 use App\Models\Franchises;
 use App\Models\Receptioner;
 use App\Models\Staff;
+use App\Services\FranchiseService;
 use DB;
 use Hash;
 use Http;
@@ -14,6 +15,8 @@ use Illuminate\View\View;
 use Mail;
 class AdminController extends Controller
 {
+    protected $franchiseService;
+
     public function dashboard()
     {
         $counts = DB::select("
@@ -28,6 +31,19 @@ class AdminController extends Controller
 
         return view('admin.dashboard', $data);
     }
+
+    public function __construct(FranchiseService $franchiseService)
+    {
+        $this->franchiseService = $franchiseService;
+    }
+
+    public function toggleStatus($id)
+    {
+        $newStatus = $this->franchiseService->toggleStatus($id);
+
+        return redirect()->route('admin.panel')->with('success', "Status updated to $newStatus.");
+    }
+
 
 
     public function insertFranchises()
@@ -72,6 +88,14 @@ class AdminController extends Controller
         $franchises = $franchises->get();
         return view('admin.manageFranchises', compact('franchises', 'search'));
     }
+
+    public function managetoggleStatus($id, FranchiseService $franchiseService)
+{
+    $newStatus = $franchiseService->toggleStatus($id);
+
+    return redirect()->route('admin.manageFranchises')->with('success', "Status updated to $newStatus.");
+}
+
     public function storeFranchises(Request $request)
     {
         // Validate the request data
