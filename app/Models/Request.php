@@ -21,8 +21,11 @@ class Request extends Model
         return $this->HasOne(Staff::class, "id", "technician_id");
     }
 
-  
-
+    public function receptionist()
+    {
+        return $this->belongsTo(Receptioner::class, 'reciptionist_id'); 
+    }
+    
     public function getStatus()
     {
         $status = $this->status;
