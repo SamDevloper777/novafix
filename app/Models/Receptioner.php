@@ -21,4 +21,9 @@ class Receptioner extends Authenticatable
     public function type():HasOne{
         return $this->HasOne(Type::class,"id","type_id");
     }
+
+    public function franchise()
+    {
+        return $this->belongsTo(Franchises::class);
+    }
 }

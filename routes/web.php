@@ -62,6 +62,7 @@ Route::prefix('admin')->group(function () {
         Route::put('/update-franchises/{id}', [AdminController::class, 'updateFranchises'])->name('admin.update');
         Route::get('/view-franchises/{id}', [AdminController::class, 'viewFranchises'])->name('admin.view');
         Route::get('/manageStaffs', [AdminController::class, 'manageStaffs'])->name('admin.manageStaff');
+        Route::get('/manageReceptioners', [AdminController::class, 'manageReceptioners'])->name('admin.manageReceptioner');
     });
 });
 

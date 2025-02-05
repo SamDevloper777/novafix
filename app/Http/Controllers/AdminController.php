@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use App\Mail\FranchiseCreated;
 use App\Models\Franchises;
+use App\Models\Receptioner;
 use App\Models\Staff;
+use DB;
 use Hash;
 use Http;
 use Illuminate\Http\Request;
@@ -14,9 +16,19 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $data['franchises'] = Franchises::all();
+        $counts = DB::select("
+            SELECT 
+                (SELECT COUNT(*) FROM franchises) AS franchiseCount,
+                (SELECT COUNT(*) FROM staff) AS staffCount,
+                (SELECT COUNT(*) FROM receptioners) AS receptionerCount
+        ");
+
+        $data['franchises'] = Franchises::paginate(10);
+        $data['counts'] = (object) $counts[0];
+
         return view('admin.dashboard', $data);
     }
+
 
     public function insertFranchises()
     {
@@ -40,6 +52,7 @@ class AdminController extends Controller
 
         return view('admin.adminLogin');
     }
+
 
     public function manageFranchises(Request $request)
     {
@@ -111,8 +124,8 @@ class AdminController extends Controller
 
         // Inside the controller method
         $validatedData['password'] = Hash::make($validatedData['password']);
-        
-        $franchise = Franchises::create($validatedData); 
+
+        $franchise = Franchises::create($validatedData);
 
         Mail::to($franchise->email)->send(new FranchiseCreated($franchise));
 
@@ -229,6 +242,32 @@ class AdminController extends Controller
         $data['franchises'] = Franchises::all();
 
         return view('admin.manageStaff', $data);
+    }
+    public function manageReceptioners(Request $request)
+    {
+
+        $search = $request->get('search');
+        $franchise_id = $request->get('franchise_id');
+
+        $receptionerQuery = Receptioner::query();
+        if ($search) {
+            $receptionerQuery->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('contact', 'like', '%' . $search . '%')
+                    ->orWhereHas('franchise', function ($query) use ($search) {
+                        $query->where('franchise_name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        if ($franchise_id) {
+            $receptionerQuery->where('franchise_id', $franchise_id);
+        }
+
+        $receptioners = $receptionerQuery->get();
+        $franchises = Franchises::all();
+        return view('admin.manageReceptioner', compact('receptioners', 'search', 'franchise_id', 'franchises'));
     }
 
 }

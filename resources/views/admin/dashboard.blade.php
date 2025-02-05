@@ -31,7 +31,7 @@
                 </div>
 
                 <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                    Total Franchises
+                    Total Franchises ({{$counts->franchiseCount}})
                 </h5>
 
                 <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
@@ -72,7 +72,7 @@
                 </div>
 
                 <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                    Total Staff
+                    Total Staff ({{$counts->staffCount}})
                 </h5>
 
                 <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
@@ -113,7 +113,7 @@
                 </div>
 
                 <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
-                    Total Receptioner
+                    Total Receptioner ({{$counts->receptionerCount}})
                 </h5>
 
                 <p class="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
