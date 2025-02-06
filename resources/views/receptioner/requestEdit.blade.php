@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="w-full px-3 mb-5 col">
-                        <label for="" class="text-black-100">Product Name</label>
+                        <label for="" class="text-black-100">Model Name</label>
                         <div class="flex">
                             <input type="text" name="product_name" value="{{ $data->product_name }}" class="form-control"
                                 readonly>

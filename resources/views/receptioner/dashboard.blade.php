@@ -75,7 +75,7 @@
                             <tr>
                                 <th>S CODE</th>
                                 <th>owner_name</th>
-                                <th>product_name</th>
+                                <th>model_name</th>
                                 <th>Contact</th>
                                 <th>color</th>
                                 <th>brand</th>

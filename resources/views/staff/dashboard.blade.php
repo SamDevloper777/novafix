@@ -111,7 +111,7 @@
                       <thead>
                           <tr>
                               <th>S CODE</th>
-                              <th>product_name</th>
+                              <th>Model_name</th>
                               <th>problem</th>
                               
                               <th>Action</th>

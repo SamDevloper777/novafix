@@ -42,7 +42,13 @@ class RequestController extends Controller
            $data['service_code'] = $service_code;
 
         //    dd($data);
-        
+        $previousRequest = RequestModel::where('owner_name', $data['owner_name'])
+            ->orWhere('email', $data['email'])
+            ->first();
+
+        if ($previousRequest) {
+            $data['contact'] = $previousRequest->contact;
+        } 
 
         RequestModel::create($data);
         // return redirect()->route('flashMsg');

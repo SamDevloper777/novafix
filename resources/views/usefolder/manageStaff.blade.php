@@ -528,7 +528,8 @@
                                                                             </path>
                                                                         </g>
                                                                     </svg></span>Type</label>
-                                                            <h5>{{ $item->type_id }}</h5>
+                                                            <h5>{{ $item->type_id}}</h5>                                                            
+                                                            {{dd($item->type_id)}}
                                                         </div>
                                                         <div class="border border-dark p-1 text-center ">
                                                             <label for="">

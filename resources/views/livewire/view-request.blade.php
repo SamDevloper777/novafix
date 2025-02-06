@@ -32,7 +32,7 @@
 
                         <th>Service code</th>
                         <th>Owner name</th>
-                        <th>Product name</th>
+                        <th>Model name</th>
 
                         <th>Contact</th>
                         <th>Type</th>
@@ -87,7 +87,7 @@
                                                             <td>{{ $item->owner_name }}</td>
                                                         </tr>
                                                         <tr>
-                                                            <th>Product Name</th>
+                                                            <th>Model Name</th>
                                                             <td>{{ $item->product_name }}</td>
                                                         </tr>
                                                         <tr>
