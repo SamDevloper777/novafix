@@ -21,7 +21,7 @@
                             @enderror
                         </div>
                         <div class="mb-3 col-12 col-md-6">
-                            <label for="" class="text-xs font-semibold px-1">Product Name</label>
+                            <label for="" class="text-xs font-semibold px-1">Model Name</label>
                             <input type="text" name="product_name" class="form-control">
                             @error('product_name')
                                 <p class="text-danger small">{{ $message }}</p>

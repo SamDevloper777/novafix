@@ -34,4 +34,9 @@ class Franchises extends Authenticatable
     {
         return $this->hasMany(Staff::class);
     }
+    public function requests()
+{
+    return $this->hasMany(Request::class, 'franchise_id');
+}
+
 }

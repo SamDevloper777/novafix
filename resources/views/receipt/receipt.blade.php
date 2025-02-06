@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
-    </script>
+        </script>
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     <!-- Google Font: Source Sans Pro -->
@@ -69,7 +69,7 @@
                                 <div class="col-md-12">
                                     <div class="text-center">
                                         <h1 class="fw-bold text-dark">NovaFix</h1>
-                                            servicxteam@gmail.com</p>
+                                        Fixing Today, Securing Tomorrow!</p>
                                     </div>
                                 </div>
 
@@ -81,7 +81,7 @@
                                                     style="color:#5d9fc5 ;">{{ $item->owner_name }}</span>
                                             </li>
                                             {{-- <li class="text-muted">Street, City</li>
-                        <li class="text-muted">State, Country</li> --}}
+                                            <li class="text-muted">State, Country</li> --}}
                                             <li class="text-muted"><i class="fas fa-phone"></i> {{ $item->contact }}
                                             </li>
                                             <li class="text-muted"><i class="bi bi-envelope"></i> {{ $item->email }}
@@ -90,31 +90,45 @@
                                         </ul>
                                     </div>
                                     <div class="col-md-4">
-                                        {{-- <p class="text-muted"></p> --}}
                                         <ul class="list-unstyled">
-                                            <li class="text-muted"><i class="fas fa-map-marker"
-                                                    style="color:#84B0CA ;"></i> <span class="fw-bold">NovaFix</span>
-                                                <br>
-                                                Zila School Road, Near BSNL tower, <br> Purnea (Bihar) - 854301
+                                            <li class="text-muted">
+                                                <i class="fas fa-map-marker" style="color:#84B0CA;"></i>
+                                                <span class="fw-bold">NovaFix</span> <br>
+
+                                                @if ($item->receptionist?->franchise)
+                                                    {{ $item->receptionist->franchise->franchise_name }} <br>
+                                                    {{ $item->receptionist->franchise->street }}, <br>
+                                                    {{ $item->receptionist->franchise->city }}
+                                                    ({{ $item->receptionist->franchise->district }}),
+                                                    {{ $item->receptionist->franchise->state }} -
+                                                    {{ $item->receptionist->franchise->pincode }} <br>
+                                                @else
+                                                    <span class="text-danger">Franchise details not available</span>
+                                                @endif
                                             </li>
-                                            <li class="text-muted"><i class="fas fa-phone" style="color:#84B0CA ;"></i>
-                                                <span class="fw-bold">(+91) 7856802002</span>
+
+                                            <li class="text-muted">
+                                                <i class="fas fa-phone" style="color:#84B0CA;"></i>
+                                                <span class="fw-bold">
+                                                    {{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}
+                                                </span>
                                             </li>
-                                            <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i>
-                                                <span class="fw-bold">Creation
-                                                    Date:
-                                                </span>{{ date('d M Y', strtotime($item->created_at)) }}
+
+                                            <li class="text-muted">
+                                                <i class="fas fa-envelope" style="color:#84B0CA;"></i>
+                                                <span class="fw-bold">
+                                                    {{ $item->receptionist->franchise?->email ?? 'N/A' }}
+                                                </span>
                                             </li>
-                                            {{-- <li class="text-muted"><i
-                                                    class="fas fa-circle"
-                                                    style="color:#84B0CA ;"></i>
-                                                <span
-                                                    class="me-1 fw-bold">Status:</span><span
-                                                    class="badge bg-warning text-black fw-bold">
-                                                    {{}}</span>
-                                            </li> --}}
+
+                                            <li class="text-muted">
+                                                <i class="fas fa-circle" style="color:#84B0CA;"></i>
+                                                <span class="fw-bold">Creation Date:</span>
+                                                {{ date('d M Y', strtotime($item->created_at)) }}
+                                            </li>
                                         </ul>
                                     </div>
+
                                 </div>
 
                                 <div class="row my-2 mx-1 justify-content-center">
@@ -156,17 +170,20 @@
                                                 <td class="text-uppercase">{{ $item->product_name }}</td>
                                                 <th scope="col">Est Delivery Date</th>
                                                 <td class="text-uppercase">
-                                                    {{ date('d M Y', strtotime($item->estimate_delivery)) }}</td>
+                                                    {{ date('d M Y', strtotime($item->estimate_delivery)) }}
+                                                </td>
 
                                             </tr>
                                             <tr>
                                                 <th scope="col">Status</th>
                                                 <td class="text-uppercase ">
                                                     <span class="font-weight-bold   rounded px-2 py-1
-                            " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span></td>
+                            " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span>
+                                                </td>
                                                 <th scope="col">Remark</th>
                                                 <td class="text-uppercase">
-                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}</td>
+                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}
+                                                </td>
 
                                             </tr>
                                         </tbody>
@@ -184,24 +201,32 @@
                                                     class="text-black me-4">SubTotal</span>$1110
                                             </li>
                                             <li class="text-muted ms-3 mt-2">
-                                                <span
-                                                    class="text-black me-4">Tax(15%)</span>$111
+                                                <span class="text-black me-4">Tax(15%)</span>$111
                                             </li>
                                         </ul>
-                                        <p class="text-black float-start"><span
-                                                class="text-black me-3"> Total
-                                                Amount</span><span
-                                                style="font-size: 25px;">$1221</span>
+                                        <p class="text-black float-start"><span class="text-black me-3"> Total
+                                                Amount</span><span style="font-size: 25px;">$1221</span>
                                         </p>
                                     </div> --}}
                                 </div>
                                 <hr>
-                                <div class="row">
+                                <div class="flex justify-content-between row">
                                     <div class="col-xl-10">
-                                        <p>Thank you for your visiting</p>
+                                        <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                     </div>
-                                    <div class="col-xl-2 mt-4">
-                                        <h6>Sign & Stamp</h6>
+                                    <div class="col-xl-10">
+                                        <p>For a 6-month warranty, GST payment is required.</p>
+                                    </div>
+                                    <div class="col-xl-10">
+                                        <p>Track your order status:
+                                            <a href="{{ route('track.order', ['service_code' => $item->service_code]) }}"
+                                                class="fw-bold text-primary">
+                                                Track Now
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="col-xl-2">
+                                        <h6>Authorized Sign & Stamp</h6>
                                     </div>
                                 </div>
 
@@ -244,13 +269,14 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
-    {{-- <script src="{{ asset("dist/js/demo.js") }}"></script> --}}
+    {{--
+    <script src="{{ asset(" dist/js/demo.js") }}"></script> --}}
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('js/printThis.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
-    </script>
+        </script>
 </body>
 
 </html>

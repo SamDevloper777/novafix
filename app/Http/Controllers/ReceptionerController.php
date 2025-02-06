@@ -45,54 +45,64 @@ class ReceptionerController extends Controller
     }
 
     public function requestForm(Request $req)
-    {
-        if ($req->method() == 'POST') {
-            $receptionerId = Auth::guard('receptioner')->id();
-            $date = \Carbon\Carbon::now();
-            $service_code = Str::random(6);
+{
+    if ($req->method() == 'POST') {
+        $receptionerId = Auth::guard('receptioner')->id();
+        $date = \Carbon\Carbon::now();
+        $service_code = Str::random(6);
 
-            $data = $req->validate([
-                'owner_name' => 'required',
-                'product_name' => 'required',
-                'email' => 'required',
-                'contact' => 'required',
-                'type_id' => 'required',
-                'brand' => 'required',
-                'color' => 'required',
-                'problem' => 'required',
-                'serial_no' => 'required',
-                'MAC' => 'required',
+        // Validate the form data
+        $data = $req->validate([
+            'owner_name' => 'required',
+            'product_name' => 'required',
+            'email' => 'nullable',
+            'contact' => 'required',
+            'type_id' => 'required',
+            'brand' => 'required',
+            'color' => 'required',
+            'problem' => 'required',
+            'serial_no' => 'required',
+            'MAC' => 'nullable',
+        ]);
 
-            ]);
+        $previousRequest = RequestModel::where('owner_name', $data['owner_name'])
+            ->orWhere('email', $data['email'])
+            ->first();
 
-            $data['service_code'] = $service_code;
-            $data['date_of_delivery'] = $date;
-            $data['reciptionist_id'] = $receptionerId;
-            if ($req->image != null) {
-                $img = $req->image;
-                $folderPath = "uploads/";
-
-                $image_parts = explode(";base64,", $img);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-
-                $image_base64 = base64_decode($image_parts[1]);
-                $fileName = uniqid() . '.png';
-
-                $file = $folderPath . $fileName;
-                Storage::put($file, $image_base64);
-                // dd($fileName);
-                $data['image'] = $fileName;
-            }
-
-            RequestModel::create($data);
-
-            return redirect()->route("receptioner.all.request");
-
+        if ($previousRequest) {
+            $data['contact'] = $previousRequest->contact;
         }
-        return view('receptioner.requestForm');
 
+        // Generate service code and other info
+        $data['service_code'] = $service_code;
+        $data['date_of_delivery'] = $date;
+        $data['reciptionist_id'] = $receptionerId;
+
+        // Handle image upload if available
+        if ($req->image != null) {
+            $img = $req->image;
+            $folderPath = "uploads/";
+
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid() . '.png';
+
+            $file = $folderPath . $fileName;
+            Storage::put($file, $image_base64);
+            $data['image'] = $fileName;
+        }
+
+        RequestModel::create($data);
+
+        return redirect()->route("receptioner.all.request");
     }
+
+    return view('receptioner.requestForm');
+}
+
 
     public function allnewRequest()
     {

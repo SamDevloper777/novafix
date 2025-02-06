@@ -23,7 +23,7 @@
                     @enderror
                 </div>
                 <div class="mb-3 px-3 col">
-                    <label for="product_name" class="text-black-100">Product Name</label>
+                    <label for="product_name" class="text-black-100">Model Name</label>
                     <input type="text" name="product_name" class="form-control" value="{{old('product_name')}}">
                     @error('product_name')
                         <p class="text-danger small">{{ $message }}</p>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="mb-3 px-3 col">
                     <label for="contact" class="text-black-100">Contact</label>
-                    <input type="number" name="contact" class="form-control" value="{{old('contact')}}">
+                    <input type="number" name="contact" class="form-control" value="{{ old('contact', $previousRequest->contact ?? '') }}">
                     @error('contact')
                         <p class="text-danger small">{{ $message }}</p>
                     @enderror
