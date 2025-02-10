@@ -16,15 +16,7 @@
                             </svg>
                         </div>
 
-                        <!-- Percentage Badge -->
-                        <div class="flex items-center px-2 py-1 sm:px-3 sm:py-1 bg-green-100 rounded-full">
-                            <svg class="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mr-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13V1m0 0L1 5m4-4 4 4" />
-                            </svg>
-                            <span class="text-xs sm:text-sm font-medium text-green-600">12%</span>
-                        </div>
+                      
                     </div>
 
                     <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900">
@@ -56,16 +48,7 @@
                             </svg>
                         </div>
 
-                        <!-- Percentage Badge -->
-                        <div
-                            class="flex items-center px-2 py-1 sm:px-3 sm:py-1 bg-green-100 rounded-full">
-                            <svg class="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mr-1" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13V1m0 0L1 5m4-4 4 4" />
-                            </svg>
-                            <span class="text-xs sm:text-sm font-medium text-green-600">55%</span>
-                        </div>
+                       
                     </div>
 
                     <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900">
@@ -97,15 +80,7 @@
                         </svg>
                     </div>
             
-                    <!-- Percentage Badge -->
-                    <div class="flex items-center px-2 py-1 sm:px-3 sm:py-1 bg-green-100 rounded-full">
-                        <svg class="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 10 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M5 13V1m0 0L1 5m4-4 4 4" />
-                        </svg>
-                        <span class="text-xs sm:text-sm font-medium text-green-600">78%</span>
-                    </div>
+                    
                 </div>
             
                 <h5 class="mb-1 sm:mb-2 text-xl sm:text-2xl font-bold text-gray-900">
@@ -129,124 +104,47 @@
                 <!-- Repeat other cards (same structure) -->
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                <div class="md:col-span-2 bg-white rounded-lg shadow-sm p-4">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-                        <div class="w-full md:w-auto">Recent Franchises</div>
-                    </div>
-            
-                    <div class="overflow-x-auto rounded-lg">
-                        <table class="w-full text-sm text-left text-gray-500">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" class="px-3 py-3">Franchise</th>
-                                    <th scope="col" class="px-3 py-3">Location</th>
-                                    <th scope="col" class="px-3 py-3">Status</th>
-                                    <th scope="col" class="px-3 py-3">Revenue</th>
-                                </tr>
-                            </thead>
-                            @foreach ($franchises as $item)
-                            <tbody>
-                                <tr class="bg-white border-b hover:bg-gray-50">
-                                    <td class="px-3 py-4">
-                                        <div class="flex items-center space-x-3">
-                                            <div class="font-medium text-gray-900">{{ $item->franchise_name }}</div>
-                                        </div>
-                                    </td>
-                                    <td class="px-3 py-4">{{ $item->district }}</td>
-                                    <td>
-                                        <form action="{{ route('admin.toggleStatus', $item->id) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit"
-                                                class="p-2 rounded text-white {{ $item->status === 'Active' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' }}">
-                                                {{ $item->status === 'Active' ? 'Deactivate' : 'Activate' }}
-                                            </button>
-                                        </form>
-                                    </td>
-                                    <td class="px-3 py-4">Rs.4500</td>
-                                </tr>
-                            </tbody>
-                            @endforeach
-                        </table>
-                    </div>
-                </div>
-            
-                <div class="max-w-sm w-full bg-white rounded-lg shadow-sm p-4 md:p-6">
-                    <div class="flex justify-between items-start w-full">
-                        <div class="flex-col items-center">
-                            <div class="flex items-center mb-1">
-                                <h5 class="text-xl font-bold leading-none text-gray-900 me-1">Website traffic</h5>
-                                <svg class="w-3.5 h-3.5 text-gray-500 hover:text-gray-900 cursor-pointer ms-1" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path
-                                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm0 16a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm1-5.034V12a1 1 0 0 1-2 0v-1.418a1 1 0 0 1 1.038-.999 1.436 1.436 0 0 0 1.488-1.441 1.501 1.501 0 1 0-3-.116.986.986 0 0 1-1.037.961 1 1 0 0 1-.96-1.037A3.5 3.5 0 1 1 11 11.466Z" />
-                                </svg>
+            <div class="w-full grid md:grid-cols-2  gap-4 mb-4">
+    <div class="md:col-span-2 bg-white rounded-lg shadow-sm p-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+            <div class="w-full md:w-auto">Recent Franchises</div>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-3 py-3">Franchise</th>
+                        <th scope="col" class="px-3 py-3">Location</th>
+                        <th scope="col" class="px-3 py-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($franchises as $item)
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-3 py-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="font-medium text-gray-900">{{ $item->franchise_name }}</div>
                             </div>
-                            <button id="dateRangeButton" data-dropdown-toggle="dateRangeDropdown" type="button"
-                                class="inline-flex items-center text-blue-700 font-medium hover:underline">31 Nov - 31 Dev <svg
-                                    class="w-3 h-3 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-            
-                    <div class="py-6" id="pie-chart"></div>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-center h-48 mb-4 rounded-sm bg-gray-50">
-                <p class="text-2xl text-gray-400">
-                    <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 18 18">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 1v16M1 9h16" />
-                    </svg>
-                </p>
-            </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28">
-                    <p class="text-2xl text-gray-400">
-                        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
-                </div>
-                <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28">
-                    <p class="text-2xl text-gray-400">
-                        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
-                </div>
-                <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28">
-                    <p class="text-2xl text-gray-400">
-                        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
-                </div>
-                <div class="flex items-center justify-center rounded-sm bg-gray-50 h-28">
-                    <p class="text-2xl text-gray-400">
-                        <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 18 18">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 1v16M1 9h16" />
-                        </svg>
-                    </p>
-                </div>
-            </div>
-            
-
+                        </td>
+                        <td class="px-3 py-4">{{ $item->district }}</td>
+                        <td class="px-3 py-4">
+                            <form action="{{ route('admin.toggleStatus', $item->id) }}" method="POST">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                    class="p-2 rounded text-white {{ $item->status === 'Active' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600' }}">
+                                    {{ $item->status === 'Active' ? 'Deactivate' : 'Activate' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
         </div>

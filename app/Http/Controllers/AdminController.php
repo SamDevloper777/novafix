@@ -46,28 +46,31 @@ class AdminController extends Controller
 
 
 
-    public function insertFranchises()
-    {
-        return view('admin.insertFranchises');
-    }
     public function adminlogin(Request $req)
     {
+        // Check if the user is already logged in as an admin
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route("admin.panel"); // Redirect to dashboard if already logged in
+        }
+    
         if ($req->method() == "POST") {
             $this->validate($req, [
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-
+    
             $credentials = $req->only('email', 'password');
+    
             if (Auth::guard('admin')->attempt($credentials)) {
-                return redirect()->route("admin.panel");
+                return redirect()->route("admin.panel"); // Redirect to dashboard if login successful
             } else {
                 return redirect()->back()->with("alert", "Invalid email or password.");
             }
         }
-
+    
         return view('admin.adminLogin');
     }
+    
 
 
     public function manageFranchises(Request $request)
@@ -292,6 +295,12 @@ class AdminController extends Controller
         $receptioners = $receptionerQuery->get();
         $franchises = Franchises::all();
         return view('admin.manageReceptioner', compact('receptioners', 'search', 'franchise_id', 'franchises'));
+    }
+
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('admin.login');
     }
 
 }
