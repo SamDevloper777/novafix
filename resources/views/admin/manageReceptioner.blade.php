@@ -34,7 +34,7 @@
 
             <div class="flex-grow-0 w-full sm:w-auto">
                 <button type="submit"
-                    class="p-3 w-full sm:w-auto text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium text-sm transition-all duration-200">
+                    class="p-3 w-full sm:w-auto rounded text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium text-sm transition-all duration-200">
                     Search
                 </button>
             </div>
