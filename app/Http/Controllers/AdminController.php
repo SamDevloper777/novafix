@@ -8,6 +8,7 @@ use App\Models\Staff;
 use App\Services\FranchiseService;
 use DB;
 use Hash;
+use App\Models\Request as RequestModel;
 use Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,29 +53,29 @@ class AdminController extends Controller
         if (Auth::guard('admin')->check()) {
             return redirect()->route("admin.panel"); // Redirect to dashboard if already logged in
         }
-    
+
         if ($req->method() == "POST") {
             $this->validate($req, [
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-    
+
             $credentials = $req->only('email', 'password');
-    
+
             if (Auth::guard('admin')->attempt($credentials)) {
                 return redirect()->route("admin.panel"); // Redirect to dashboard if login successful
             } else {
                 return redirect()->back()->with("alert", "Invalid email or password.");
             }
         }
-    
+
         return view('admin.adminLogin');
     }
     public function insertFranchises()
     {
         return view('admin.insertFranchises');
     }
-    
+
 
 
     public function manageFranchises(Request $request)
@@ -92,16 +93,16 @@ class AdminController extends Controller
                     ->orWhere('city', 'like', '%' . $search . '%');
             });
         }
-        $franchises = $franchises->get();
+        $franchises = $franchises->paginate(10);
         return view('admin.manageFranchises', compact('franchises', 'search'));
     }
 
     public function managetoggleStatus($id, FranchiseService $franchiseService)
-{
-    $newStatus = $franchiseService->toggleStatus($id);
+    {
+        $newStatus = $franchiseService->toggleStatus($id);
 
-    return redirect()->route('admin.manageFranchises')->with('success', "Status updated to $newStatus.");
-}
+        return redirect()->route('admin.manageFranchises')->with('success', "Status updated to $newStatus.");
+    }
 
     public function storeFranchises(Request $request)
     {
@@ -269,11 +270,47 @@ class AdminController extends Controller
         if ($franchise_id) {
             $staffQuery->where('franchise_id', $franchise_id);
         }
-        $data['staffs'] = $staffQuery->get();
+        $data['staffs'] = $staffQuery->pagination(10);
         $data['franchises'] = Franchises::all();
 
         return view('admin.manageStaff', $data);
     }
+    public function manageRequest(Request $request)
+    {
+        $search = $request->get('search');
+        $receptionist_id = $request->get('receptionist_id');
+        $franchise_id = $request->get('franchise_id');
+
+        $requests = RequestModel::query()
+            ->where(function ($query) use ($search) {
+                $query->where('technician_id', '<>', null)
+                    ->where('owner_name', 'LIKE', '%' . $search . '%')
+                    ->orWhereHas('receptionist', function ($query) use ($search) {
+                        $query->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+
+        if ($franchise_id) {
+            $requests->whereHas('receptionist', function ($query) use ($franchise_id) {
+                $query->where('franchise_id', $franchise_id);
+            });
+        }
+
+        if ($receptionist_id) {
+            $requests->where('receptionist_id', $receptionist_id);
+        }
+
+        $requests = $requests->paginate(10);
+
+        $staffs = Staff::all();
+        $franchises = Franchises::all();
+
+        return view('admin.manageRequest', compact('requests', 'staffs', 'search', 'franchises', 'franchise_id', 'receptionist_id'));
+    }
+
+
+
+
     public function manageReceptioners(Request $request)
     {
 
@@ -295,14 +332,14 @@ class AdminController extends Controller
         if ($franchise_id) {
             $receptionerQuery->where('franchise_id', $franchise_id);
         }
-
-        $receptioners = $receptionerQuery->get();
+        $receptioners = $receptionerQuery->paginate(10);
         $franchises = Franchises::all();
         return view('admin.manageReceptioner', compact('receptioners', 'search', 'franchise_id', 'franchises'));
     }
 
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return redirect()->route('admin.login');
     }

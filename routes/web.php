@@ -68,6 +68,7 @@ Route::prefix('admin')->group(function () {
         Route::patch('/dashboard/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggleStatus');
         Route::patch('/manage-franchises/{id}/toggle-status', [AdminController::class, 'managetoggleStatus'])->name('admin.mangaetoggleStatus');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+        Route::get('/manageRequest', [AdminController::class, 'manageRequest'])->name('admin.managerequest');
     });
 });
 

@@ -75,5 +75,7 @@
         </table>
     </div>
 </div>
-
+<div class="mt-5">
+        {{ $franchises->appends(request()->query())->links('pagination::tailwind') }}
+    </div>
 @endsection
