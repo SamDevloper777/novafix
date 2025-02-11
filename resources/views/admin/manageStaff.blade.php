@@ -118,7 +118,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->email }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->salary }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $item->franchise->franchise_name }}</td>
+                                {{ $item?->franchise?->franchise_name }}</td>
                         </tr>
                     @endforeach
                 </tbody>

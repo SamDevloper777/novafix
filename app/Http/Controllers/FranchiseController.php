@@ -48,7 +48,7 @@ class FranchiseController extends Controller
     }
     public function insertFranchises()
     {
-        return view('franchises.insertFranchises');
+        return view('admin.insertFranchises');
     }
     public function manageFranchises(Request $request)
     {

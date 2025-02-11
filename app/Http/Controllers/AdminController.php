@@ -70,6 +70,10 @@ class AdminController extends Controller
     
         return view('admin.adminLogin');
     }
+    public function insertFranchises()
+    {
+        return view('admin.insertFranchises');
+    }
     
 
 
