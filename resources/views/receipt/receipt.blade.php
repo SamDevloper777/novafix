@@ -219,7 +219,7 @@
                                     </div>
                                     <div class="col-xl-10">
                                         <p>Track your order status:
-                                            <a href="{{ route('track.order', ['service_code' => $item->service_code]) }}"
+                                            <a href="{{ route('track.status' }}"
                                                 class="fw-bold text-primary">
                                                 Track Now
                                             </a>
