@@ -209,7 +209,7 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 @php
-                    $rep=auth()->user()->id;
+                    $rep=auth()->guard('receptioner')->user()->id;
                     $NewCountReq=App\Models\Request::where('technician_id',NULL)->where('reciptionist_id',$rep)->get()->count();
                     $dateFilter=App\Models\Request::where('reciptionist_id',$rep)->get()->count();
                     $ConformCountReq=App\Models\Request::where('status',1)->where('reciptionist_id',$rep)->get()->count();
