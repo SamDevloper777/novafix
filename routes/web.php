@@ -141,6 +141,18 @@ Route::prefix("crm")->group(function () {
     });
 });
 
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    Artisan::call('db:seed');
+    Artisan::call('storage:link');
+    
+
+    return "All Caches are cleared by @Sam";
+});
 // Route::prefix('superadmin')->group(function () {
 //     Route::controller(SuperAdminController::class)->group(function () {
 //         Route::get('/', 'dashboard')->name('superadmin.panel');
@@ -207,16 +219,5 @@ Route::prefix('franchise')->group(function () {
         // Route::get('/status/{receptioner}', [ReceptionerController::class, "status"])->name('receptioner.status');
 
     });
-    Route::get('/clear-cache', function () {
-        Artisan::call('cache:clear');
-        Artisan::call('config:cache');
-        Artisan::call('config:clear');
-        Artisan::call('view:clear');
-        Artisan::call('route:clear');
-        Artisan::call('db:seed');
-        Artisan::call('storage:link');
-        
-    
-        return "All Caches are cleared by @Sam";
-    });
+   
 });
