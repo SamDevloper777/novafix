@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/novafixi/public_html/
+    - /bin/cp -R * $DEPLOYPATH
+
+    
