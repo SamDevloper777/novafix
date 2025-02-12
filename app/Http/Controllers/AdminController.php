@@ -110,7 +110,7 @@ class AdminController extends Controller
         $validatedData = $request->validate([
             'franchise_name' => 'required|string|max:255',
             'contact_no' => 'required|string|unique:franchises|max:15',
-            'email' => 'required|email|unique:franchises|max:255',
+            'email' => 'required|email|unique:franchises|max:255|regex:/^[\w\.]+@[\w]+\.[a-z]{2,3}$/',
             'password' => 'required|string|min:8',
             'aadhaar_no' => 'required|string|unique:franchises|max:20',
             'pan_no' => 'required|string|unique:franchises|max:20',
