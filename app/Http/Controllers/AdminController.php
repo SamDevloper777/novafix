@@ -270,7 +270,7 @@ class AdminController extends Controller
         if ($franchise_id) {
             $staffQuery->where('franchise_id', $franchise_id);
         }
-        $data['staffs'] = $staffQuery->pagination(10);
+        $data['staffs'] = $staffQuery->paginate(10);
         $data['franchises'] = Franchises::all();
 
         return view('admin.manageStaff', $data);
