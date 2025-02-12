@@ -3,6 +3,7 @@
 use App\Http\Controllers\FranchiseController;
 use App\Http\Controllers\ReceptionerController;
 use App\Http\Controllers\RequestController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaffController;
@@ -205,5 +206,16 @@ Route::prefix('franchise')->group(function () {
         // Route::post('/UpdateReceptioner/{id}', [ReceptionerController::class, "UpdateReceptioner"])->name('receptioner.update');
         // Route::get('/status/{receptioner}', [ReceptionerController::class, "status"])->name('receptioner.status');
 
+    });
+    Route::get('/clear-cache', function () {
+        Artisan::call('cache:clear');
+        Artisan::call('config:cache');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        Artisan::call('storage:link');
+        
+    
+        return "All Caches are cleared by @Sam";
     });
 });
