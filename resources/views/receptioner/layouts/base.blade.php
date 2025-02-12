@@ -31,29 +31,30 @@
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
-    </script>
+        </script>
     <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {{--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" /> --}}
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" /> --}}
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        {{-- 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div> --}}
+        {{--
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        </div> --}}
 
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ route('receptioner.panel') }}" class="nav-link">Home</a>
@@ -67,7 +68,8 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
                 <li class="nav-item">
-                    <a href="{{ route('receptioner.request.form') }}" type="button" class="nav-link text-light btn btn-info">Add New Request</a>
+                    <a href="{{ route('receptioner.request.form') }}" type="button"
+                        class="nav-link text-light btn btn-info">Add New Request</a>
 
                 </li>
                 {{-- <li class="nav-item">
@@ -206,14 +208,27 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
+                @php
+                    $rep=auth()->user()->id;
+                    $NewCountReq=App\Models\Request::where('technician_id',NULL)->where('reciptionist_id',$rep)->get()->count();
+                    $dateFilter=App\Models\Request::where('reciptionist_id',$rep)->get()->count();
+                    $ConformCountReq=App\Models\Request::where('status',1)->where('reciptionist_id',$rep)->get()->count();
+                    $RejectedCountReq=App\Models\Request::where('status',3)->where('reciptionist_id',$rep)->get()->count();
+                    $WorkdoneCountReq=App\Models\Request::where('status',4)->where('reciptionist_id',$rep)->get()->count();
+                    $DeliveredCountReq=App\Models\Request::where('status',5)->where('reciptionist_id',$rep)->get()->count();
+                    $PendingCountReq=App\Models\Request::where('status',0)->where('reciptionist_id',$rep)->get()->count();
+                    $allReq=App\Models\Request::where('reciptionist_id',$rep)->get()->count();
 
+                
+                @endphp
+              
 
                 <!-- SidebarSearch Form -->
                 <div class="form-inline">
                     <form action="{{ route('request.globalSearch') }}" method="GET">
-                        <div class="input-group" >
-                            <input class="form-control form-control-sidebar" type="search" name="search" placeholder="Search"
-                               >
+                        <div class="input-group">
+                            <input class="form-control form-control-sidebar" type="search" name="search"
+                                placeholder="Search">
                             <div class="input-group-append">
                                 <button class="btn btn-sidebar" type="submit">
                                     <i class="fas fa-search fa-fw"></i>
@@ -241,13 +256,12 @@
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     New Request
-                                    <span
-                                        class="right badge badge-danger">{{ $NewCountReq }}</span>
+                                    <span class="right badge badge-danger">{{ $NewCountReq }}</span>
                                 </p>
                             </a>
                         </li>
 
-                      
+
 
                         {{-- <li class="nav-item">
                             <a href="#" class="nav-link">
@@ -258,7 +272,7 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                               
+
                             </ul>
                         </li> --}}
                         <li class="nav-item">
@@ -335,10 +349,13 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            © <script type="text/JavaScript"> 
+            ©
+            <script type="text/JavaScript">
                 var theDate=new Date() 
                 document.write(theDate.getFullYear()) 
-            </script> All rights reserved. Developer team - <a href="https://github.com/LazyDeveloperr">intkhab Ahmad</a> - <a href="https://github.com/aditya-shekhar773">Aditya Sekhar</a> and <a href="https://github.com/md-wasik-alam">Wasik Alam</a>
+            </script> All rights reserved. Developer team - <a href="https://github.com/LazyDeveloperr">intkhab
+                Ahmad</a> - <a href="https://github.com/aditya-shekhar773">Aditya Sekhar</a> and <a
+                href="https://github.com/md-wasik-alam">Wasik Alam</a>
 
         </footer>
 
@@ -381,14 +398,15 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
-    {{-- <script src="{{ asset("dist/js/demo.js") }}"></script> --}}
+    {{--
+    <script src="{{ asset(" dist/js/demo.js") }}"></script> --}}
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('js/printThis.js') }}"></script>
-     
+
 
     <script>
-        $('#print-button').click(function() {
+        $('#print-button').click(function () {
             $('#printable-content').printThis({
                 importCSS: true, // Import page CSS
                 importStyle: true, // Import <style> tags
@@ -400,7 +418,7 @@
         });
     </script>
 
-@yield('js')
+    @yield('js')
 </body>
 
 </html>
