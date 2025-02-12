@@ -143,6 +143,13 @@
                                                             <li> <a role="button" class="btn btn-success dropdown-item"
                                                                     href="{{ route('request.edit', $item->id) }}">Edit</a>
                                                             </li>
+                                                            @case(2.3)
+                                                            <li>
+                                                                <a role="button" href="{{ route('request.workDone', $item->id) }}"
+                                                                    class="btn btn-success dropdown-item"
+                                                                    href="">Work Done</a>
+                                                            </li>                                                            
+                                                            @break
                                                         @break
 
                                                         @case(2)
