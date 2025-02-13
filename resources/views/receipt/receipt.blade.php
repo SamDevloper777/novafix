@@ -219,7 +219,7 @@
                                     </div>
                                     <div class="col-xl-10">
                                         <p>Track your order status:
-                                            <a href="{{ route('track.status') }}" class="fw-bold text-primary">Track Now</a>                                                                                                                                 
+                                            <a href="{{ route('track.status') }}" class="fw-bold text-primary">link</a>                                                                                                                                 
                                         </p>
                                     </div>
                                     <div class="col-xl-2">
