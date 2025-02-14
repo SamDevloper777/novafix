@@ -26,10 +26,12 @@
 
 
                         {{-- date and time filter --}}
-
+                        
                         <div class=" d-flex" style="gap:10px">
+                            <a href="{{ route('receipt.gst',  $item->id) }}" class="btn btn-success">GST Receipt</a>
                            <a href="{{ route('receipt.view',$item->id) }}" class="btn btn-success">Print Reciept</a>
                         </div>
+
                     </div>
                 </div>
 

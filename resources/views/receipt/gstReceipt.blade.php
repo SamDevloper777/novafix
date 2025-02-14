@@ -191,38 +191,28 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xl-8">
-                                        <p class="ms-3">Add additional notes
-                                            and payment information</p>
-
+                                        <p class="ms-3">Add additional notes and payment information</p>
                                     </div>
-                                    {{-- <div class="col-xl-3">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted ms-3"><span
-                                                    class="text-black me-4">SubTotal</span>$1110
-                                            </li>
-                                            <li class="text-muted ms-3 mt-2">
-                                                <span class="text-black me-4">Tax(15%)</span>$111
-                                            </li>
-                                        </ul>
-                                        <p class="text-black float-start"><span class="text-black me-3"> Total
-                                                Amount</span><span style="font-size: 25px;">$1221</span>
-                                        </p>
-                                    </div> --}}
                                 </div>
                                 <hr>
                                 <div class="flex justify-content-between row">
                                     <div class="col-xl-10">
                                         <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
-                                    </div>                                    
+                                    </div>
+                                    <div class="col-xl-10">
+                                        <p><strong>6-Month Warranty:</strong> Your receipt entitles you to a 6-month
+                                            warranty on this service. Please note that GST payment is required to
+                                            activate the warranty.</p>
+                                    </div>
                                     <div class="col-xl-5">
                                         <p>To track your request, please click the link below:</p>
                                         <p>https://www.novafix.in/trackRequest</p>
                                     </div>
-
                                     <div class="col-xl-2">
                                         <h6>Authorized Sign & Stamp</h6>
                                     </div>
                                 </div>
+
 
                             </div>
                         </div>

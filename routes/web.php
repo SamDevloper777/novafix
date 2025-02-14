@@ -25,7 +25,8 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/view', 'view')->name('home.view');
     Route::get('/{id}/address', 'showFranchiseAddress');
     Route::get('/track-order/{service_code}',  'track')->name('track.order');
-
+    Route::get('/receipt/{itemId}', 'generateGstReceipt')->name('receipt.gst');
+    
     // Route::get('/trackRequest', 'trackStatus')->name('track.status');
     // new req
 

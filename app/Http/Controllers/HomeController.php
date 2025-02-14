@@ -83,6 +83,12 @@ class HomeController extends Controller
         return $pdf->download('receipt-' . $id . '.pdf');
 
     }
+    public function generateGstReceipt($itemId)
+    {
+        $item = RequestModel::find($itemId);        
+
+        return view('receipt.gstReceipt', compact('item'));
+    }
 
     public function view(): View
     {
@@ -92,14 +98,14 @@ class HomeController extends Controller
     public function track($service_code)
     {
         $order = RequestModel::where('service_code', 'LIKE', "%$service_code%")->first();
-    
+
         if (!$order) {
             return redirect()->back()->with('error', 'Order not found.');
         }
-    
+
         return view('receipt.track-order', compact('order'));
     }
-    
-    
+
+
 
 }
