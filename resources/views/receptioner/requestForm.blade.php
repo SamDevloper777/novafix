@@ -76,6 +76,13 @@
                     @enderror
                 </div>
                 <div class="mb-3 px-3 col">
+                    <label for="service_amount" class="text-black-100">Service Amount</label>
+                    <input type="text" name="service_amount" class="form-control" value="{{old('service_amount')}}">
+                    @error('MAC')
+                        <p class="text-danger small">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class="mb-3 px-3 col">
                     <label for="type_id" class="text-black-100">Type</label>
                     <select name="type_id" class="form-control">
                         <option value="">Select Type</option>

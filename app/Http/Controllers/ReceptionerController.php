@@ -63,6 +63,7 @@ class ReceptionerController extends Controller
             'problem' => 'required',
             'serial_no' => 'required',
             'MAC' => 'nullable',
+            'service_amount' => 'nullable',
         ]);
 
         $previousRequest = RequestModel::where('owner_name', $data['owner_name'])

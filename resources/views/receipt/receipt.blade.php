@@ -174,18 +174,21 @@
                                                 </td>
 
                                             </tr>
+                                            
                                             <tr>
-                                                <th scope="col">Status</th>
-                                                <td class="text-uppercase ">
-                                                    <span class="font-weight-bold   rounded px-2 py-1
-                            " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span>
-                                                </td>
-                                                <th scope="col">Remark</th>
-                                                <td class="text-uppercase">
-                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}
-                                                </td>
-
-                                            </tr>
+                                            <th scope="col">Status</th>
+                                            <td class="text-uppercase "><span class="font-weight-bold rounded px-2 py-1"
+                                                    style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
+                                            </td>
+                                            <th scope="col">Remark</th>
+                                            <td class="text-uppercase">
+                                                {{ $item->remark == null ? 'N/A' : $item->remark }}</td>
+                                        </tr>                                       
+                                        <tr>
+                                            <th scope="col">Total Amount</th>
+                                            <td colspan="3" class="text-uppercase text-end text-center">₹
+                                                <strong>{{ number_format($item->service_amount, 2) }}</td></strong>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -213,7 +216,7 @@
                                 <div class="flex justify-content-between row">
                                     <div class="col-xl-10">
                                         <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
-                                    </div>                                    
+                                    </div>
                                     <div class="col-xl-5">
                                         <p>To track your request, please click the link below:</p>
                                         <p>https://www.novafix.in/trackRequest</p>

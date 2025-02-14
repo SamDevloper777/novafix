@@ -35,7 +35,7 @@ class RequestController extends Controller
             'type_id' => 'required',
             'brand' => 'required',
             'color' => 'required',
-            'problem' => 'required',
+            'problem' => 'required',            
            
            ]);
 

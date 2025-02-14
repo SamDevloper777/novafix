@@ -42,186 +42,169 @@
     <div class="container-fluid mt-5">
         <div class="card">
             <div class="card-body">
-                <div c`lass="container mb-5 mt-3">
+                <div class="container mb-5 mt-3">
                     <div class="row d-flex align-items-baseline">
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p style="color: #7e8d9f;font-size: 20px;">Receipt No: <strong
-                                        class="text-uppercase">SX-{{ $item->id }}-{{ $item->type->id }}
-                                    </strong></p>
-
-                            </div>
-                            <div class="col-xl-3 float-end d-print-none">
-                                <a href="{{  url()->previous() }}" class="btn btn-light text-capitalize"
-                                    data-mdb-ripple-color="dark"><i class="fa fa-arrow-left text-danger"></i>
-                                    back</a>
-                                <a type="button" onclick="window.print()" id="print-button"
-                                    class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i
-                                        class="fas fa-print text-primary"></i>
-                                    Print</a>
-
-                            </div>
-                            <hr />
+                        <div class="col-xl-9">
+                            <p style="color: #7e8d9f;font-size: 20px;">Receipt No: <strong
+                                    class="text-uppercase">SX-{{ $item->id }}-{{ $item->type->id }}</strong></p>
                         </div>
+                        <div class="col-xl-3 float-end d-print-none">
+                            <a href="{{ url()->previous() }}" class="btn btn-light text-capitalize"
+                                data-mdb-ripple-color="dark"><i class="fa fa-arrow-left text-danger"></i> back</a>
+                            <a type="button" onclick="window.print()" id="print-button"
+                                class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i
+                                    class="fas fa-print text-primary"></i> Print</a>
+                        </div>
+                        <hr />
+                    </div>
 
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="col-md-12">
-                                    <div class="text-center">
-                                        <h1 class="fw-bold text-dark">NovaFix</h1>
-                                        Fixing Today, Securing Tomorrow!</p>
-                                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="text-center">
+                                <h1 class="fw-bold text-dark">NovaFix</h1>
+                                <p>Fixing Today, Securing Tomorrow!</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted">Name: <span
+                                                style="color:#5d9fc5 ;">{{ $item->owner_name }}</span></li>
+                                        <li class="text-muted"><i class="fas fa-phone"></i> {{ $item->contact }}</li>
+                                        <li class="text-muted"><i class="bi bi-envelope"></i> {{ $item->email }}</li>
+                                    </ul>
                                 </div>
 
-
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted">Name: <span
-                                                    style="color:#5d9fc5 ;">{{ $item->owner_name }}</span>
-                                            </li>
-                                            {{-- <li class="text-muted">Street, City</li>
-                                            <li class="text-muted">State, Country</li> --}}
-                                            <li class="text-muted"><i class="fas fa-phone"></i> {{ $item->contact }}
-                                            </li>
-                                            <li class="text-muted"><i class="bi bi-envelope"></i> {{ $item->email }}
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted">
-                                                <i class="fas fa-map-marker" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">NovaFix</span> <br>
-
-                                                @if ($item->receptionist?->franchise)
-                                                    {{ $item->receptionist->franchise->franchise_name }} <br>
-                                                    {{ $item->receptionist->franchise->street }}, <br>
-                                                    {{ $item->receptionist->franchise->city }}
-                                                    ({{ $item->receptionist->franchise->district }}),
-                                                    {{ $item->receptionist->franchise->state }} -
-                                                    {{ $item->receptionist->franchise->pincode }} <br>
-                                                @else
-                                                    <span class="text-danger">Franchise details not available</span>
-                                                @endif
-                                            </li>
-
-                                            <li class="text-muted">
-                                                <i class="fas fa-phone" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">
-                                                    {{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}
-                                                </span>
-                                            </li>
-
-                                            <li class="text-muted">
-                                                <i class="fas fa-envelope" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">
-                                                    {{ $item->receptionist->franchise?->email ?? 'N/A' }}
-                                                </span>
-                                            </li>
-
-                                            <li class="text-muted">
-                                                <i class="fas fa-circle" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">Creation Date:</span>
-                                                {{ date('d M Y', strtotime($item->created_at)) }}
-                                            </li>
-                                        </ul>
-                                    </div>
-
+                                <div class="col-md-4">
+                                    <ul class="list-unstyled">
+                                        <li class="text-muted">
+                                            <i class="fas fa-map-marker" style="color:#84B0CA;"></i>
+                                            <span class="fw-bold">NovaFix</span><br>
+                                            @if ($item->receptionist?->franchise)
+                                                {{ $item->receptionist->franchise->franchise_name }} <br>
+                                                {{ $item->receptionist->franchise->street }}, <br>
+                                                {{ $item->receptionist->franchise->city }}
+                                                ({{ $item->receptionist->franchise->district }}),
+                                                {{ $item->receptionist->franchise->state }} -
+                                                {{ $item->receptionist->franchise->pincode }} <br>
+                                            @else
+                                                <span class="text-danger">Franchise details not available</span>
+                                            @endif
+                                        </li>
+                                        <li class="text-muted">
+                                            <i class="fas fa-phone" style="color:#84B0CA;"></i>
+                                            <span
+                                                class="fw-bold">{{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}</span>
+                                        </li>
+                                        <li class="text-muted">
+                                            <i class="fas fa-envelope" style="color:#84B0CA;"></i>
+                                            <span
+                                                class="fw-bold">{{ $item->receptionist->franchise?->email ?? 'N/A' }}</span>
+                                        </li>
+                                        <li class="text-muted">
+                                            <i class="fas fa-circle" style="color:#84B0CA;"></i>
+                                            <span class="fw-bold">Creation Date:</span>
+                                            {{ date('d M Y', strtotime($item->created_at)) }}
+                                        </li>
+                                    </ul>
                                 </div>
+                            </div>
 
-                                <div class="row my-2 mx-1 justify-content-center">
-                                    <table class="table table-striped table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <td class="text-uppercase">
-                                                    {{ $item->owner_name }}
-                                                </td>
-                                                <th scope="col">Service code</th>
-                                                <td class="text-uppercase">
-                                                    <h4 class="m-0 text-info">{{ $item->service_code }}</h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
+                            <div class="row my-2 mx-1 justify-content-center">
+                                <table class="table table-striped table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <td class="text-uppercase">{{ $item->owner_name }}</td>
+                                            <th scope="col">Service code</th>
+                                            <td class="text-uppercase">
+                                                <h4 class="m-0 text-info">{{ $item->service_code }}</h4>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Problem</th>
+                                            <td class="text-uppercase">{{ $item->problem }}</td>
+                                            <th scope="col">Brand</th>
+                                            <td class="text-uppercase">{{ $item->brand }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Type</th>
+                                            <td class="text-uppercase">{{ $item->type->name }}</td>
+                                            <th scope="col">S.N</th>
+                                            <td class="text-uppercase">{{ $item->serial_no }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">MAC</th>
+                                            <td class="text-uppercase">{{ $item->MAC }}</td>
+                                            <th scope="col">Color</th>
+                                            <td class="text-uppercase">{{ $item->color }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Model No</th>
+                                            <td class="text-uppercase">{{ $item->product_name }}</td>
+                                            <th scope="col">Est Delivery Date</th>
+                                            <td class="text-uppercase">
+                                                {{ date('d M Y', strtotime($item->estimate_delivery)) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Status</th>
+                                            <td class="text-uppercase "><span class="font-weight-bold rounded px-2 py-1"
+                                                    style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
+                                            </td>
+                                            <th scope="col">Remark</th>
+                                            <td class="text-uppercase">
+                                                {{ $item->remark == null ? 'N/A' : $item->remark }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="col">Service Amount</th>
+                                            <td class="text-uppercase">₹ {{ number_format($item->service_amount, 2) }}</td>
+                                            <th scope="col">GST (18%)</th>
+                                            <td class="text-uppercase">₹ {{ number_format($gst_amount, 2) }}</td>
+                                        </tr>                                                                            
+                                        <tr>
+                                            <th scope="col">Total Amount (Including GST)</th>
+                                            <td colspan="3" class="text-uppercase text-end text-center">
+                                                <strong>₹ {{ number_format($total_with_gst, 2) }}</strong>
+                                            </td>
+                                        </tr>   
 
-                                                <th scope="col">Problem</th>
-                                                <td class="text-uppercase">{{ $item->problem }}</td>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                                <th scope="col">brand</th>
-                                                <td class="text-uppercase">{{ $item->brand }}</td>
-                                            </tr>
-                                            <tr>
-
-                                                <th scope="col">Type</th>
-                                                <td class="text-uppercase">{{ $item->type->name }}</td>
-                                                <th scope="col">S.N</th>
-                                                <td class="text-uppercase">{{ $item->serial_no }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">MAC</th>
-                                                <td class="text-uppercase">{{ $item->MAC }}</td>
-                                                <th scope="col">Color</th>
-                                                <td class="text-uppercase">{{ $item->color }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Model No</th>
-                                                <td class="text-uppercase">{{ $item->product_name }}</td>
-                                                <th scope="col">Est Delivery Date</th>
-                                                <td class="text-uppercase">
-                                                    {{ date('d M Y', strtotime($item->estimate_delivery)) }}
-                                                </td>
-
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Status</th>
-                                                <td class="text-uppercase ">
-                                                    <span class="font-weight-bold   rounded px-2 py-1
-                            " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span>
-                                                </td>
-                                                <th scope="col">Remark</th>
-                                                <td class="text-uppercase">
-                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}
-                                                </td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="row">
+                                <div class="col-xl-8">
+                                    <p class="ms-3">Add additional notes and payment information</p>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xl-8">
-                                        <p class="ms-3">Add additional notes and payment information</p>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="flex justify-content-between row">
-                                    <div class="col-xl-10">
-                                        <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
-                                    </div>
-                                    <div class="col-xl-10">
-                                        <p><strong>6-Month Warranty:</strong> Your receipt entitles you to a 6-month
-                                            warranty on this service. Please note that GST payment is required to
-                                            activate the warranty.</p>
-                                    </div>
-                                    <div class="col-xl-5">
-                                        <p>To track your request, please click the link below:</p>
-                                        <p>https://www.novafix.in/trackRequest</p>
-                                    </div>
-                                    <div class="col-xl-2">
-                                        <h6>Authorized Sign & Stamp</h6>
-                                    </div>
-                                </div>
+                            </div>
 
-
+                            <hr>
+                            <div class="flex justify-content-between row">
+                                <div class="col-xl-10">
+                                    <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
+                                </div>
+                                <div class="col-xl-10">
+                                    <p><strong>GST</strong> <strong>6-Month Warranty:</strong> Your receipt entitles you
+                                        to a 6-month
+                                        warranty on this service.</p>
+                                </div>
+                                <div class="col-xl-5">
+                                    <p>To track your request, please click the link below:</p>
+                                    <p>https://www.novafix.in/trackRequest</p>
+                                </div>
+                                <div class="col-xl-2">
+                                    <h6>Authorized Sign & Stamp</h6>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->

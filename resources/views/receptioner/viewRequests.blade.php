@@ -14,7 +14,7 @@
                         <form action="{{ route('receptioner.request.filterbyinput') }}">
                             <div class="input-group" style="width: 300px;">
                                 <input type="text" name="search" value="{{ $search_value }}"
-                                    class="form-control float-right w-25"placeholder="Search">
+                                    class="form-control float-right w-25" placeholder="Search">
 
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-default">
@@ -26,10 +26,10 @@
 
 
                         {{-- date and time filter --}}
-                        
+
                         <div class=" d-flex" style="gap:10px">
-                            <a href="{{ route('receipt.gst',  $item->id) }}" class="btn btn-success">GST Receipt</a>
-                           <a href="{{ route('receipt.view',$item->id) }}" class="btn btn-success">Print Reciept</a>
+                            <a href="{{ route('receipt.gst', $item->id) }}" class="btn btn-success">GST Receipt</a>
+                            <a href="{{ route('receipt.view', $item->id) }}" class="btn btn-success">Print Reciept</a>
                         </div>
 
                     </div>
@@ -58,6 +58,9 @@
                         </tr>
                         <th>Status</th>
                         <td>{{ $item->getStatus() }}</td>
+                        </tr>
+                        <th>Service Amount</th>
+                        <td>{{ $item->service_amount }}</td>
                         </tr>
                         <th>Remark</th>
                         <td>{{ $item->remark }}</td>

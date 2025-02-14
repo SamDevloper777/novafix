@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string("serial_no")->nullable();
             $table->string("MAC")->nullable()->nullable();
             $table->string("color");
+            $table->decimal("service_amount", 8, 2)->nullable();
             $table->string("problem");
             $table->string("remark")->nullable();
             $table->float("status")->default(0.0);

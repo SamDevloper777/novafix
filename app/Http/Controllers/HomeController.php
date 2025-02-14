@@ -85,10 +85,15 @@ class HomeController extends Controller
     }
     public function generateGstReceipt($itemId)
     {
-        $item = RequestModel::find($itemId);        
-
-        return view('receipt.gstReceipt', compact('item'));
+        $item = RequestModel::find($itemId);
+        
+        $gst_percentage = 18; 
+        $gst_amount = ($item->service_amount * $gst_percentage) / 100; 
+        $total_with_gst = $item->service_amount + $gst_amount;  
+    
+        return view('receipt.gstReceipt', compact('item', 'gst_amount', 'total_with_gst'));
     }
+    
 
     public function view(): View
     {
