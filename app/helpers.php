@@ -6,8 +6,7 @@ use Carbon\Carbon;
 
 if (! function_exists('countNewRequest')) {
     function countNewRequest($type_id = NULL,$status = NULL) {
-        $rep = auth()->guard('receptioner')->check() ? auth()->guard('receptioner')->user()->id : null;
-
+        
         if($status == NULL){
            
                 $count = RequestModel::where('reciptionist_id')->where('technician_id',NULL)->count();
