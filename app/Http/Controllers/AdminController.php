@@ -317,7 +317,6 @@ class AdminController extends Controller
 
     $requests = RequestModel::whereNull('reciptionist_id')
         ->when($search, function ($query, $search) {
-            // Group the search conditions to ensure they are applied together
             return $query->where(function ($query) use ($search) {
                 $query->where('owner_name', 'like', '%' . $search . '%')
                     ->orWhere('service_code', 'like', '%' . $search . '%')
@@ -326,7 +325,7 @@ class AdminController extends Controller
                     ->orWhere('contact', 'like', '%' . $search . '%');
             });
         })
-        ->get();
+        ->paginate(10);
 
     return view('admin.userSideRequest', compact('requests'));
 }

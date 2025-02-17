@@ -91,7 +91,8 @@
         </div>
     </div>
 
-    
-</div>
+    <div class="mt-5">
+        {{ $requests->appends(request()->query())->links('pagination::tailwind') }}
+    </div>
 
 @endsection
