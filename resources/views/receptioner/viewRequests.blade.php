@@ -28,7 +28,9 @@
                         {{-- date and time filter --}}
 
                         <div class=" d-flex" style="gap:10px">
+                            @if ($item->status === 'work done')
                             <a href="{{ route('receipt.gst', $item->id) }}" class="btn btn-success">GST Receipt</a>
+                            @endif
                             <a href="{{ route('receipt.view', $item->id) }}" class="btn btn-success">Print Reciept</a>
                         </div>
 
@@ -58,10 +60,7 @@
                         </tr>
                         <th>Status</th>
                         <td>{{ $item->getStatus() }}</td>
-                        </tr>
-                        <th>Service Amount</th>
-                        <td>{{ $item->service_amount }}</td>
-                        </tr>
+                        </tr>                        
                         <th>Remark</th>
                         <td>{{ $item->remark }}</td>
                         </tr>

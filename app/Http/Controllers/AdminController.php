@@ -284,7 +284,10 @@ class AdminController extends Controller
         $requests = RequestModel::query()
             ->where(function ($query) use ($search) {
                 $query->where('technician_id', '<>', null)
-                    ->where('owner_name', 'LIKE', '%' . $search . '%')
+                    ->orwhere('owner_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('product_name', 'like', '%' . $search . '%')
+                    ->orWhere('brand', 'like', '%' . $search . '%')
+                    ->orWhere('contact', 'like', '%' . $search . '%')
                     ->orWhereHas('receptionist', function ($query) use ($search) {
                         $query->where('name', 'like', '%' . $search . '%');
                     });
@@ -297,7 +300,7 @@ class AdminController extends Controller
         }
 
         if ($receptionist_id) {
-            $requests->where('receptionist_id', $receptionist_id);
+            $requests->whereNull('receptionist_id', $receptionist_id);
         }
 
         $requests = $requests->paginate(10);
@@ -308,6 +311,25 @@ class AdminController extends Controller
         return view('admin.manageRequest', compact('requests', 'staffs', 'search', 'franchises', 'franchise_id', 'receptionist_id'));
     }
 
+    public function usermanageRequest(Request $request)
+{
+    $search = $request->input('search');
+
+    $requests = RequestModel::whereNull('reciptionist_id')
+        ->when($search, function ($query, $search) {
+            // Group the search conditions to ensure they are applied together
+            return $query->where(function ($query) use ($search) {
+                $query->where('owner_name', 'like', '%' . $search . '%')
+                    ->orWhere('service_code', 'like', '%' . $search . '%')
+                    ->orWhere('product_name', 'like', '%' . $search . '%')
+                    ->orWhere('brand', 'like', '%' . $search . '%')
+                    ->orWhere('contact', 'like', '%' . $search . '%');
+            });
+        })
+        ->get();
+
+    return view('admin.userSideRequest', compact('requests'));
+}
 
 
 

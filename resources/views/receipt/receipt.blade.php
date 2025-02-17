@@ -98,7 +98,7 @@
                                                 @if ($item->receptionist?->franchise)
                                                     {{ $item->receptionist->franchise->franchise_name }} <br>
                                                     {{ $item->receptionist->franchise->street }}, <br>
-                                                    {{ $item->receptionist->franchise->city }}
+                                                    <!-- {{ $item->receptionist->franchise->city }} -->
                                                     ({{ $item->receptionist->franchise->district }}),
                                                     {{ $item->receptionist->franchise->state }} -
                                                     {{ $item->receptionist->franchise->pincode }} <br>
@@ -170,25 +170,39 @@
                                                 <td class="text-uppercase">{{ $item->product_name }}</td>
                                                 <th scope="col">Est Delivery Date</th>
                                                 <td class="text-uppercase">
-                                                    {{ date('d M Y', strtotime($item->estimate_delivery)) }}
+                                                {{ date('d M Y', strtotime('+10 days')) }}
                                                 </td>
 
                                             </tr>
-                                            
+
                                             <tr>
-                                            <th scope="col">Status</th>
-                                            <td class="text-uppercase "><span class="font-weight-bold rounded px-2 py-1"
-                                                    style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
-                                            </td>
-                                            <th scope="col">Remark</th>
-                                            <td class="text-uppercase">
-                                                {{ $item->remark == null ? 'N/A' : $item->remark }}</td>
-                                        </tr>                                       
-                                        <tr>
-                                            <th scope="col">Total Amount</th>
-                                            <td colspan="3" class="text-uppercase text-end text-center">₹
-                                                <strong>{{ number_format($item->service_amount, 2) }}</td></strong>
-                                        </tr>
+                                                <th scope="col">Status</th>
+                                                <td class="text-uppercase "><span
+                                                        class="font-weight-bold rounded px-2 py-1"
+                                                        style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
+                                                </td>
+                                                <th scope="col">Remark</th>
+                                                <td class="text-uppercase">
+                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}
+                                                </td>
+                                            </tr>
+                                            @if ($item->status === 'work done')
+                                                <tr id="amount-row">
+                                                    <th scope="col">Total Amount</th>
+                                                    <td colspan="4" class="text-uppercase text-end text-center">
+                                                        <span id="amount-display">
+                                                            @if($item->amount)
+                                                                ₹ {{ $item->amount }}                                                            
+                                                            @endif
+                                                        </span>
+                                                        <input type="text" name="service_amount" id="service_amount"
+                                                            placeholder="Service Amount" class="form-control" value="{{ $item->amount ?? '' }}"
+                                                            style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
+                                                            onblur="toggleAmountDisplay()">
+                                                    </td>
+                                                </tr>
+                                            @endif
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -217,16 +231,22 @@
                                     <div class="col-xl-10">
                                         <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                     </div>
-                                    <div class="col-xl-5">
-                                        <p>To track your request, please click the link below:</p>
-                                        <p>https://www.novafix.in/trackRequest</p>
-                                    </div>
+                                    @if ($item->status != 'work done')
 
+                                        <div class="col-xl-5">
+                                            <p>To track your request, please check url path below:</p>
+                                            <p>https://www.novafix.in/trackRequest</p>
+                                        </div>
+                                        <div class="col-xl-10">
+                                            <strong>
+                                                <p>If you want 6-Month Warranty Pay with GST(18%)</p>
+                                            </strong>
+                                        </div>
+                                    @endif
                                     <div class="col-xl-2">
                                         <h6>Authorized Sign & Stamp</h6>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -274,6 +294,59 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
         </script>
+    <script>
+        function toggleAmountDisplay() {
+            const amountField = document.getElementById('service_amount');
+            const amountDisplay = document.getElementById('amount-display');
+
+            if (amountField.value) {
+                amountDisplay.textContent = '₹ ' + amountField.value; // Update with the new amount
+                amountField.style.display = 'none'; // Hide the input field
+                amountDisplay.style.display = 'inline'; // Show the updated price as text
+
+                saveAmountToDatabase(amountField.value);
+            }
+        }
+
+        function saveAmountToDatabase(amount) {
+            const xhr = new XMLHttpRequest();
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log('Amount saved successfully');
+                }
+            };
+            xhr.send(JSON.stringify({
+                amount: amount,
+                item_id: '{{ $item->id }}'
+            }));
+        }
+
+        // Initially show the price as text and input is hidden if an amount exists
+        window.onload = function () {
+            const amountField = document.getElementById('service_amount');
+            const amountDisplay = document.getElementById('amount-display');
+
+            if (amountField.value) {
+                amountDisplay.textContent = '₹ ' + amountField.value; // Set the initial price text
+                amountField.style.display = 'none'; // Hide the input field initially
+                amountDisplay.style.display = 'inline'; // Show the price as text initially
+            } else {
+                amountDisplay.style.display = 'none'; // Hide the price text if no value
+                amountField.style.display = 'inline'; // Show the input field initially
+            }
+
+            // Add the "Enter" key event listener to the input field
+            amountField.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent default "Enter" behavior
+                    toggleAmountDisplay(); // Trigger the function to save and update the amount
+                }
+            });
+        };
+    </script>
+
 </body>
 
 </html>

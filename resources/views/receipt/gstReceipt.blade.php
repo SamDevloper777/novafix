@@ -83,7 +83,7 @@
                                             @if ($item->receptionist?->franchise)
                                                 {{ $item->receptionist->franchise->franchise_name }} <br>
                                                 {{ $item->receptionist->franchise->street }}, <br>
-                                                {{ $item->receptionist->franchise->city }}
+                                                <!-- {{ $item->receptionist->franchise->city }} -->
                                                 ({{ $item->receptionist->franchise->district }}),
                                                 {{ $item->receptionist->franchise->state }} -
                                                 {{ $item->receptionist->franchise->pincode }} <br>
@@ -144,7 +144,7 @@
                                             <td class="text-uppercase">{{ $item->product_name }}</td>
                                             <th scope="col">Est Delivery Date</th>
                                             <td class="text-uppercase">
-                                                {{ date('d M Y', strtotime($item->estimate_delivery)) }}
+                                                {{ date('d M Y', strtotime('+10')) }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -157,18 +157,37 @@
                                                 {{ $item->remark == null ? 'N/A' : $item->remark }}
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="col">Service Amount</th>
-                                            <td class="text-uppercase">₹ {{ number_format($item->service_amount, 2) }}</td>
-                                            <th scope="col">GST (18%)</th>
-                                            <td class="text-uppercase">₹ {{ number_format($gst_amount, 2) }}</td>
-                                        </tr>                                                                            
-                                        <tr>
-                                            <th scope="col">Total Amount (Including GST)</th>
-                                            <td colspan="3" class="text-uppercase text-end text-center">
-                                                <strong>₹ {{ number_format($total_with_gst, 2) }}</strong>
-                                            </td>
-                                        </tr>   
+                                        @if ($item->status != 'work done')
+                                            <tr>
+                                                <th scope="col">Total Amount</th>
+                                                <td colspan="3" class="text-uppercase text-end text-center">
+                                                    <span id="amount-display">
+                                                        @if($item->amount)
+                                                            ₹ {{ $item->amount }}                                                       
+                                                        @endif
+                                                    </span>
+                                                    <input type="text" class="form-control" name="service_amount" id="service_amount"
+                                                        placeholder="Service Amount" value="{{ $item->amount ?? '' }}"
+                                                        style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
+                                                        onblur="updateAmounts()">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="col">GST (18%)</th>
+                                                <td class="text-uppercase" id="gst-display">₹
+                                                    {{ number_format($gst_amount, 2) }}
+                                                </td>
+
+
+                                                <th scope="col">Total Amount (Including GST)</th>
+                                                <td colspan="3" class="text-uppercase text-end text-center">
+                                                    <strong id="total-amount-display">₹
+                                                        {{ number_format($total_with_gst, 2) }}</strong>
+                                                </td>
+                                            </tr>
+
+
+                                        @endif
 
                                     </tbody>
                                 </table>
@@ -185,15 +204,9 @@
                                 <div class="col-xl-10">
                                     <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                 </div>
-                                <div class="col-xl-10">
-                                    <p><strong>GST</strong> <strong>6-Month Warranty:</strong> Your receipt entitles you
-                                        to a 6-month
-                                        warranty on this service.</p>
-                                </div>
-                                <div class="col-xl-5">
-                                    <p>To track your request, please click the link below:</p>
-                                    <p>https://www.novafix.in/trackRequest</p>
-                                </div>
+                                @if ($item->status === 'work done')
+                                <p><strong>6-Month Warranty:</strong></p>
+                                @endif                                
                                 <div class="col-xl-2">
                                     <h6>Authorized Sign & Stamp</h6>
                                 </div>
@@ -244,6 +257,87 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
         </script>
+    <script>
+    function updateAmounts() {
+        const amountField = document.getElementById('service_amount');
+        const amountDisplay = document.getElementById('amount-display');
+        const serviceAmount = parseFloat(amountField.value);
+        const gstRate = 0.18;  // GST is 18%
+
+        if (!isNaN(serviceAmount)) {
+            // Calculate GST and Total
+            const gstAmount = serviceAmount * gstRate;
+            const totalAmount = serviceAmount + gstAmount;
+
+            // Update GST and Total Amount display
+            document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
+            document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
+
+            // Update the display of the amount
+            amountDisplay.textContent = '₹ ' + serviceAmount.toFixed(2);  // Display the updated amount
+            amountField.style.display = 'none'; // Hide the input field
+            amountDisplay.style.display = 'inline'; // Show the updated price as text
+
+            // Save the updated amount to the database
+            saveAmountToDatabase(serviceAmount);
+        } else {
+            // Handle invalid input by hiding the GST and Total fields
+            document.getElementById('gst-display').textContent = '₹ 0.00';
+            document.getElementById('total-amount-display').textContent = '₹ 0.00';
+        }
+    }
+
+    function saveAmountToDatabase(amount) {
+        const xhr = new XMLHttpRequest();
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log('Amount saved successfully');
+            }
+        };
+        xhr.send(JSON.stringify({
+            amount: amount,
+            item_id: '{{ $item->id }}'
+        }));
+    }
+
+    // Add event listener for the Enter key
+    document.getElementById('service_amount').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();  // Prevent form submission (if it's part of a form)
+            updateAmounts();  // Trigger the updateAmounts function
+        }
+    });
+
+    // Initially set the price, GST, and total amounts when the page loads
+    window.onload = function () {
+        const amountField = document.getElementById('service_amount');
+        const amountDisplay = document.getElementById('amount-display');
+        const initialAmount = parseFloat(amountField.value);
+
+        if (!isNaN(initialAmount)) {
+            // Calculate GST and Total
+            const gstAmount = initialAmount * 0.18;
+            const totalAmount = initialAmount + gstAmount;
+
+            // Update GST and Total Amount display
+            document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
+            document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
+        }
+
+        // Set initial display for the amount field
+        if (amountField.value) {
+            amountDisplay.textContent = '₹ ' + amountField.value;
+            amountField.style.display = 'none';
+            amountDisplay.style.display = 'inline';
+        } else {
+            amountDisplay.style.display = 'none';
+            amountField.style.display = 'inline';
+        }
+    };
+</script>
+
 </body>
 
 </html>
