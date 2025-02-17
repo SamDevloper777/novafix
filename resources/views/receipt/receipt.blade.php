@@ -170,7 +170,7 @@
                                                 <td class="text-uppercase">{{ $item->product_name }}</td>
                                                 <th scope="col">Est Delivery Date</th>
                                                 <td class="text-uppercase">
-                                                {{ date('d M Y', strtotime('+10 days')) }}
+                                                    {{ date('d M Y', strtotime('+10 days')) }}
                                                 </td>
 
                                             </tr>
@@ -192,11 +192,12 @@
                                                     <td colspan="4" class="text-uppercase text-end text-center">
                                                         <span id="amount-display">
                                                             @if($item->amount)
-                                                                ₹ {{ $item->amount }}                                                            
+                                                                ₹ {{ $item->amount }}
                                                             @endif
                                                         </span>
                                                         <input type="text" name="service_amount" id="service_amount"
-                                                            placeholder="Service Amount" class="form-control" value="{{ $item->amount ?? '' }}"
+                                                            placeholder="Service Amount" class="form-control"
+                                                            value="{{ $item->amount ?? '' }}"
                                                             style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
                                                             onblur="toggleAmountDisplay()">
                                                     </td>
@@ -227,26 +228,40 @@
                                     </div> --}}
                                 </div>
                                 <hr>
-                                <div class="flex justify-content-between row">
-                                    <div class="col-xl-10">
+                                <div class="row mb-5">
+                                    <div class="col-xl-10 col-lg-8 col-md-12 mb-3">
                                         <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                     </div>
-                                    @if ($item->status != 'work done')
 
-                                        <div class="col-xl-5">
-                                            <p>To track your request, please check url path below:</p>
-                                            <p>https://www.novafix.in/trackRequest</p>
+                                    <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
+                                        <p><strong>Terms & Conditions:</strong></p>
+                                        <ul class="list-unstyled">
+                                            <li>1. We will not be responsible if the product are not taken back within 30
+                                                days.</li>
+                                            <li>2. Before coming to collect the product, call and make sure.</li>
+                                            <li>3. Warranty guarantee will not be valid for repairing of any item.
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    @if ($item->status != 'work done')
+                                        <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
+                                            <p><strong>To track your request, please check the URL below:</strong></p>
+                                            https://www.novafix.in/trackRequest
                                         </div>
-                                        <div class="col-xl-10">
+                                        <div class="col-xl-10 col-lg-12 mb-3">
                                             <strong>
-                                                <p>If you want 6-Month Warranty Pay with GST(18%)</p>
+                                                <p>If you want a 6-Month Warranty, pay with GST (18%)</p>
                                             </strong>
                                         </div>
                                     @endif
-                                    <div class="col-xl-2">
-                                        <h6>Authorized Sign & Stamp</h6>
+
+                                    <!-- Authorized Sign & Stamp section -->
+                                    <div class="col-xl-2 col-lg-4 col-md-12 mb-3 text-center">
+                                        <h6><strong>Authorized Sign & Stamp</strong></h6>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

@@ -163,11 +163,12 @@
                                                 <td colspan="3" class="text-uppercase text-end text-center">
                                                     <span id="amount-display">
                                                         @if($item->amount)
-                                                            ₹ {{ $item->amount }}                                                       
+                                                            ₹ {{ $item->amount }}
                                                         @endif
                                                     </span>
-                                                    <input type="text" class="form-control" name="service_amount" id="service_amount"
-                                                        placeholder="Service Amount" value="{{ $item->amount ?? '' }}"
+                                                    <input type="text" class="form-control" name="service_amount"
+                                                        id="service_amount" placeholder="Service Amount"
+                                                        value="{{ $item->amount ?? '' }}"
                                                         style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
                                                         onblur="updateAmounts()">
                                                 </td>
@@ -204,10 +205,19 @@
                                 <div class="col-xl-10">
                                     <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                 </div>
+                                <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
+                                    <p><strong>Terms & Conditions:</strong></p>
+                                    <ul class="list-unstyled">
+                                        <li>1. We will not be responsible if the product are not taken back within 30
+                                            days.</li>
+                                        <li>2. Before coming to collect the product, call and make sure.</li>
+                                        <li>3. Warranty guarantee will not be valid for repairing of any item.
+                                        </li>
+                                    </ul>
+                                </div>
                                 @if ($item->status === 'work done')
-                                <p><strong>6-Month Warranty:</strong></p>
-                                @endif                                
-                                <div class="col-xl-2">
+                                    <p><strong>6-Month Warranty:</strong></p>
+                                @endif                                  <div class="col-xl-2">
                                     <h6>Authorized Sign & Stamp</h6>
                                 </div>
                             </div>
@@ -258,85 +268,85 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
         </script>
     <script>
-    function updateAmounts() {
-        const amountField = document.getElementById('service_amount');
-        const amountDisplay = document.getElementById('amount-display');
-        const serviceAmount = parseFloat(amountField.value);
-        const gstRate = 0.18;  // GST is 18%
+        function updateAmounts() {
+            const amountField = document.getElementById('service_amount');
+            const amountDisplay = document.getElementById('amount-display');
+            const serviceAmount = parseFloat(amountField.value);
+            const gstRate = 0.18;  // GST is 18%
 
-        if (!isNaN(serviceAmount)) {
-            // Calculate GST and Total
-            const gstAmount = serviceAmount * gstRate;
-            const totalAmount = serviceAmount + gstAmount;
+            if (!isNaN(serviceAmount)) {
+                // Calculate GST and Total
+                const gstAmount = serviceAmount * gstRate;
+                const totalAmount = serviceAmount + gstAmount;
 
-            // Update GST and Total Amount display
-            document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
-            document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
+                // Update GST and Total Amount display
+                document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
+                document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
 
-            // Update the display of the amount
-            amountDisplay.textContent = '₹ ' + serviceAmount.toFixed(2);  // Display the updated amount
-            amountField.style.display = 'none'; // Hide the input field
-            amountDisplay.style.display = 'inline'; // Show the updated price as text
+                // Update the display of the amount
+                amountDisplay.textContent = '₹ ' + serviceAmount.toFixed(2);  // Display the updated amount
+                amountField.style.display = 'none'; // Hide the input field
+                amountDisplay.style.display = 'inline'; // Show the updated price as text
 
-            // Save the updated amount to the database
-            saveAmountToDatabase(serviceAmount);
-        } else {
-            // Handle invalid input by hiding the GST and Total fields
-            document.getElementById('gst-display').textContent = '₹ 0.00';
-            document.getElementById('total-amount-display').textContent = '₹ 0.00';
+                // Save the updated amount to the database
+                saveAmountToDatabase(serviceAmount);
+            } else {
+                // Handle invalid input by hiding the GST and Total fields
+                document.getElementById('gst-display').textContent = '₹ 0.00';
+                document.getElementById('total-amount-display').textContent = '₹ 0.00';
+            }
         }
-    }
 
-    function saveAmountToDatabase(amount) {
-        const xhr = new XMLHttpRequest();
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log('Amount saved successfully');
+        function saveAmountToDatabase(amount) {
+            const xhr = new XMLHttpRequest();
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log('Amount saved successfully');
+                }
+            };
+            xhr.send(JSON.stringify({
+                amount: amount,
+                item_id: '{{ $item->id }}'
+            }));
+        }
+
+        // Add event listener for the Enter key
+        document.getElementById('service_amount').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent form submission (if it's part of a form)
+                updateAmounts();  // Trigger the updateAmounts function
+            }
+        });
+
+        // Initially set the price, GST, and total amounts when the page loads
+        window.onload = function () {
+            const amountField = document.getElementById('service_amount');
+            const amountDisplay = document.getElementById('amount-display');
+            const initialAmount = parseFloat(amountField.value);
+
+            if (!isNaN(initialAmount)) {
+                // Calculate GST and Total
+                const gstAmount = initialAmount * 0.18;
+                const totalAmount = initialAmount + gstAmount;
+
+                // Update GST and Total Amount display
+                document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
+                document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
+            }
+
+            // Set initial display for the amount field
+            if (amountField.value) {
+                amountDisplay.textContent = '₹ ' + amountField.value;
+                amountField.style.display = 'none';
+                amountDisplay.style.display = 'inline';
+            } else {
+                amountDisplay.style.display = 'none';
+                amountField.style.display = 'inline';
             }
         };
-        xhr.send(JSON.stringify({
-            amount: amount,
-            item_id: '{{ $item->id }}'
-        }));
-    }
-
-    // Add event listener for the Enter key
-    document.getElementById('service_amount').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();  // Prevent form submission (if it's part of a form)
-            updateAmounts();  // Trigger the updateAmounts function
-        }
-    });
-
-    // Initially set the price, GST, and total amounts when the page loads
-    window.onload = function () {
-        const amountField = document.getElementById('service_amount');
-        const amountDisplay = document.getElementById('amount-display');
-        const initialAmount = parseFloat(amountField.value);
-
-        if (!isNaN(initialAmount)) {
-            // Calculate GST and Total
-            const gstAmount = initialAmount * 0.18;
-            const totalAmount = initialAmount + gstAmount;
-
-            // Update GST and Total Amount display
-            document.getElementById('gst-display').textContent = '₹ ' + gstAmount.toFixed(2);
-            document.getElementById('total-amount-display').textContent = '₹ ' + totalAmount.toFixed(2);
-        }
-
-        // Set initial display for the amount field
-        if (amountField.value) {
-            amountDisplay.textContent = '₹ ' + amountField.value;
-            amountField.style.display = 'none';
-            amountDisplay.style.display = 'inline';
-        } else {
-            amountDisplay.style.display = 'none';
-            amountField.style.display = 'inline';
-        }
-    };
-</script>
+    </script>
 
 </body>
 
