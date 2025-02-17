@@ -5,15 +5,15 @@
 
 @section('content')
   @php
-    $franchise = auth()->guard('franchise')->user()->id;
-    $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('franchise_id', $franchise)->get()->count();
-    $dateFilter = App\Models\Request::where('franchise_id', $franchise)->get()->count();
-    $ConformCountReq = App\Models\Request::where('status', 1)->where('franchise_id', $franchise)->get()->count();
-    $RejectedCountReq = App\Models\Request::where('status', 3)->where('franchise_id', $franchise)->get()->count();
-    $WorkdoneCountReq = App\Models\Request::where('status', 4)->where('franchise_id', $franchise)->get()->count();
-    $DeliveredCountReq = App\Models\Request::where('status', 5)->where('franchise_id', $franchise)->get()->count();
-    $PendingCountReq = App\Models\Request::where('status', 0)->where('franchise_id', $franchise)->get()->count();
-    $allReq = App\Models\Request::where('franchise_id', $franchise)->get()->count();
+    
+    $NewCountReq = App\Models\Request::where('reciptionist_id')->where('technician_id', NULL)->get()->count();
+    $dateFilter = App\Models\Request::where('reciptionist_id')->get()->count();
+    $ConformCountReq = App\Models\Request::where('reciptionist_id')->where('status', 1)->get()->count();
+    $RejectedCountReq = App\Models\Request::where('reciptionist_id')->where('status', 3)->get()->count();
+    $WorkdoneCountReq = App\Models\Request::where('reciptionist_id')->where('status', 4)->get()->count();
+    $DeliveredCountReq = App\Models\Request::where('reciptionist_id')->where('status', 5)->get()->count();
+    $PendingCountReq = App\Models\Request::where('reciptionist_id')->where('status', 0)->get()->count();
+    $allReq = App\Models\Request::where('reciptionist_id')->where('reciptionist_id')->get()->count();
   @endphp
 
   <!-- Content Wrapper. Contains page content -->
