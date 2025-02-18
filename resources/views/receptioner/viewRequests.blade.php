@@ -27,11 +27,11 @@
 
                         {{-- date and time filter --}}
 
-                        <div class=" d-flex" style="gap:10px">
-                            @if ($item->status === 'work done')
-                            <a href="{{ route('receipt.gst', $item->id) }}" class="btn btn-success">GST Receipt</a>
+                        <div class="d-flex" style="gap:10px">
+                            @if ($item->status == 4 || $item->status == 5)
+                                <a href="{{ route('receipt.gst', $item->id) }}" class="btn btn-success">GST Receipt</a>
                             @endif
-                            <a href="{{ route('receipt.view', $item->id) }}" class="btn btn-success">Print Reciept</a>
+                            <a href="{{ route('receipt.view', $item->id) }}" class="btn btn-success">Print Receipt</a>
                         </div>
 
                     </div>
@@ -60,7 +60,7 @@
                         </tr>
                         <th>Status</th>
                         <td>{{ $item->getStatus() }}</td>
-                        </tr>                        
+                        </tr>
                         <th>Remark</th>
                         <td>{{ $item->remark }}</td>
                         </tr>

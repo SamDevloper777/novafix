@@ -186,7 +186,7 @@
                                                     {{ $item->remark == null ? 'N/A' : $item->remark }}
                                                 </td>
                                             </tr>
-                                            @if ($item->status === 'work done')
+                                            @if ($item->status == 4 || $item->status == 5)
                                                 <tr id="amount-row">
                                                     <th scope="col">Total Amount</th>
                                                     <td colspan="4" class="text-uppercase text-end text-center">
