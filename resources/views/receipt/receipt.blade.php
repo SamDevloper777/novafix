@@ -236,10 +236,14 @@
                                     <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
                                         <p><strong>Terms & Conditions:</strong></p>
                                         <ul class="list-unstyled">
-                                            <li>1. We will not be responsible if the product are not taken back within 30
+                                            <li>1. We will not be responsible if the product are not taken back within
+                                                30
                                                 days.</li>
-                                            <li>2. Before coming to collect the product, call and make sure.</li>
-                                            <li>3. Warranty guarantee will not be valid for repairing of any item.
+                                            <li class="mt-2">2. Before coming to collect the product, call and make sure.</li>
+                                            <li class="mt-2">3. Warranty guarantee will not be valid for repairing of any item.
+                                            </li>
+                                            <li class="mt-2">4. If for any reason your laptop is not repaired or you do not get it
+                                                repaired then you will have to pay checking charges (Rs. 350).
                                             </li>
                                         </ul>
                                     </div>
@@ -248,11 +252,6 @@
                                         <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
                                             <p><strong>To track your request, please check the URL below:</strong></p>
                                             https://www.novafix.in/trackRequest
-                                        </div>
-                                        <div class="col-xl-10 col-lg-12 mb-3">
-                                            <strong>
-                                                <p>If you want a 6-Month Warranty, pay with GST (18%)</p>
-                                            </strong>
                                         </div>
                                     @endif
 
