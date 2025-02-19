@@ -121,11 +121,13 @@
                                                 </span>
                                             </li>
 
-                                            <li class="text-muted">
-                                                <i class="fas fa-circle" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">Creation Date:</span>
-                                                {{ date('d M Y', strtotime($item->created_at)) }}
-                                            </li>
+                                            @if ($item->status != 4 && $item->status != 5)
+                                                <li class="text-muted">
+                                                    <i class="fas fa-circle" style="color:#84B0CA;"></i>
+                                                    <span class="fw-bold">Creation Date:</span>
+                                                    {{ date('d M Y', strtotime($item->created_at)) }}
+                                                </li>
+                                            @endif
                                         </ul>
                                     </div>
 
@@ -168,19 +170,27 @@
                                             <tr>
                                                 <th scope="col">Model No</th>
                                                 <td class="text-uppercase">{{ $item->product_name }}</td>
-                                                <th scope="col">Est Delivery Date</th>
+                                                <th scope="col">Delivery Date</th>
                                                 <td class="text-uppercase">
-                                                    {{ date('d M Y', strtotime('+10 days')) }}
+                                                    {{ date('d M Y') }}
                                                 </td>
+                                                @if ($item->status != 4 && $item->status != 5)
+                                                <th scope="col">ESTDelivery Date</th>
+                                                <td class="text-uppercase">
+                                                {{ date('d M Y', strtotime('+10 days')) }}
+                                                </td>
+                                                @endif
 
                                             </tr>
 
                                             <tr>
-                                                <th scope="col">Status</th>
-                                                <td class="text-uppercase "><span
-                                                        class="font-weight-bold rounded px-2 py-1"
-                                                        style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
-                                                </td>
+                                                @if ($item->status != 4 && $item->status != 5)
+                                                    <th scope="col">Status</th>
+                                                    <td class="text-uppercase "><span
+                                                            class="font-weight-bold rounded px-2 py-1"
+                                                            style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
+                                                    </td>
+                                                @endif
                                                 <th scope="col">Remark</th>
                                                 <td class="text-uppercase">
                                                     {{ $item->remark == null ? 'N/A' : $item->remark }}
@@ -213,47 +223,35 @@
                                             and payment information</p>
 
                                     </div>
-                                    {{-- <div class="col-xl-3">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted ms-3"><span
-                                                    class="text-black me-4">SubTotal</span>$1110
-                                            </li>
-                                            <li class="text-muted ms-3 mt-2">
-                                                <span class="text-black me-4">Tax(15%)</span>$111
-                                            </li>
-                                        </ul>
-                                        <p class="text-black float-start"><span class="text-black me-3"> Total
-                                                Amount</span><span style="font-size: 25px;">$1221</span>
-                                        </p>
-                                    </div> --}}
+
                                 </div>
                                 <hr>
                                 <div class="row mb-5">
                                     <div class="col-xl-10 col-lg-8 col-md-12 mb-3">
                                         <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
                                     </div>
-
-                                    <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
-                                        <p><strong>Terms & Conditions:</strong></p>
-                                        <ul class="list-unstyled">
-                                            <li>1. We will not be responsible if the product are not taken back within
-                                                30
-                                                days.</li>
-                                            <li class="mt-2">2. Before coming to collect the product, call and make sure.</li>
-                                            <li class="mt-2">3. Warranty guarantee will not be valid for repairing of any item.
-                                            </li>
-                                            <li class="mt-2">4. If for any reason your laptop is not repaired or you do not get it
-                                                repaired then you will have to pay checking charges (Rs. 350).
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    @if ($item->status != 'work done')
+                                    @if ($item->status != 4 && $item->status != 5)
+                                        <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
+                                            <p><strong>Terms & Conditions:</strong></p>
+                                            <ul class="list-unstyled">
+                                                <li>1. We will not be responsible if the product is not taken back within 30
+                                                    days.</li>
+                                                <li class="mt-2">2. Before coming to collect the product, call and make
+                                                    sure.</li>
+                                                <li class="mt-2">3. Warranty guarantee will not be valid for repairing any
+                                                    item.</li>
+                                                <li class="mt-2">4. If for any reason your laptop is not repaired or you do
+                                                    not get it repaired, you will have to pay checking charges (Rs. 350).
+                                                </li>
+                                            </ul>
+                                        </div>
                                         <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
                                             <p><strong>To track your request, please check the URL below:</strong></p>
                                             https://www.novafix.in/trackRequest
                                         </div>
                                     @endif
+
+
 
                                     <!-- Authorized Sign & Stamp section -->
                                     <div class="col-xl-2 col-lg-4 col-md-12 mb-3 text-center">

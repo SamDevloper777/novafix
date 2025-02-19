@@ -22,7 +22,7 @@
                         </div>
                         <div class="mb-3 col-12 col-md-6">
                             <label for="" class="text-xs font-semibold px-1">Model Name</label>
-                            <input type="text" id="product_name" name="product_name" class="form-control">
+                            <input type="text" id="product_name" name="product_name"  value="{{ old('product_name') }}" class="form-control">
                             @error('product_name')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
@@ -31,14 +31,14 @@
                     <div class="row">
                         <div class="mb-3 col-12 col-md-6">
                             <label for="" class="text-xs font-semibold px-1">Contact</label>
-                            <input type="number" id="contact" name="contact" class="form-control" onblur="fetchCustomerDetails()">
+                            <input type="number" id="contact" name="contact" value="{{ old('contact') }}" class="form-control" onblur="fetchCustomerDetails()">
                             @error('contact')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-3 col-12 col-md-6">
                             <label for="" class="text-xs font-semibold px-1">Email</label>
-                            <input type="email" id="email" name="email" class="form-control">
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" class="form-control">
                             @error('email')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
@@ -47,21 +47,21 @@
                     <div class="row">
                         <div class="mb-3 col-12 col-md-4">
                             <label for="" class="text-xs font-semibold px-1">Brand</label>
-                            <input type="text" id="brand" name="brand" class="form-control">
+                            <input type="text" id="brand" name="brand" value="{{ old('brand') }}" class="form-control">
                             @error('brand')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-3 col-12 col-md-4">
                             <label for="" class="text-xs font-semibold px-1">Color</label>
-                            <input type="text" id="color" name="color" class="form-control">
+                            <input type="text" id="color" name="color" value="{{ old('color') }}" class="form-control">
                             @error('color')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
                         </div>
                         <div class="mb-3 col-12 col-md-4">
                             <label for="" class="text-xs font-semibold px-1">Type</label>
-                            <select name="type_id" id="type_id" class="form-select font-semibold text-xl px-1">
+                            <select name="type_id" id="type_id" value="{{ old('type_id') }}" class="form-select font-semibold text-xl px-1">
                                 <option value="">Select Type</option>
                                 @foreach ($Types as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>

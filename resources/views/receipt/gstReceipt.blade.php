@@ -100,12 +100,7 @@
                                             <i class="fas fa-envelope" style="color:#84B0CA;"></i>
                                             <span
                                                 class="fw-bold">{{ $item->receptionist->franchise?->email ?? 'N/A' }}</span>
-                                        </li>
-                                        <li class="text-muted">
-                                            <i class="fas fa-circle" style="color:#84B0CA;"></i>
-                                            <span class="fw-bold">Creation Date:</span>
-                                            {{ date('d M Y', strtotime($item->created_at)) }}
-                                        </li>
+                                        </li>                                       
                                     </ul>
                                 </div>
                             </div>
@@ -114,12 +109,14 @@
                                 <table class="table table-striped table-bordered">
                                     <tbody>
                                         <tr>
-                                            <th scope="col">Name</th>
-                                            <td class="text-uppercase">{{ $item->owner_name }}</td>
-                                            <th scope="col">Service code</th>
-                                            <td class="text-uppercase">
-                                                <h4 class="m-0 text-info">{{ $item->service_code }}</h4>
-                                            </td>
+                                        <th scope="col">Name</th>
+                                                <td class="text-uppercase">
+                                                    {{ $item->owner_name }}
+                                                </td>
+                                                <th scope="col">Service code</th>
+                                                <td class="text-uppercase">
+                                                    <h4 class="m-0 text-info">{{ $item->service_code }}</h4>
+                                                </td>
                                         </tr>
                                         <tr>
                                             <th scope="col">Problem</th>
@@ -142,16 +139,12 @@
                                         <tr>
                                             <th scope="col">Model No</th>
                                             <td class="text-uppercase">{{ $item->product_name }}</td>
-                                            <th scope="col">Est Delivery Date</th>
+                                            <th scope="col">Delivery Date</th>
                                             <td class="text-uppercase">
-                                                {{ date('d M Y', strtotime('+10')) }}
+                                                {{ date('d M Y') }}
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <th scope="col">Status</th>
-                                            <td class="text-uppercase "><span class="font-weight-bold rounded px-2 py-1"
-                                                    style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
-                                            </td>
+                                        <tr>                                          
                                             <th scope="col">Remark</th>
                                             <td class="text-uppercase">
                                                 {{ $item->remark == null ? 'N/A' : $item->remark }}
@@ -201,25 +194,14 @@
                             </div>
 
                             <hr>
-                            <div class="flex justify-content-between row">
+                            <div class="flex">
                                 <div class="col-xl-10">
                                     <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
+                                </div>                                                              
+                                    <p><strong>6-Month Warranty</strong></p>
+                                
                                 </div>
-                                <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
-                                    <p><strong>Terms & Conditions:</strong></p>
-                                    <ul class="list-unstyled">
-                                        <li>1. We will not be responsible if the product are not taken back within 30
-                                            days.</li>
-                                        <li>2. Before coming to collect the product, call and make sure.</li>
-                                        <li>3. Warranty guarantee will not be valid for repairing of any item.
-                                        </li>
-                                    </ul>
-                                </div>
-                                @if ($item->status === 'work done')
-                                    <p><strong>6-Month Warranty:</strong></p>
-                                @endif                                  <div class="col-xl-2">
-                                    <h6>Authorized Sign & Stamp</h6>
-                                </div>
+                                <h6 class="text-end">Authorized Sign & Stamp</h6>
                             </div>
                         </div>
                     </div>
