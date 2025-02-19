@@ -24,39 +24,50 @@ class RequestController extends Controller
     }
 
     public function requestCreate(Request $request)
-    {
-        $service_code = Str::random(6);
-        
-        $data = $request -> validate([
-            'owner_name' => 'required',
-            'product_name' => 'required',
-            'email' => 'required',
-            'contact' => 'required',
-            'type_id' => 'required',
-            'brand' => 'required',
-            'color' => 'required',
-            'problem' => 'required',            
-           
-           ]);
+{
+    if ($request->ajax() && $request->has('contact')) {            
+        $contactNumber = $request->input('contact');
 
-           $data['service_code'] = $service_code;
+        $customer = RequestModel::where('contact', $contactNumber)->first();
 
-        //    dd($data);
-        $previousRequest = RequestModel::where('owner_name', $data['owner_name'])
-            ->orWhere('email', $data['email'])
-            ->first();
-
-        if ($previousRequest) {
-            $data['contact'] = $previousRequest->contact;
-        } 
-
-        RequestModel::create($data);
-        // return redirect()->route('flashMsg');
-        // Mail::to($data['email'])->send(new RequestSend());
-
-        return view('flashMessage',$data);
-        
+        if ($customer) {
+            return response()->json([
+                'success' => true,
+                'customer' => [
+                    'owner_name' => $customer->owner_name,
+                    'product_name' => $customer->product_name,
+                    'email' => $customer->email,
+                    'brand' => $customer->brand,
+                    'serial_no' => $customer->serial_no,
+                    'color' => $customer->color,
+                    'MAC' => $customer->MAC,
+                    'type_id' => $customer->type_id,
+                ]
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Customer not found. Please check the contact number.']);
+        }
     }
+
+    $service_code = Str::random(6);
+    
+    $data = $request->validate([
+        'owner_name' => 'required',
+        'product_name' => 'required',
+        'email' => 'required',
+        'contact' => 'required|unique:requests,contact',  
+        'type_id' => 'required',
+        'brand' => 'required',
+        'color' => 'required',
+        'problem' => 'required',            
+    ]);
+
+    $data['service_code'] = $service_code;
+
+    RequestModel::create($data);
+    return view('flashMessage', $data);
+}
+
     
     public function allRequests(){
         $recpt = auth()->user()->id;
