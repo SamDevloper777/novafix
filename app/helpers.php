@@ -6,17 +6,17 @@ use Carbon\Carbon;
 
 if (! function_exists('countNewRequest')) {
     function countNewRequest($type_id = NULL,$status = NULL) {
-        
+        $recpt = auth()->user()->id;
         if($status == NULL){
            
-                $count = RequestModel::where('reciptionist_id')->where('technician_id',NULL)->count();
+                $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',NULL)->count();
     
         }
         else if($status == NULL){
-            $count = RequestModel::where('reciptionist_id')->where('technician_id',NULL)->where('type_id',$type_id)->count();
+            $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',NULL)->where('type_id',$type_id)->count();
         }
         else if($status != NULL){
-            $count = RequestModel::where('reciptionist_id')->where('technician_id','!=',NULL)->where('type_id',$type_id)->where('status',$status)->count();
+            $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id','!=',NULL)->where('type_id',$type_id)->where('status',$status)->count();
         }
         return $count;
     }
@@ -98,16 +98,17 @@ for($i = 1; $i <= 12; $i++){
 
 if (! function_exists('CountStaffRequest')) {
     function CountStaffRequest($status="all",$technician=NULL) {
+        $recpt = auth()->user()->id;
         if($status=="all" && $technician == null ){
-            $count = RequestModel::where('technician_id',Auth::user()->id)->where('type_id',Auth()->user()->type_id)->count();
+            $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',Auth::user()->id)->where('type_id',Auth()->user()->type_id)->count();
         }
         elseif($status=="all" && $technician == true){
-            $count = RequestModel::where('technician_id',NULL)->where('type_id',Auth()->user()->type_id)->count();
+            $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',NULL)->where('type_id',Auth()->user()->type_id)->count();
             
         }
         else{
           
-            $count = RequestModel::where('technician_id',Auth::user()->id)->where("status",$status)->where('type_id',Auth()->user()->type_id)->count();
+            $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',Auth::user()->id)->where("status",$status)->where('type_id',Auth()->user()->type_id)->count();
             
         }     
         

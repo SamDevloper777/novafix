@@ -59,8 +59,9 @@ class RequestController extends Controller
     }
     
     public function allRequests(){
+        $recpt = auth()->user()->id;
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)->where('technician_id',$user->id)->orderBy('created_at', 'DESC')->paginate(8);
+        $data['allRequests'] = RequestModel::where('reciptionist_id',$recpt)->where('type_id',$user->type_id)->where('technician_id',$user->id)->orderBy('created_at', 'DESC')->paginate(8);
         $data['title'] = "All Request";
         return view("staff.requests",$data);
     }
@@ -92,7 +93,8 @@ class RequestController extends Controller
     // work in progress requset 
     public function workProgressRequest(Request $req, $id){
         $user = Auth::guard('staff')->user();
-        $request = RequestModel::where('type_id',$user->type_id)
+        $recept = auth()->user()->id;
+        $request = RequestModel::where('reciptionist_id',$recept)->where('type_id',$user->type_id)
                                 ->where('technician_id',$user->id)
                                 ->where('status',1)  // 1 confirm
                                 ->where('id',$id)->first();
@@ -138,7 +140,8 @@ class RequestController extends Controller
     public function rejected( Request $req){
         
         $user = Auth::guard('staff')->user();
-        $data=RequestModel::where('id',$req->id)
+        $recept = auth()->user()->id;
+        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
         ->where('type_id',$user->type_id)
         ->where('status',"!=",5)  // 5 delivered
         ->where('technician_id',$user->id)->first();
@@ -151,8 +154,9 @@ class RequestController extends Controller
     //pending update table
    
     public function pending( Request $req){
+        $recept = auth()->user()->id;
         $user = Auth::guard('staff')->user();
-        $data=RequestModel::where('id',$req->id)
+        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
         ->where('type_id',$user->type_id)
         ->where('status',"!=",5)    // 5 delivered
         ->where('technician_id',$user->id)->first();
@@ -166,7 +170,8 @@ class RequestController extends Controller
    
     public function workDone( Request $req){
         $user = Auth::guard('staff')->user();
-        $data=RequestModel::where('id',$req->id)
+        $recept = auth()->user()->id;
+        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
         ->where('type_id',$user->type_id)
         ->where('technician_id',$user->id)
         // ->where('status',2)  
@@ -205,6 +210,8 @@ class RequestController extends Controller
     // show pending request
     public function pendingRequests(){
         $user = Auth::guard('staff')->user();
+
+        
         $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
                                     ->where('technician_id',$user->id)                              
                                     ->where('status',0)
@@ -216,7 +223,7 @@ class RequestController extends Controller
     }
     //  showWorkprogress request
     public function showWorkprogress(){
-        $user = Auth::guard('staff')->user();
+        $user = Auth::guard('staff')->user();        
         $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
                                     ->where('technician_id',$user->id)                              
                                    -> whereBetween('status', [2.0, 3.0])

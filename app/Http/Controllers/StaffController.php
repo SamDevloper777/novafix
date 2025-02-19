@@ -13,8 +13,9 @@ class StaffController extends Controller
 {   
     public function index(Request $req): View
     {
+        $rep = auth()->user()->id;
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('technician_id',null)->where('type_id',$user->type_id)->orderBy("id", "DESC")->take(7)->get();
+        $data['allRequests'] = RequestModel::where('reciptionist_id',$rep)->where('technician_id',null)->where('type_id',$user->type_id)->orderBy("id", "DESC")->take(7)->get();
 
         return view('staff.dashboard',$data); 
     }
@@ -52,7 +53,7 @@ class StaffController extends Controller
     
     public function globalSearch(Request $req){
         $data['search_value']="";
-        $data['allRequests']=RequestModel::where('service_code',"LIKE","%".$req->search."%")
+        $data['allRequests']=RequestModel::where('reciptionist_id')->where('service_code',"LIKE","%".$req->search."%")
         ->orWhere('contact', 'like', '%' . $req->search . '%')
         ->orWhere('owner_name', 'like', '%' . $req->search . '%')->get();
         $data['title']='Search Record';
