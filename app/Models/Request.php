@@ -10,7 +10,22 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Request extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    protected $fillable = [
+        'franchise_id',
+        'reciptionist_id',
+        'service_code',
+        'technician_id',
+        'owner_name',
+        'product_name',
+        'email',
+        'contact',
+        'brand',
+        'serial_no',
+        'color',
+        'MAC',
+        'type_id',
+        'problem',
+    ];
 
     public function type(): HasOne
     {
@@ -23,10 +38,10 @@ class Request extends Model
 
     public function receptionist()
     {
-        return $this->belongsTo(Receptioner::class, 'reciptionist_id'); 
+        return $this->belongsTo(Receptioner::class, 'reciptionist_id');
     }
-  
-    
+
+
     public function getStatus()
     {
         $status = $this->status;
