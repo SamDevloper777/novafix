@@ -55,7 +55,7 @@ class RequestController extends Controller
         'owner_name' => 'required',
         'product_name' => 'required',
         'email' => 'required',
-        'contact' => 'required|unique:requests,contact',  
+        'contact' => 'required',  
         'type_id' => 'required',
         'brand' => 'required',
         'color' => 'required',
