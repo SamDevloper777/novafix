@@ -36,18 +36,19 @@
     <!-- summernote -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-        <style>
-    @media print {
-        .print-flex {
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
+    <style>
+        @media print {
+            .print-flex {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            .print-flex .col-md-6 {
+                width: 48% !important;
+            }
         }
-        .print-flex .col-md-6 {
-            width: 48% !important;
-        }
-    }
-</style>
+    </style>
 
 </head>
 
@@ -79,32 +80,36 @@
 
                 <!-- User and Franchise Info -->
                 <div class="row mb-4 print-flex">
-    <div class="mt-5 mt-print-0 col-md-6">
-        <ul class="list-unstyled text-muted">
-            <li><strong>Name:</strong> <span class="text-primary">{{ $item->owner_name }}</span></li>
-            <li><i class="fas fa-phone me-1"></i>{{ $item->contact }}</li>
-            <li><i class="bi bi-envelope me-1"></i>{{ $item->email }}</li>
-        </ul>
-    </div>
-    <div class="col-md-6">
-        <ul class="list-unstyled text-end text-muted">
-            <li>
-                <i class="fas fa-map-marker-alt me-1 text-primary"></i><strong>NovaFix</strong><br>
-                @if ($item->receptionist?->franchise)
-                    {{ $item->receptionist->franchise->franchise_name }}<br>
-                    {{ $item->receptionist->franchise->street }},<br>
-                    ({{ $item->receptionist->franchise->district }}),
-                    {{ $item->receptionist->franchise->state }} -
-                    {{ $item->receptionist->franchise->pincode }}
-                @else
-                    <span class="text-danger">Franchise details not available</span>
-                @endif
-            </li>
-            <li><i class="fas fa-phone me-1 text-primary"></i>{{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}</li>
-            <li><i class="fas fa-envelope me-1 text-primary"></i>{{ $item->receptionist->franchise?->email ?? 'N/A' }}</li>
-        </ul>
-    </div>
-</div>
+                    <div class="mt-5 mt-print-0 col-md-6">
+                        <ul class="list-unstyled text-muted">
+                            <li><strong>Name:</strong> <span class="text-primary">{{ $item->owner_name }}</span></li>
+                            <li><i class="fas fa-phone me-1"></i>{{ $item->contact }}</li>
+                            <li><i class="bi bi-envelope me-1"></i>{{ $item->email }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled text-end text-muted">
+                            <li>
+                                <i class="fas fa-map-marker-alt me-1 text-primary"></i><strong>NovaFix</strong><br>
+                                @if ($item->receptionist?->franchise)
+                                    {{ $item->receptionist->franchise->franchise_name }}<br>
+                                    {{ $item->receptionist->franchise->street }},<br>
+                                    ({{ $item->receptionist->franchise->district }}),
+                                    {{ $item->receptionist->franchise->state }} -
+                                    {{ $item->receptionist->franchise->pincode }}
+                                @else
+                                    <span class="text-danger">Franchise details not available</span>
+                                @endif
+                            </li>
+                            <li><i
+                                    class="fas fa-phone me-1 text-primary"></i>{{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}
+                            </li>
+                            <li><i
+                                    class="fas fa-envelope me-1 text-primary"></i>{{ $item->receptionist->franchise?->email ?? 'N/A' }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
                 <!-- Device & Service Info Table -->
                 <div class="table-responsive mb-4">
