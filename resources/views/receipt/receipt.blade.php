@@ -36,237 +36,157 @@
     <!-- summernote -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <style>
+    @media print {
+        .print-flex {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+        .print-flex .col-md-6 {
+            width: 48% !important;
+        }
+    }
+</style>
+
 </head>
 
 <body>
-    <div class="container-fluid mt-5">
-        <div class="card">
+    <div class="container mt-5">
+        <div class="card shadow-sm">
             <div class="card-body">
-                <div c`lass="container mb-5 mt-3">
-                    <div class="row d-flex align-items-baseline">
-                        <div class="row">
-                            <div class="col-xl-9">
-                                <p style="color: #7e8d9f;font-size: 20px;">Receipt No: <strong
-                                        class="text-uppercase">SX-{{ $item->id }}-{{ $item->type->id }}
-                                    </strong></p>
-
-                            </div>
-                            <div class="col-xl-3 float-end d-print-none">
-                                <a href="{{  url()->previous() }}" class="btn btn-light text-capitalize"
-                                    data-mdb-ripple-color="dark"><i class="fa fa-arrow-left text-danger"></i>
-                                    back</a>
-                                <a type="button" onclick="window.print()" id="print-button"
-                                    class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark"><i
-                                        class="fas fa-print text-primary"></i>
-                                    Print</a>
-
-                            </div>
-                            <hr />
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="col-md-12">
-                                    <div class="text-center">
-                                        <h1 class="fw-bold text-dark">NovaFix</h1>
-                                        Fixing Today, Securing Tomorrow!</p>
-                                    </div>
-                                </div>
-
-
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted">Name: <span
-                                                    style="color:#5d9fc5 ;">{{ $item->owner_name }}</span>
-                                            </li>
-                                            {{-- <li class="text-muted">Street, City</li>
-                                            <li class="text-muted">State, Country</li> --}}
-                                            <li class="text-muted"><i class="fas fa-phone"></i> {{ $item->contact }}
-                                            </li>
-                                            <li class="text-muted"><i class="bi bi-envelope"></i> {{ $item->email }}
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <ul class="list-unstyled">
-                                            <li class="text-muted">
-                                                <i class="fas fa-map-marker" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">NovaFix</span> <br>
-
-                                                @if ($item->receptionist?->franchise)
-                                                    {{ $item->receptionist->franchise->franchise_name }} <br>
-                                                    {{ $item->receptionist->franchise->street }}, <br>
-                                                    <!-- {{ $item->receptionist->franchise->city }} -->
-                                                    ({{ $item->receptionist->franchise->district }}),
-                                                    {{ $item->receptionist->franchise->state }} -
-                                                    {{ $item->receptionist->franchise->pincode }} <br>
-                                                @else
-                                                    <span class="text-danger">Franchise details not available</span>
-                                                @endif
-                                            </li>
-
-                                            <li class="text-muted">
-                                                <i class="fas fa-phone" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">
-                                                    {{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}
-                                                </span>
-                                            </li>
-
-                                            <li class="text-muted">
-                                                <i class="fas fa-envelope" style="color:#84B0CA;"></i>
-                                                <span class="fw-bold">
-                                                    {{ $item->receptionist->franchise?->email ?? 'N/A' }}
-                                                </span>
-                                            </li>
-
-                                            @if ($item->status != 4 && $item->status != 5)
-                                                <li class="text-muted">
-                                                    <i class="fas fa-circle" style="color:#84B0CA;"></i>
-                                                    <span class="fw-bold">Creation Date:</span>
-                                                    {{ date('d M Y', strtotime($item->created_at)) }}
-                                                </li>
-                                            @endif
-                                        </ul>
-                                    </div>
-
-                                </div>
-
-                                <div class="row my-2 mx-1 justify-content-center">
-                                    <table class="table table-striped table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <td class="text-uppercase">
-                                                    {{ $item->owner_name }}
-                                                </td>
-                                                <th scope="col">Service code</th>
-                                                <td class="text-uppercase">
-                                                    <h4 class="m-0 text-info">{{ $item->service_code }}</h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-
-                                                <th scope="col">Problem</th>
-                                                <td class="text-uppercase">{{ $item->problem }}</td>
-
-                                                <th scope="col">brand</th>
-                                                <td class="text-uppercase">{{ $item->brand }}</td>
-                                            </tr>
-                                            <tr>
-
-                                                <th scope="col">Type</th>
-                                                <td class="text-uppercase">{{ $item->type->name }}</td>
-                                                <th scope="col">S.N</th>
-                                                <td class="text-uppercase">{{ $item->serial_no }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">MAC</th>
-                                                <td class="text-uppercase">{{ $item->MAC }}</td>
-                                                <th scope="col">Color</th>
-                                                <td class="text-uppercase">{{ $item->color }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="col">Model No</th>
-                                                <td class="text-uppercase">{{ $item->product_name }}</td>
-                                                <th scope="col">Delivery Date</th>
-                                                <td class="text-uppercase">
-                                                    {{ date('d M Y') }}
-                                                </td>
-                                                @if ($item->status != 4 && $item->status != 5)
-                                                <th scope="col">ESTDelivery Date</th>
-                                                <td class="text-uppercase">
-                                                {{ date('d M Y', strtotime('+10 days')) }}
-                                                </td>
-                                                @endif
-
-                                            </tr>
-
-                                            <tr>
-                                                @if ($item->status != 4 && $item->status != 5)
-                                                    <th scope="col">Status</th>
-                                                    <td class="text-uppercase "><span
-                                                            class="font-weight-bold rounded px-2 py-1"
-                                                            style="color:{{StatusColor($item->status)}};">{{ $item->getStatus() }}</span>
-                                                    </td>
-                                                @endif
-                                                <th scope="col">Remark</th>
-                                                <td class="text-uppercase">
-                                                    {{ $item->remark == null ? 'N/A' : $item->remark }}
-                                                </td>
-                                            </tr>
-                                            @if ($item->status == 4 || $item->status == 5)
-                                                <tr id="amount-row">
-                                                    <th scope="col">Total Amount</th>
-                                                    <td colspan="4" class="text-uppercase text-end text-center">
-                                                        <span id="amount-display">
-                                                            @if($item->amount)
-                                                                ₹ {{ $item->amount }}
-                                                            @endif
-                                                        </span>
-                                                        <input type="text" name="service_amount" id="service_amount"
-                                                            placeholder="Service Amount" class="form-control"
-                                                            value="{{ $item->amount ?? '' }}"
-                                                            style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
-                                                            onblur="toggleAmountDisplay()">
-                                                    </td>
-                                                </tr>
-                                            @endif
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xl-8">
-                                        <p class="ms-3">Add additional notes
-                                            and payment information</p>
-
-                                    </div>
-
-                                </div>
-                                <hr>
-                                <div class="row mb-5">
-                                    <div class="col-xl-10 col-lg-8 col-md-12 mb-3">
-                                        <p>Thank you for choosing NovaFix. We appreciate your trust in our service!</p>
-                                    </div>
-                                    @if ($item->status != 4 && $item->status != 5)
-                                        <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
-                                            <p><strong>Terms & Conditions:</strong></p>
-                                            <ul class="list-unstyled">
-                                                <li>1. We will not be responsible if the product is not taken back within 30
-                                                    days.</li>
-                                                <li class="mt-2">2. Before coming to collect the product, call and make
-                                                    sure.</li>
-                                                <li class="mt-2">3. Warranty guarantee will not be valid for repairing any
-                                                    item.</li>
-                                                <li class="mt-2">4. If for any reason your laptop is not repaired or you do
-                                                    not get it repaired, you will have to pay checking charges (Rs. 350).
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-xl-5 col-lg-6 col-md-12 mb-3">
-                                            <p><strong>To track your request, please check the URL below:</strong></p>
-                                            https://www.novafix.in/trackRequest
-                                        </div>
-                                    @endif
-
-
-
-                                    <!-- Authorized Sign & Stamp section -->
-                                    <div class="col-xl-2 col-lg-4 col-md-12 mb-3 text-center">
-                                        <h6><strong>Authorized Sign & Stamp</strong></h6>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                <!-- Header Section -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="text-muted fs-5 mb-0">
+                        Receipt No: <strong>SX-{{ $item->id }}-{{ $item->type->id }}</strong>
+                    </p>
+                    <div class="d-print-none">
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-sm me-2">
+                            <i class="fa fa-arrow-left text-danger"></i> Back
+                        </a>
+                        <button onclick="window.print()" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-print text-primary"></i> Print
+                        </button>
                     </div>
                 </div>
+                <hr>
 
+                <!-- Company Branding -->
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold text-dark mb-0">NovaFix</h1>
+                    <small class="text-muted">Fixing Today, Securing Tomorrow!</small>
+                </div>
+
+                <!-- User and Franchise Info -->
+                <div class="row mb-4 print-flex">
+    <div class="mt-5 mt-print-0 col-md-6">
+        <ul class="list-unstyled text-muted">
+            <li><strong>Name:</strong> <span class="text-primary">{{ $item->owner_name }}</span></li>
+            <li><i class="fas fa-phone me-1"></i>{{ $item->contact }}</li>
+            <li><i class="bi bi-envelope me-1"></i>{{ $item->email }}</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <ul class="list-unstyled text-end text-muted">
+            <li>
+                <i class="fas fa-map-marker-alt me-1 text-primary"></i><strong>NovaFix</strong><br>
+                @if ($item->receptionist?->franchise)
+                    {{ $item->receptionist->franchise->franchise_name }}<br>
+                    {{ $item->receptionist->franchise->street }},<br>
+                    ({{ $item->receptionist->franchise->district }}),
+                    {{ $item->receptionist->franchise->state }} -
+                    {{ $item->receptionist->franchise->pincode }}
+                @else
+                    <span class="text-danger">Franchise details not available</span>
+                @endif
+            </li>
+            <li><i class="fas fa-phone me-1 text-primary"></i>{{ $item->receptionist->franchise?->contact_no ?? 'N/A' }}</li>
+            <li><i class="fas fa-envelope me-1 text-primary"></i>{{ $item->receptionist->franchise?->email ?? 'N/A' }}</li>
+        </ul>
+    </div>
+</div>
+
+                <!-- Device & Service Info Table -->
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered table-striped align-middle">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td class="text-uppercase">{{ $item->owner_name }}</td>
+                                <th>Service Code</th>
+                                <td class="text-uppercase text-info">{{ $item->service_code }}</td>
+                            </tr>
+                            <tr>
+                                <th>Problem</th>
+                                <td class="text-uppercase">{{ $item->problem }}</td>
+                                <th>Brand</th>
+                                <td class="text-uppercase">{{ $item->brand }}</td>
+                            </tr>
+                            <tr>
+                                <th>Type</th>
+                                <td class="text-uppercase">{{ $item->type->name }}</td>
+                                <th>S.N</th>
+                                <td class="text-uppercase">{{ $item->serial_no }}</td>
+                            </tr>
+                            <tr>
+                                <th>MAC</th>
+                                <td class="text-uppercase">{{ $item->MAC }}</td>
+                                <th>Color</th>
+                                <td class="text-uppercase">{{ $item->color }}</td>
+                            </tr>
+                            <tr>
+                                <th>Model No</th>
+                                <td class="text-uppercase">{{ $item->product_name }}</td>
+                                <th>Delivery Date</th>
+                                <td>{{ date('d M Y') }}</td>
+                            </tr>
+                            @if ($item->status != 4 && $item->status != 5)
+                                <tr>
+                                    <th>Estimated Delivery</th>
+                                    <td>{{ date('d M Y', strtotime('+10 days')) }}</td>
+                                    <th>Status</th>
+                                    <td>
+                                        <span class="fw-bold px-2 py-1 rounded"
+                                            style="color:{{ StatusColor($item->status) }}">
+                                            {{ $item->getStatus() }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endif
+                            <tr>
+                                <th>Remark</th>
+                                <td colspan="3" class="text-uppercase">{{ $item->remark ?? 'N/A' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Thank You Note -->
+                <div class="text-muted mb-4">
+                    Thank you for choosing NovaFix. We appreciate your trust in our service!
+                </div>
+
+                <hr>
+
+                <!-- Terms & Conditions -->
+                <div>
+                    <h6><strong>Terms & Conditions:</strong></h6>
+                    <ul class="text-muted">
+                        <li>1. We will not be responsible if the product is not taken back within 30 days.</li>
+                        <li>2. Please confirm by phone before collecting your product.</li>
+                        <li>3. Warranty applies only to GST-included repairs.</li>
+                        <li>4. Rs. 350 checking fee applies if not repaired or repair declined.</li>
+                    </ul>
+                </div>
+
+                <!-- Signature -->
+                <div class="text-end mt-4">
+                    <h6><strong>Authorized Sign & Stamp</strong></h6>
+                </div>
             </div>
         </div>
     </div>
+
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->

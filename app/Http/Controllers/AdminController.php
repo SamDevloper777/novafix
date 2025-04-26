@@ -159,9 +159,6 @@ class AdminController extends Controller
 
         $franchise = Franchises::create($validatedData);
 
-        Mail::to($franchise->email)->send(new FranchiseCreated($franchise));
-
-
         return redirect()->route('admin.manageFranchises')->with('success', 'Franchise created successfully.');
     }
 
