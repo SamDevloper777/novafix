@@ -36,7 +36,8 @@
                     <div class="w-full px-3 mb-5 col">
                         <label for="" class="text-black-100">Email</label>
                         <div class="flex">
-                            <input type="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="example@gmail.com">
+                            <input type="email" name="email" class="form-control" value="{{ old('email') }}"
+                                placeholder="example@gmail.com">
                         </div>
                         @error('email')
                             <p class="text-error text-danger">{{ $message }}</p>
@@ -45,7 +46,8 @@
                     <div class="w-full px-3 mb-5 col">
                         <label for="" class="text-black-100">Contact</label>
                         <div class="flex">
-                            <input type="number" name="contact" class="form-control" value="{{ old('contact') }}" placeholder="">
+                            <input type="number" name="contact" class="form-control" value="{{ old('contact') }}"
+                                placeholder="">
                         </div>
                         @error('contact')
                             <p class="text-error text-danger">{{ $message }}</p>
@@ -56,7 +58,8 @@
                     <div class="w-full px-3 mb-5 col">
                         <label for="" class="text-black-100">Salary</label>
                         <div class="flex">
-                            <input type="text" name="salary" class="form-control" value="{{ old('salary') }}" placeholder="">
+                            <input type="text" name="salary" class="form-control" value="{{ old('salary') }}"
+                                placeholder="">
                         </div>
                         @error('salary')
                             <p class="text-error text-danger">{{ $message }}</p>
@@ -85,13 +88,14 @@
                     <div class="w-full px-3 mb-5 col">
                         <label for="" class="text-black-100">Address</label>
                         <div class="flex">
-                            <input type="text" name="address" class="form-control"  value="{{ old('address') }}" placeholder="">
+                            <input type="text" name="address" class="form-control" value="{{ old('address') }}"
+                                placeholder="">
                         </div>
                         @error('salary')
                             <p class="text-error text-danger">{{ $message }}</p>
                         @enderror
                     </div>
-                   
+
                     <div class="w-full px-3 mb-5 col">
 
                         <label for="inputState" class="text-black-100">Type</label>
@@ -105,6 +109,22 @@
                                 {{-- <option>Mobile</option>
                                 <option>Laptop</option>
                                 <option>Assessories</option> --}}
+                            </select>
+                        </div>
+                    </div>
+                    @error('type')
+                        <p class="text-error text-danger">{{ $message }}</p>
+                    @enderror
+                    <div class="w-full px-3 mb-5 col">
+
+                        <label for="inputState" class="text-black-100">Receptionist</label>
+                        <div class="flex w-full">
+                            <label for="receptionist_id">Assign Receptionist</label>
+                            <select name="receptionist_id" id="receptionist_id" class="form-control">
+                                <option value="">None</option>
+                                @foreach ($receptioners as $receptioner)
+                                    <option value="{{ $receptioner->id }}">{{ $receptioner->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -127,7 +147,7 @@
                     <div class="w-full px-3 mb-5 col">
                         <label for="" class="text-black-100">Password</label>
                         <div class="flex">
-                            <input type="password" name="password"  value="{{ old('password') }}" class="form-control">
+                            <input type="password" name="password" value="{{ old('password') }}" class="form-control">
                         </div>
                         @error('password')
                             <p class="text-error text-danger">{{ $message }}</p>

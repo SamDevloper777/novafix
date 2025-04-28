@@ -69,23 +69,43 @@ class RequestController extends Controller
 }
 
     
-    public function allRequests(){
-        $recpt = auth()->user()->id;
-        $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('reciptionist_id',$recpt)->where('type_id',$user->type_id)->where('technician_id',$user->id)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "All Request";
-        return view("staff.requests",$data);
+public function allRequests(){
+    $user = Auth::guard('staff')->user();
+
+    $query = RequestModel::where('type_id', $user->type_id)
+                         ->where('technician_id', $user->id)
+                         ->orderBy('created_at', 'DESC');
+
+    if (!is_null($user->receptionist_id)) {
+        $query->where('reciptionist_id', $user->receptionist_id);
+    } else {
+        $query->whereNull('reciptionist_id'); // Adjust as needed
     }
+
+    $data['allRequests'] = $query->paginate(8);
+    $data['title'] = "All Request";
+
+    return view("staff.requests", $data);
+}
 
     public function newRequests(){
-        $recept = Auth::guard(('receptioner'))->id();
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('reciptionist_id',$recept)->where('type_id',$user->type_id)->where('technician_id',NULL)
-                                        ->orderBy('created_at', 'DESC')->paginate(8);
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', NULL)
+                             ->orderBy('created_at', 'DESC');
+    
+        
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); 
+        }
+            $data['allRequests'] = $query->paginate(8);
         $data['title'] = "New Request";
-        return view("staff.requests",$data);
+        
+        return view("staff.requests", $data);
     }
-
     // Confirm request 
     public function confirmRequest(Request $req, $id){
         $date = \Carbon\Carbon::now();
@@ -104,169 +124,301 @@ class RequestController extends Controller
     // work in progress requset 
     public function workProgressRequest(Request $req, $id){
         $user = Auth::guard('staff')->user();
-        $recept = auth()->user()->id;
-        $request = RequestModel::where('reciptionist_id',$recept)->where('type_id',$user->type_id)
-                                ->where('technician_id',$user->id)
-                                ->where('status',1)  // 1 confirm
-                                ->where('id',$id)->first();
-        $request->status =2;   //2 for work process 
-        $request->save();
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 1) // 1 confirm
+                             ->where('id', $id);
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $request = $query->first();
+    
+        if ($request) {
+            $request->status = 2; // 2 for work in progress
+            $request->save();
+        }
+    
         return redirect()->back();
     }
     // update Deassemble requset 
     public function deassemble(Request $req, $id){
         $user = Auth::guard('staff')->user();
-        $request = RequestModel::where('type_id',$user->type_id)
-                                ->where('technician_id',$user->id)
-                                ->where('status',2)  // 1 confirm
-                                ->where('id',$id)->first();
-        $request->status =2.1;   // Deassemble
-        $request->save();
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 2) // 2 work in progress
+                             ->where('id', $id);
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $request = $query->first();
+    
+        if ($request) {
+            $request->status = 2.1; // Disassembled
+            $request->save();
+        }
+    
         return redirect()->back();
     }
     // update Repair requset 
     public function repair(Request $req, $id){
         $user = Auth::guard('staff')->user();
-        $request = RequestModel::where('type_id',$user->type_id)
-                                ->where('technician_id',$user->id)
-                                // ->where('status',2.1)  
-                                ->where('id',$id)->first();
-        $request->status =2.2;   // Repair 
-        $request->save();
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 2.1) // 2.1 disassembled
+                             ->where('id', $id);
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $request = $query->first();
+    
+        if ($request) {
+            $request->status = 2.2; // Repaired
+            $request->save();
+        }
+    
         return redirect()->back();
     }
     // update Assemble requset 
     public function assemble(Request $req, $id){
         $user = Auth::guard('staff')->user();
-        $request = RequestModel::where('type_id',$user->type_id)
-                                ->where('technician_id',$user->id)
-                                // ->where('status',1)  
-                                ->where('id',$id)->first();
-        $request->status =2.3;   //Assemble 
-        $request->save();
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 2.2) // 2.2 repaired
+                             ->where('id', $id);
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $request = $query->first();
+    
+        if ($request) {
+            $request->status = 2.3; // Assembled
+            $request->save();
+        }
+    
         return redirect()->back();
     }
 
-    // reject update table
-    public function rejected( Request $req){
-        
+    public function rejected(Request $req){
         $user = Auth::guard('staff')->user();
-        $recept = auth()->user()->id;
-        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
-        ->where('type_id',$user->type_id)
-        ->where('status',"!=",5)  // 5 delivered
-        ->where('technician_id',$user->id)->first();
-        $data->status= 3;   // 3 reject
-        $data->remark=$req->remark;
-        $data->save();   
+    
+        $query = RequestModel::where('id', $req->id)
+                             ->where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', '!=', 5); // 5 delivered
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data = $query->first();
+    
+        if ($data) {
+            $data->status = 3; // 3 reject
+            $data->remark = $req->remark;
+            $data->save();
+        }
+    
         return redirect()->back();
     }
-
     //pending update table
    
-    public function pending( Request $req){
-        $recept = auth()->user()->id;
+    public function pending(Request $req){
         $user = Auth::guard('staff')->user();
-        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
-        ->where('type_id',$user->type_id)
-        ->where('status',"!=",5)    // 5 delivered
-        ->where('technician_id',$user->id)->first();
-        $data->status= 0; // 0 painding
-        $data->technician_id=null;
-        
-        $data->save();   
+    
+        $query = RequestModel::where('id', $req->id)
+                             ->where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', '!=', 5); // 5 delivered
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data = $query->first();
+    
+        if ($data) {
+            $data->status = 0; // 0 pending
+            $data->technician_id = null;
+            $data->save();
+        }
+    
         return redirect()->back();
     }
     //  work done requset
    
-    public function workDone( Request $req){
+    public function workDone(Request $req){
         $user = Auth::guard('staff')->user();
-        $recept = auth()->user()->id;
-        $data=RequestModel::where('reciptionist_id',$recept)->where('id',$req->id)
-        ->where('type_id',$user->type_id)
-        ->where('technician_id',$user->id)
-        // ->where('status',2)  
-        ->first();
-        $data->status= 4;   // 4 work done
-        $data->save();   
+    
+        $query = RequestModel::where('id', $req->id)
+                             ->where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id);
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data = $query->first();
+    
+        if ($data) {
+            $data->status = 4; // 4 work done
+            $data->save();
+        }
+    
         return redirect()->back();
     }
-
      // update device deliver 
-     public function requestDeliver( Request $req){
+     public function requestDeliver(Request $req){
         $date = \Carbon\Carbon::now();
-        $user = Auth::guard('receptioner')->user();
-        $data=RequestModel::where('id',$req->id)->where('status',4)->first(); // 4 workdone
-        $data->status= 5;   // 5 deliver
-        $data->remark= "please feedback";
-        $data->delivered_by=$user->name;
-        $data->date_of_delivery=$date;
-        $data->save();   
+        $user = Auth::guard('staff')->user();
+    
+        $query = RequestModel::where('id', $req->id)
+                             ->where('status', 4); // 4 work done
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data = $query->first();
+    
+        if ($data) {
+            $data->status = 5; // 5 deliver
+            $data->remark = "please feedback";
+            $data->delivered_by = $user->name;
+            $data->date_of_delivery = $date;
+            $data->save();
+        }
+    
         return redirect()->back();
     }
-
     // show delivered 
     public function showDelivered(){
-      
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
-                                    ->where('technician_id',$user->id)
-                                    ->where('status',5)->paginate(8);
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 5); // 5 delivered
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data['allRequests'] = $query->paginate(8);
         $data['title'] = "Total Delivered Requests";
         $data["deliveredCount"] = $data['allRequests']->count();
-        
-        return view("staff.requests",$data);
+    
+        return view("staff.requests", $data);
     }
-
     // show pending request
     public function pendingRequests(){
         $user = Auth::guard('staff')->user();
-
-        
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
-                                    ->where('technician_id',$user->id)                              
-                                    ->where('status',0)
-                                    ->orderBy('created_at', 'DESC')->paginate(8);
-
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 0) // 0 pending
+                             ->orderBy('created_at', 'DESC');
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data['allRequests'] = $query->paginate(8);
         $data['title'] = "Total Pending Requests";
-        return view("staff.requests",$data);
-       
+    
+        return view("staff.requests", $data);
     }
     //  showWorkprogress request
     public function showWorkprogress(){
-        $user = Auth::guard('staff')->user();        
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
-                                    ->where('technician_id',$user->id)                              
-                                   -> whereBetween('status', [2.0, 3.0])
-                                    
-                                    ->orderBy('created_at', 'DESC')->paginate(8);
-
-        $data['title'] = "Current work Requests";
-        return view("staff.requests",$data);
-       
+        $user = Auth::guard('staff')->user();
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->whereBetween('status', [2.0, 3.0])
+                             ->orderBy('created_at', 'DESC');
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data['allRequests'] = $query->paginate(8);
+        $data['title'] = "Current Work Requests";
+    
+        return view("staff.requests", $data);
     }
     // show  rejected request 
     public function rejectedRequests(){
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
-                                    ->where('technician_id',$user->id)
-                                    ->where('status',3)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total RejectedRequests";
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 3) // 3 rejected
+                             ->orderBy('created_at', 'DESC');
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id'); // Adjust as needed
+        }
+    
+        $data['allRequests'] = $query->paginate(8);
+        $data['title'] = "Total Rejected Requests";
         $data["RejectedCount"] = $data['allRequests']->count();
-        return view("staff.requests",$data);
-       
+    
+        return view("staff.requests", $data);
     }
     // show Work Done Request
     public function workDoneRequests(){
         $user = Auth::guard('staff')->user();
-        $data['allRequests'] = RequestModel::where('type_id',$user->type_id)
-                                    ->where('technician_id',$user->id)
-                                    ->where('status',4)->orderBy('created_at', 'DESC')->paginate(8);
-        $data['title'] = "Total WorkDoneRequests";
-        return view("staff.requests",$data);
-       
+    
+        $query = RequestModel::where('type_id', $user->type_id)
+                             ->where('technician_id', $user->id)
+                             ->where('status', 4) // 4 work done
+                             ->orderBy('created_at', 'DESC');
+    
+        if (!is_null($user->receptionist_id)) {
+            $query->where('reciptionist_id', $user->receptionist_id);
+        } else {
+            $query->whereNull('reciptionist_id');
+        }
+    
+        $data['allRequests'] = $query->paginate(8);
+        $data['title'] = "Total Work Done Requests";
+    
+        return view("staff.requests", $data);
     }
-
 
     public function requestEdit(Request $req, $id){
         $data=RequestModel::where('id',$id)->first();

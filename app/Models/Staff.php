@@ -13,7 +13,21 @@ class Staff extends Authenticatable
     use HasFactory;
 
     protected $guard = "staff";
-    protected $guarded = [];
+    protected $fillable = [
+        'franchise_id',
+        'receptionist_id',
+        'name',
+        'email',
+        'contact',
+        'salary',
+        'type_id',
+        'status',
+        'image',
+        'aadhar',
+        'pan',
+        'address',
+        'password'
+    ];
 
     public function setPasswordAttribute($value)
     {
@@ -28,6 +42,11 @@ class Staff extends Authenticatable
     public function franchise()
     {
         return $this->belongsTo(Franchises::class);
+    }
+
+    public function receptioner()
+    {
+        return $this->belongsTo(Receptioner::class, 'receptionist_id', 'id');
     }
 
 }
