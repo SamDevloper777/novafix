@@ -134,7 +134,7 @@ Route::prefix("crm")->group(function () {
             Route::match(['post', 'get'], '/EditRequest/{id}', 'editRequest')->name('receptioner.request.edit');
             Route::match(['post', 'get'], '/receptionerRequestForm', 'requestForm')->name('receptioner.request.form');
             Route::get('/request/global/search/', [RequestController::class, 'globalSearch'])->name('request.globalSearch');
-            Route::get('/request/Deliver/{id}', [RequestController::class, 'requestDeliver'])->name('crm.request.deliver');
+            Route::get('/request/Deliver/{id}', [RequestController::class, 'receptionerRequestDeliver'])->name('crm.request.deliver');
             // filter 
             Route::get("/request/datefilter", "dateFilter")->name("receptioner.request.filterbydate");
             Route::get("/request/filterbyselect", "filterBySelect")->name("receptioner.request.filterbyselect");

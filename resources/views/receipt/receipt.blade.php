@@ -162,6 +162,23 @@
                                 <th>Remark</th>
                                 <td colspan="3" class="text-uppercase">{{ $item->remark ?? 'N/A' }}</td>
                             </tr>
+                            @if ($item->status == 4 || $item->status == 5)
+                            <tr id="amount-row">
+                                <th scope="col">Total Amount</th>
+                                <td colspan="4" class="text-uppercase text-end text-center">
+                                    <span id="amount-display">
+                                        @if($item->amount)
+                                            ₹ {{ $item->amount }}
+                                        @endif
+                                    </span>
+                                    <input type="text" name="service_amount" id="service_amount"
+                                        placeholder="Service Amount" class="form-control"
+                                        value="{{ $item->amount ?? '' }}"
+                                        style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
+                                        onblur="toggleAmountDisplay()">
+                                </td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>

@@ -3,197 +3,201 @@
 @section('content')
   <!-- Content Wrapper. Contains page content -->
 
-  <!-- Content Header (Page header) -->
-  <div class="content-header">
-    <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6">
-      <h1 class="m-0">Dashboard</h1>
-      </div><!-- /.col -->
-      <div class="col-sm-6">
-      <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="">Home</a></li>
-        <li class="breadcrumb-item active">Dashboard</li>
-      </ol>
-      </div><!-- /.col -->
-    </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+<div class="content-header">
+  <div class="container-fluid">
+      <div class="row mb-2">
+          <div class="col-sm-6">
+              <h1 class="m-0">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="">Home</a></li>
+                  <li class="breadcrumb-item active">Dashboard</li>
+              </ol>
+          </div><!-- /.col -->
+      </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+@php
+  $rep = Auth::guard('receptioner')->id();
+  $NewCountReq = App\Models\Request::where('technician_id', null)->where('reciptionist_id', $rep)->count();
+  $ConformCountReq = App\Models\Request::where('status', 1)->where('reciptionist_id', $rep)->count();
+  $RejectedCountReq = App\Models\Request::where('status', 3)->where('reciptionist_id', $rep)->count();
+  $WorkdoneCountReq = App\Models\Request::where('status', 4)->where('reciptionist_id', $rep)->count();
+  $DeliveredCountReq = App\Models\Request::where('status', 5)->where('reciptionist_id', $rep)->count();
+  $PendingCountReq = App\Models\Request::where('status', 0)->where('reciptionist_id', $rep)->count();
+  $allReq = App\Models\Request::where('reciptionist_id', $rep)->count();
+@endphp
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+          <div class="col-6">
+              <!-- small box -->
+              <div class="small-box bg-info">
+                  <div class="inner">
+                      <h3>{{ $NewCountReq }}</h3>
+                      <p>New Request</p>
+                  </div>
+                  <div class="icon">
+                      <i class="ion ion-bag"></i>
+                  </div>
+                  <a href="{{ route('receptioner.all.request') }}" class="small-box-footer">More info <i
+                          class="fas fa-arrow-circle-right"></i></a>
+              </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                  <div class="inner">
+                      <h3>{{ $DeliveredCountReq }}</h3>
+                      <p>Total Delivered</p>
+                  </div>
+                  <div class="icon">
+                      <i class="ion ion-stats-bars"></i>
+                  </div>
+                  <a href="{{ route('receptioner.all.request') }}" class="small-box-footer">More info <i
+                          class="fas fa-arrow-circle-right"></i></a>
+              </div>
+          </div>
+      </div>
+
+      <!-- Latest 10 Records -->
+      <div class="card">
+          <div class="card-header float">
+              <div class="float-left">
+                  <h2 class="card-title mb-3">Latest 10 Records</h2>
+              </div>
+              <div class="float-right">
+                  <a href="{{ route('receptioner.request.form') }}" type="button" class="btn btn-info">Add New Request</a>
+              </div>
+          </div>
+          <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                  <thead>
+                      <tr>
+                          <th>S CODE</th>
+                          <th>Owner Name</th>
+                          <th>Model Name</th>
+                          <th>Contact</th>
+                          <th>Color</th>
+                          <th>Brand</th>
+                          <th>Problem</th>
+                          <th>Status</th>
+                          <th>Remark</th>
+                          <th>Created At</th>
+                          <th>Action</th>
+                          <th>Staff</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      @foreach ($allRequests as $item)
+                          <tr>
+                              <td class="text-uppercase text-success fw-bold">{{ $item->service_code }}</td>
+                              <td>{{ $item->owner_name }}</td>
+                              <td>{{ $item->product_name }}</td>
+                              <td>{{ $item->contact }}</td>
+                              <td>{{ $item->color }}</td>
+                              <td>{{ $item->brand }}</td>
+                              <td>{{ $item->problem }}</td>
+                              <td>
+                                  <span class="font-weight-bold rounded px-2 py-1"
+                                      style="color:{{ StatusColor($item->status) }};">
+                                      {{ $item->getStatus() }}
+                                  </span>
+                              </td>
+                              <td>{{ $item->remark }}</td>
+                              <td>{{ date('d M Y', strtotime($item->created_at)) }}</td>
+                              <td class="border border-slate-700 p-1.5 items-center justify-center flex btn-group"
+                                  role="group">
+                                  <div class="btn-group" role="group" aria-label="Button group">
+                                      <a href="{{ route('receptioner.viewRequest', $item->id) }}" role="button"
+                                          class="btn btn-info btn-group">View</a>
+                                      <a href="{{ route('receptioner.request.edit', $item->id) }}" role="button"
+                                          class="btn btn-warning btn-group">Edit</a>
+                                  </div>
+                              </td>
+                              <td>
+                                  <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                      data-bs-target="#exampleModal{{ $item->id }}">
+                                      Staff
+                                  </button>
+                              </td>
+                          </tr>
+
+                          <!-- Modal for Assigning Technician -->
+                          <div class="modal fade" id="exampleModal{{ $item->id }}" tabindex="-1"
+                              aria-labelledby="exampleModalLabel{{ $item->id }}" aria-hidden="true">
+                              <div class="modal-dialog">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="exampleModalLabel{{ $item->id }}">Select Staff</h1>
+                                          <button type="button" class="btn btn-close" data-bs-dismiss="modal"
+                                              aria-label="Close"></button>
+                                      </div>
+                                      <form action="{{ route('receptioner.assignTechnician', $item->id) }}"
+                                          method="POST">
+                                          @csrf
+                                          @method('PATCH')
+                                          <div class="modal-body">
+                                              <select name="technician_id" id="technician_id"
+                                                  class="form-select" required>
+                                                  <option value="">Select Staff</option>
+                                                  @foreach ($staffs as $staff)
+                                                      <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                                  @endforeach
+                                              </select>
+                                          </div>
+                                          <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary"
+                                                  data-bs-dismiss="modal">Close</button>
+                                              <button type="submit" class="btn btn-primary">Assign Technician</button>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+                      @endforeach
+                  </tbody>
+              </table>
+          </div>
+      </div>
   </div>
-  <!-- /.content-header -->
-
-  @php
-    $rep = Auth::guard('receptioner')->id();
-    $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('reciptionist_id', $rep)->get()->count();
-    $dateFilter = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
-    $ConformCountReq = App\Models\Request::where('status', 1)->where('reciptionist_id', $rep)->get()->count();
-    $RejectedCountReq = App\Models\Request::where('status', 3)->where('reciptionist_id', $rep)->get()->count();
-    $WorkdoneCountReq = App\Models\Request::where('status', 4)->where('reciptionist_id', $rep)->get()->count();
-    $DeliveredCountReq = App\Models\Request::where('status', 5)->where('reciptionist_id', $rep)->get()->count();
-    $PendingCountReq = App\Models\Request::where('status', 0)->where('reciptionist_id', $rep)->get()->count();
-    $allReq = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
-
-    
-
-  @endphp
-
-  <!-- Main content -->
-  <section class="content">
-    <div class="container-fluid">
-    <!-- Small boxes (Stat box) -->
-    <div class="row">
-      <div class="col-6">
-      <!-- small box -->
-      <div class="small-box bg-info">
-        <div class="inner">
-        <h3>{{ countNewRequest(auth()->user()->type_id) }}</h3>
-
-        <p>New Request</p>
-        </div>
-        <div class="icon">
-        <i class="ion ion-bag"></i>
-        </div>
-        <a href="{{ route('receptioner.all.request') }}" class="small-box-footer">More info <i
-          class="fas fa-arrow-circle-right"></i></a>
-      </div>
-      </div>
-      <!-- ./col -->
-      <div class="col-6">
-      <!-- small box -->
-      <div class="small-box bg-success">
-        <div class="inner">
-        <h3>{{ $DeliveredCountReq }}</h3>
-
-        <p>Total Delivered</p>
-        </div>
-        <div class="icon">
-        <i class="ion ion-stats-bars"></i>
-        </div>
-        <a href="{{ route('receptioner.all.request') }}" class="small-box-footer">More info <i
-          class="fas fa-arrow-circle-right"></i></a>
-      </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header  float">
-      <div class=" float-left">
-        <h2 class="card-title  mb-3">
-        <h2>Latest 10 Records</h2>
-        </h2>
-      </div>
-      <div class=" float-right  ">
-        <a href="{{ route('receptioner.request.form') }}" type="button" class="btn btn-info">Add New Request</a>
-      </div>
-      </div>
-      <div class="card-body table-responsive p-0">
-      <table class="table table-hover text-nowrap">
-        <thead>
-        <tr>
-          <th>S CODE</th>
-          <th>owner_name</th>
-          <th>model_name</th>
-          <th>Contact</th>
-          <th>color</th>
-          <th>brand</th>
-          <th>problem</th>
-          <th>Status</th>
-          <th>Remark</th>
-          <th>Create_At</th>
-          <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($allRequests as $item)
-      <tr>
-        <td class="text-uppercase text-success fw-bold">{{ $item->service_code }}</td>
-        <td>{{ $item->owner_name }}</td>
-        <td>{{ $item->product_name }}</td>
-        <td>{{ $item->contact }}</td>
-        <td>{{ $item->color }}</td>
-        <td>{{ $item->brand }}</td>
-        <td>{{ $item->problem }}</td>
-        <td><span class="font-weight-bold   rounded px-2 py-1
-              " style="color:{{StatusColor($item->status)}}; ">{{ $item->getStatus() }}</span>
-        </td>
-        <td>{{ $item->remark }}</td>
-        <td>{{ date('d M Y', strtotime($item->created_at)) }}</td>
-        <td class="border border-slate-700 p-1.5  items-center justify-center flex btn-group" role="group">
-        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-
-
-        <div class="btn-group" role="group">
-
-
-
-        {{-- <a data-toggle="modal" data-target="#view{{ $item->id }}" role="button"
-          class=" btn btn-info btn-group ">View</a> --}}
-        <a href="{{ route('receptioner.viewRequest', $item->id) }}" role="button"
-          class=" btn btn-info btn-group ">View</a>
-
-        <a href="{{ route('receptioner.request.edit', $item->id) }}" role="button"
-          class=" btn btn-warning btn-group ">Edit</a>
-
-
-
-        </div>
-        </div>
-
-
-
-
-
-        <div class="modal fade w-100 " id="view{{ $item->id }}" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable " role="document">
-        <div class="modal-content bg-light w-full h-100">
-          <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Profile</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-          </button>
-          </div>
-
-          <div class="modal-body" id="printable-content">
-
-          </div>
-        </div>
-
-
-        </td>
-      </tr>
-    @endforeach
-
-        </tbody>
-      </table>
-      </div>
-    </div>
+</section>
     <!-- ./col -->
     {{-- <div class="col-lg-3 col-6">
-      <!-- small box -->
-      <div class="small-box bg-warning">
+    <!-- small box -->
+    <div class="small-box bg-warning">
       <div class="inner">
-        <h3>{{ countNewRequest(auth()->user()->type_id,"pending")}}</h3>
+      <h3>{{ countNewRequest(auth()->user()->type_id,"pending")}}</h3>
 
-        <p>Total Pending</p>
+      <p>Total Pending</p>
       </div>
       <div class="icon">
-        <i class="ion ion-person-add"></i>
+      <i class="ion ion-person-add"></i>
       </div>
       <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-      </div>
+    </div>
     </div> --}}
     <!-- ./col -->
     <div class="col-lg-3 col-6">
-      <!-- small box -->
-      {{-- <div class="small-box bg-danger">
+    <!-- small box -->
+    {{-- <div class="small-box bg-danger">
       <div class="inner">
-        <h3>{{ countNewRequest(auth()->user()->type_id,"rejected")}}</h3>
+      <h3>{{ countNewRequest(auth()->user()->type_id,"rejected")}}</h3>
 
-        <p>Total Bounced/Rejects</p>
+      <p>Total Bounced/Rejects</p>
       </div>
       <div class="icon">
-        <i class="ion ion-pie-graph"></i>
+      <i class="ion ion-pie-graph"></i>
       </div>
       <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-      </div> --}}
+    </div> --}}
     </div>
     <!-- ./col -->
     </div>

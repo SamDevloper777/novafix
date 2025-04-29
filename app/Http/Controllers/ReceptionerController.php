@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receptioner;
+use App\Models\Staff;
 use App\Services\RequestService;
 use PDF;
 use Carbon\Carbon;
@@ -17,10 +18,24 @@ use Illuminate\Support\Facades\Hash;
 
 class ReceptionerController extends Controller
 {
+
     public function index(Request $req): View
     {
         $reciptionistId = Auth::guard('receptioner')->id();
-        $data['allRequests'] = RequestModel::where('reciptionist_id', $reciptionistId)->orderBy("id", "DESC")->where('technician_id', null)->take(10)->get();
+
+        // Fetch the latest 10 requests for the receptionist
+        $data['allRequests'] = RequestModel::where('reciptionist_id', $reciptionistId)
+            ->where('technician_id', null)
+            ->orderBy("id", "DESC")
+            ->take(10)
+            ->get();
+
+        // Get the type IDs from the requests
+        $requestTypeIds = $data['allRequests']->pluck('type_id')->unique();
+
+        // Fetch staff based on the type IDs from the requests
+        $data['staffs'] = Staff::whereIn('type_id', $requestTypeIds)->get();
+
         return view('receptioner.dashboard', $data);
     }
     public function receptionerlogin(Request $req)
@@ -46,7 +61,7 @@ class ReceptionerController extends Controller
 
     public function requestForm(Request $req)
     {
-        if ($req->ajax() && $req->has('contact')) {            
+        if ($req->ajax() && $req->has('contact')) {
             $contactNumber = $req->input('contact');
 
             $customer = RequestModel::where('contact', $contactNumber)->first();
@@ -88,7 +103,7 @@ class ReceptionerController extends Controller
                 'MAC' => 'nullable',
                 'service_amount' => 'nullable',
             ]);
-        
+
 
             $data['service_code'] = $service_code;
             $data['date_of_delivery'] = $date;
@@ -136,7 +151,38 @@ class ReceptionerController extends Controller
         return view('receptioner.viewRequests', compact("item", "title"));
     }
 
+    public function assignTechnician(Request $request, $id)
+    {
+        // Fetch the type_id for technicians
+        $technicianTypeIds = Type::pluck('id')->toArray(); // Convert to array for validation
 
+        $request->validate([
+            'technician_id' => [
+                'required',
+                'exists:staff,id', // Validate that the technician exists in the staff table
+                function ($attribute, $value, $fail) use ($technicianTypeIds) {
+                    // Ensure the technician's type_id is in the list of technician types
+                    $technician = Staff::find($value);
+                    if (!$technician || !in_array($technician->type_id, $technicianTypeIds)) {
+                        $fail('The selected technician is not valid.');
+                    }
+                },
+            ],
+        ]);
+
+        $receptionistId = Auth::guard('receptioner')->id();
+        $requestModel = RequestModel::where('id', $id)
+            ->where('reciptionist_id', $receptionistId)
+            ->where('technician_id', null)
+            ->firstOrFail();
+
+        $requestModel->update([
+            'technician_id' => $request->technician_id,
+            'last_update' => now(),
+        ]);
+
+        return redirect()->route('receptioner.panel')->with('success', 'Technician assigned successfully.');
+    }
     public function editRequest(Request $req, $id)
     {
         if ($req->method() == 'POST') {
@@ -342,7 +388,7 @@ class ReceptionerController extends Controller
         }
         return view("franchises.receptioner.editReceptioner", compact('data'));
     }
-
+    
     public function UpdateReceptioner(Request $req)
     {
 

@@ -59,14 +59,14 @@ class RequestController extends Controller
     {
         if ($request->ajax() && $request->has('franchise_id') && $request->has('type_id')) {
             $franchiseId = $request->input('franchise_id');
-    
-    
-            $receptionists = Receptioner::where('franchise_id', $franchiseId)              
+
+
+            $receptionists = Receptioner::where('franchise_id', $franchiseId)
                 ->select('id', 'name')
                 ->get();
-    
+
             \Log::info('Receptionists found: ' . $receptionists->toJson());
-    
+
             if ($receptionists->isNotEmpty()) {
                 return response()->json([
                     'success' => true,
@@ -79,427 +79,292 @@ class RequestController extends Controller
                 ]);
             }
         }
-    
+
         return response()->json(['success' => false, 'message' => 'Invalid request.'], 400);
     }
     public function requestCreate(Request $request)
-{
-    if ($request->ajax() && $request->has('contact')) {
-        $contactNumber = $request->input('contact');
+    {
+        if ($request->ajax() && $request->has('contact')) {
+            $contactNumber = $request->input('contact');
 
-        $customer = RequestModel::where('contact', $contactNumber)->first();
+            $customer = RequestModel::where('contact', $contactNumber)->first();
 
-        if ($customer) {
-            return response()->json([
-                'success' => true,
-                'customer' => [
-                    'owner_name' => $customer->owner_name,
-                    'product_name' => $customer->product_name,
-                    'email' => $customer->email,
-                    'brand' => $customer->brand,
-                    'serial_no' => $customer->serial_no,
-                    'color' => $customer->color,
-                    'MAC' => $customer->MAC,
-                    'type_id' => $customer->type_id,
-                ]
-            ]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Customer not found. Please check the contact number.']);
+            if ($customer) {
+                return response()->json([
+                    'success' => true,
+                    'customer' => [
+                        'owner_name' => $customer->owner_name,
+                        'product_name' => $customer->product_name,
+                        'email' => $customer->email,
+                        'brand' => $customer->brand,
+                        'serial_no' => $customer->serial_no,
+                        'color' => $customer->color,
+                        'MAC' => $customer->MAC,
+                        'type_id' => $customer->type_id,
+                    ]
+                ]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Customer not found. Please check the contact number.']);
+            }
         }
+
+        $service_code = Str::random(6);
+
+        $data = $request->validate([
+            'owner_name' => 'required',
+            'product_name' => 'required',
+            'email' => 'required|email',
+            'contact' => 'required',
+            'type_id' => 'required|exists:types,id',
+            'brand' => 'required',
+            'color' => 'required',
+            'problem' => 'required',
+            'district' => 'required',
+            'franchise_id' => 'required|exists:franchises,id',
+            'reciptionist_id' => 'required|exists:receptioners,id',
+        ]);
+
+        $data['service_code'] = $service_code;
+
+        RequestModel::create($data);
+
+        return view('flashMessage', $data);
     }
 
-    $service_code = Str::random(6);
+    public function receptionerRequestDeliver(Request $req, $id)
+    {
+        $user = Auth::guard('receptioner')->user();
+        $request = RequestModel::where('reciptionist_id', $user->id)
+            ->where('id', $id)
+            ->where('status', 4)
+            ->firstOrFail();
 
-    $data = $request->validate([
-        'owner_name' => 'required',
-        'product_name' => 'required',
-        'email' => 'required|email',
-        'contact' => 'required',
-        'type_id' => 'required|exists:types,id',
-        'brand' => 'required',
-        'color' => 'required',
-        'problem' => 'required',
-        'district' => 'required',
-        'franchise_id' => 'required|exists:franchises,id',
-        'reciptionist_id' => 'required|exists:receptioners,id',
-    ]);
+        $request->status = 5;
+        $request->remark = 'Please provide feedback';
+        $request->delivered_by = $user->name;
+        $request->date_of_delivery = now();
+        $request->save();
 
-    $data['service_code'] = $service_code;
-   
-    RequestModel::create($data);
-
-    return view('flashMessage', $data);
-}
-
-
-
+        return redirect()->back()->with('success', 'Request marked as Delivered.');
+    }
     public function allRequests()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
+        $query = RequestModel::where('technician_id', $user->id)
             ->orderBy('created_at', 'DESC');
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "All Request";
-
-        return view("staff.requests", $data);
+        $data['title'] = 'All Requests';
+        return view('staff.requests', $data);
     }
 
     public function newRequests()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', NULL)
+        $query = RequestModel::where('technician_id', $user->id)
             ->orderBy('created_at', 'DESC');
-
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id');
         }
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "New Request";
-
-        return view("staff.requests", $data);
+        $data['title'] = 'New Requests';
+        return view('staff.requests', $data);
     }
-    // Confirm request 
+
     public function confirmRequest(Request $req, $id)
     {
-        $date = \Carbon\Carbon::now();
-        $date->addDays(7);
         $user = Auth::guard('staff')->user();
-        $request = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', NULL)
-            ->where('id', $id)->first();
-
-        $request->technician_id = $user->id;
-        $request->status = 1;    // 1 confirm
-        $request->estimate_delivery = $date;
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 1; // Confirmed
+        $request->estimate_delivery = now()->addDays(7);
         $request->save();
-        return redirect()->route("request.all");
+        return redirect()->route('request.all')->with('success', 'Request confirmed successfully.');
     }
-    // work in progress requset 
+
     public function workProgressRequest(Request $req, $id)
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 1) // 1 confirm
-            ->where('id', $id);
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $request = $query->first();
-
-        if ($request) {
-            $request->status = 2; // 2 for work in progress
-            $request->save();
-        }
-
-        return redirect()->back();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('status', 1) // Confirmed
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 2; // Work in Progress
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Work in Progress.');
     }
-    // update Deassemble requset 
+
     public function deassemble(Request $req, $id)
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 2) // 2 work in progress
-            ->where('id', $id);
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $request = $query->first();
-
-        if ($request) {
-            $request->status = 2.1; // Disassembled
-            $request->save();
-        }
-
-        return redirect()->back();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('status', 2) // Work in Progress
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 2.1; // Disassembled
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Disassembled.');
     }
-    // update Repair requset 
+
     public function repair(Request $req, $id)
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 2.1) // 2.1 disassembled
-            ->where('id', $id);
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $request = $query->first();
-
-        if ($request) {
-            $request->status = 2.2; // Repaired
-            $request->save();
-        }
-
-        return redirect()->back();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('status', 2.1) // Disassembled
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 2.2; // Repaired
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Repaired.');
     }
-    // update Assemble requset 
+
     public function assemble(Request $req, $id)
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 2.2) // 2.2 repaired
-            ->where('id', $id);
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $request = $query->first();
-
-        if ($request) {
-            $request->status = 2.3; // Assembled
-            $request->save();
-        }
-
-        return redirect()->back();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('status', 2.2) // Repaired
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 2.3; // Assembled
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Assembled.');
     }
 
-    public function rejected(Request $req)
+    public function rejected(Request $req, $id)
+    {
+        $req->validate([
+            'remark' => 'required|string|max:255',
+        ]);
+        $user = Auth::guard('staff')->user();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('id', $id)
+            ->where('status', '!=', 5) // Not Delivered
+            ->firstOrFail();
+        $request->status = 3; // Rejected
+        $request->remark = $req->remark;
+        $request->save();
+        return redirect()->back()->with('success', 'Request rejected successfully.');
+    }
+
+    public function pending(Request $req, $id)
+    {
+        $user = Auth::guard('staff')->user();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('id', $id)
+            ->where('status', '!=', 5) // Not Delivered
+            ->firstOrFail();
+        $request->status = 0; // Pending
+        $request->technician_id = null;
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Pending.');
+    }
+
+    public function workDone(Request $req, $id)
+    {
+        $user = Auth::guard('staff')->user();
+        $request = RequestModel::where('technician_id', $user->id)
+            ->where('id', $id)
+            ->firstOrFail();
+        $request->status = 4; // Work Done
+        $request->save();
+        return redirect()->back()->with('success', 'Request marked as Work Done.');
+    }
+
+    public function requestDeliver(Request $req, $id)
     {
         $user = Auth::guard('staff')->user();
 
-        $query = RequestModel::where('id', $req->id)
-            ->where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', '!=', 5); // 5 delivered
+        // Find the request assigned to the same receptionist as the staff
+        $request = RequestModel::where('id', $id)
+            ->where('status', 4) // Work Done
+            ->whereHas('receptionist', function ($query) use ($user) {
+                $query->where('id', $user->receptionist_id);
+            })
+            ->firstOrFail();
 
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
+        $request->status = 5; // Delivered
+        $request->remark = 'Please provide feedback';
+        $request->delivered_by = $user->name;
+        $request->date_of_delivery = now();
+        $request->save();
 
-        $data = $query->first();
-
-        if ($data) {
-            $data->status = 3; // 3 reject
-            $data->remark = $req->remark;
-            $data->save();
-        }
-
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Request marked as Delivered.');
     }
-    //pending update table
 
-    public function pending(Request $req)
-    {
-        $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('id', $req->id)
-            ->where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', '!=', 5); // 5 delivered
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $data = $query->first();
-
-        if ($data) {
-            $data->status = 0; // 0 pending
-            $data->technician_id = null;
-            $data->save();
-        }
-
-        return redirect()->back();
-    }
-    //  work done requset
-
-    public function workDone(Request $req)
-    {
-        $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('id', $req->id)
-            ->where('type_id', $user->type_id)
-            ->where('technician_id', $user->id);
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $data = $query->first();
-
-        if ($data) {
-            $data->status = 4; // 4 work done
-            $data->save();
-        }
-
-        return redirect()->back();
-    }
-    // update device deliver 
-    public function requestDeliver(Request $req)
-    {
-        $date = \Carbon\Carbon::now();
-        $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('id', $req->id)
-            ->where('status', 4); // 4 work done
-
-        if (!is_null($user->receptionist_id)) {
-            $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
-        }
-
-        $data = $query->first();
-
-        if ($data) {
-            $data->status = 5; // 5 deliver
-            $data->remark = "please feedback";
-            $data->delivered_by = $user->name;
-            $data->date_of_delivery = $date;
-            $data->save();
-        }
-
-        return redirect()->back();
-    }
-    // show delivered 
     public function showDelivered()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 5); // 5 delivered
-
+        $query = RequestModel::where('technician_id', $user->id)
+            ->where('status', 5) // Delivered
+            ->orderBy('created_at', 'DESC');
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "Total Delivered Requests";
-        $data["deliveredCount"] = $data['allRequests']->count();
-
-        return view("staff.requests", $data);
+        $data['title'] = 'Total Delivered Requests';
+        $data['deliveredCount'] = $data['allRequests']->total();
+        return view('staff.requests', $data);
     }
-    // show pending request
+
     public function pendingRequests()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 0) // 0 pending
+        $query = RequestModel::where('technician_id', $user->id)
+            ->where('status', 0) // Pending
             ->orderBy('created_at', 'DESC');
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "Total Pending Requests";
-
-        return view("staff.requests", $data);
+        $data['title'] = 'Total Pending Requests';
+        return view('staff.requests', $data);
     }
-    //  showWorkprogress request
+
     public function showWorkprogress()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
+        $query = RequestModel::where('technician_id', $user->id)
             ->whereBetween('status', [2.0, 3.0])
             ->orderBy('created_at', 'DESC');
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "Current Work Requests";
-
-        return view("staff.requests", $data);
+        $data['title'] = 'Current Work Requests';
+        return view('staff.requests', $data);
     }
-    // show  rejected request 
+
     public function rejectedRequests()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 3) // 3 rejected
+        $query = RequestModel::where('technician_id', $user->id)
+            ->where('status', 3) // Rejected
             ->orderBy('created_at', 'DESC');
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id'); // Adjust as needed
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "Total Rejected Requests";
-        $data["RejectedCount"] = $data['allRequests']->count();
-
-        return view("staff.requests", $data);
+        $data['title'] = 'Total Rejected Requests';
+        $data['RejectedCount'] = $data['allRequests']->total();
+        return view('staff.requests', $data);
     }
-    // show Work Done Request
+
     public function workDoneRequests()
     {
         $user = Auth::guard('staff')->user();
-
-        $query = RequestModel::where('type_id', $user->type_id)
-            ->where('technician_id', $user->id)
-            ->where('status', 4) // 4 work done
+        $query = RequestModel::where('technician_id', $user->id)
+            ->where('status', 4) // Work Done
             ->orderBy('created_at', 'DESC');
-
         if (!is_null($user->receptionist_id)) {
             $query->where('reciptionist_id', $user->receptionist_id);
-        } else {
-            $query->whereNull('reciptionist_id');
         }
-
         $data['allRequests'] = $query->paginate(8);
-        $data['title'] = "Total Work Done Requests";
-
-        return view("staff.requests", $data);
+        $data['title'] = 'Total Work Done Requests';
+        return view('staff.requests', $data);
     }
-
     public function requestEdit(Request $req, $id)
     {
         $data = RequestModel::where('id', $id)->first();

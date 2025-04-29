@@ -172,28 +172,37 @@
                                 </tr>
 
                                 @if ($item->status != 'work done')
-                                    <tr>
-                                        <th>Total Amount</th>
-                                        <td colspan="3">
-                                            <span id="amount-display">
-                                                @if($item->amount)
-                                                    ₹ {{ $item->amount }}
-                                                @endif
-                                            </span>
-                                            <input type="text" class="form-control d-inline-block w-auto ms-2"
-                                                name="service_amount" id="service_amount" placeholder="Service Amount"
-                                                value="{{ $item->amount ?? '' }}"
-                                                style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
-                                                onblur="updateAmounts()">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>GST (18%)</th>
-                                        <td>₹ {{ number_format($gst_amount, 2) }}</td>
-                                        <th>Total (Incl. GST)</th>
-                                        <td><strong>₹ {{ number_format($total_with_gst, 2) }}</strong></td>
-                                    </tr>
-                                @endif
+                                            <tr>
+                                                <th scope="col">Total Amount</th>
+                                                <td colspan="3" class="text-uppercase text-end text-center">
+                                                    <span id="amount-display">
+                                                        @if($item->amount)
+                                                            ₹ {{ $item->amount }}
+                                                        @endif
+                                                    </span>
+                                                    <input type="text" class="form-control" name="service_amount"
+                                                        id="service_amount" placeholder="Service Amount"
+                                                        value="{{ $item->amount ?? '' }}"
+                                                        style="{{ $item->amount ? 'display:none;' : 'display:inline;' }}"
+                                                        onblur="updateAmounts()">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="col">GST (18%)</th>
+                                                <td class="text-uppercase" id="gst-display">₹
+                                                    {{ number_format($gst_amount, 2) }}
+                                                </td>
+
+
+                                                <th scope="col">Total Amount (Including GST)</th>
+                                                <td colspan="3" class="text-uppercase text-end text-center">
+                                                    <strong id="total-amount-display">₹
+                                                        {{ number_format($total_with_gst, 2) }}</strong>
+                                                </td>
+                                            </tr>
+
+
+                                        @endif
                             </tbody>
                         </table>
                     </div>
