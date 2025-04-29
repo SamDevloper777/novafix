@@ -63,8 +63,8 @@ class RequestController extends Controller
             \Log::info('Fetching receptionists for franchise_id: ' . $franchiseId);
 
             // Fetch receptionists from Receptioner model
-            $receptionists = Staff::where('franchise_id', $franchiseId)->
-               whereNotNull('receptionist_id') // Assumes receptionists have a non-null receptionist_id
+            $receptionists = Receptioner::where('franchise_id', $franchiseId)
+              
                 ->select('id', 'name')
                 ->get();
             \Log::info('Receptionists found: ' . $receptionists->toJson());
@@ -123,13 +123,11 @@ class RequestController extends Controller
         'problem' => 'required',
         'district' => 'required',
         'franchise_id' => 'required|exists:franchises,id',
-        'receptionist_id' => 'required|exists:staff,id',
+        'receptionist_id' => 'required|exists:receptioners,id',
     ]);
 
     $data['service_code'] = $service_code;
-    $data['reciptionist_id'] = $data['receptionist_id'];
-    unset($data['receptionist_id']);
-
+   
     RequestModel::create($data);
 
     return view('flashMessage', $data);
