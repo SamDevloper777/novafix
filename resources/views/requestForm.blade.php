@@ -109,7 +109,7 @@
                         </div>
                         <div class="mb-3 col-12 col-md-4">
                             <label for="receptionist_id" class="text-xs font-semibold px-1">Receptionist</label>
-                            <select name="receptionist_id" id="receptionist_id"
+                            <select name="reciptionist_id" id="receptionist_id"
                                 class="form-select font-semibold text-xl px-1">
                                 <option value="">Select Receptionist</option>
                             </select>
@@ -205,37 +205,40 @@
         }
 
         function fetchReceptionistsByFranchise() {
-            var franchiseId = document.getElementById('franchise_id').value;
-            console.log('Franchise selected:', franchiseId);
+    var franchiseId = document.getElementById('franchise_id').value;
+    var typeId = document.getElementById('type_id').value; // Get selected type_id
 
-            if (!franchiseId) {
-                $('#receptionist_id').html('<option value="">Select Receptionist</option>');
-                return;
+    console.log('Franchise selected:', franchiseId, 'Type selected:', typeId);
+
+    if (!franchiseId || !typeId) {
+        $('#receptionist_id').html('<option value="">Select Receptionist</option>');
+        return;
+    }
+
+    $.ajax({
+        url: "{{ route('receptionists.byFranchise') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            franchise_id: franchiseId,
+            type_id: typeId // Send type_id to the backend
+        },
+        success: function (response) {
+            console.log('Receptionists response:', response);
+            if (response.success) {
+                var options = '<option value="">Select Receptionist</option>';
+                response.receptionists.forEach(function (receptionist) {
+                    options += '<option value="' + receptionist.id + '">' + receptionist.name + '</option>';
+                });
+                $('#receptionist_id').html(options);
+            } else {
+                $('#receptionist_id').html('<option value="">No receptionists available</option>');
             }
-
-            $.ajax({
-                url: "{{ route('receptionists.byFranchise') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    franchise_id: franchiseId
-                },
-                success: function (response) {
-                    console.log('Receptionists response:', response);
-                    if (response.success) {
-                        var options = '<option value="">Select Receptionist</option>';
-                        response.receptionists.forEach(function (receptionist) {
-                            options += '<option value="' + receptionist.id + '">' + receptionist.name + '</option>';
-                        });
-                        $('#receptionist_id').html(options);
-                    } else {
-                        $('#receptionist_id').html('<option value="">No receptionists available</option>');
-                    }
-                },
-                error: function (xhr) {
-                    console.error('Receptionists AJAX error:', xhr.responseText);
-                }
-            });
+        },
+        error: function (xhr) {
+            console.error('Receptionists AJAX error:', xhr.responseText);
         }
+    });
+}
     </script>
 @endsection

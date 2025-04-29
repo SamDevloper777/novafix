@@ -57,18 +57,16 @@ class RequestController extends Controller
 
     public function getReceptionistsByFranchise(Request $request)
     {
-        if ($request->ajax() && $request->has('franchise_id')) {
+        if ($request->ajax() && $request->has('franchise_id') && $request->has('type_id')) {
             $franchiseId = $request->input('franchise_id');
-
-            \Log::info('Fetching receptionists for franchise_id: ' . $franchiseId);
-
-            // Fetch receptionists from Receptioner model
-            $receptionists = Receptioner::where('franchise_id', $franchiseId)
-              
+    
+    
+            $receptionists = Receptioner::where('franchise_id', $franchiseId)              
                 ->select('id', 'name')
                 ->get();
+    
             \Log::info('Receptionists found: ' . $receptionists->toJson());
-
+    
             if ($receptionists->isNotEmpty()) {
                 return response()->json([
                     'success' => true,
@@ -77,11 +75,11 @@ class RequestController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No receptionists found for the selected franchise.'
+                    'message' => 'No receptionists found for the selected franchise and type.'
                 ]);
             }
         }
-
+    
         return response()->json(['success' => false, 'message' => 'Invalid request.'], 400);
     }
     public function requestCreate(Request $request)
@@ -123,7 +121,7 @@ class RequestController extends Controller
         'problem' => 'required',
         'district' => 'required',
         'franchise_id' => 'required|exists:franchises,id',
-        'receptionist_id' => 'required|exists:receptioners,id',
+        'reciptionist_id' => 'required|exists:receptioners,id',
     ]);
 
     $data['service_code'] = $service_code;

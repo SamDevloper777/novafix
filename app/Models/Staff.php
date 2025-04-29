@@ -46,7 +46,7 @@ class Staff extends Authenticatable
 
     public function receptioner()
     {
-        return $this->belongsTo(Receptioner::class, 'receptionist_id', 'id');
+        return $this->belongsTo(Receptioner::class, 'reciptionist_id', 'id');
     }
 
 }
