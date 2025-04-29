@@ -68,7 +68,7 @@ class FranchiseController extends Controller
         $franchises = $franchises->get();
         return view('franchises.manageFranchises', compact('franchises', 'search'));
     }
-    
+
 
 
 
@@ -77,38 +77,36 @@ class FranchiseController extends Controller
         Auth::guard("franchise")->logout();
         return redirect()->back();
     }
-    
+
 
     public function staffUpload(Request $request)
-{
-    $data = $request->validate([
-        'name' => 'required',
-        'email' => 'required|unique:App\Models\Staff,email|email',
-        'contact' => 'required|integer|unique:App\Models\Staff,contact|digits:10',
-        'salary' => 'required',
-        'type_id' => 'required',
-        'aadhar' => 'required',
-        'pan' => 'required',
-        'address' => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'password' => 'required',
-        'receptionist_id' => 'nullable|exists:App\Models\Receptioner,id',
-    ]);
+    {
+        $data = $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:App\Models\Staff,email|email',
+            'contact' => 'required|integer|unique:App\Models\Staff,contact|digits:10',
+            'salary' => 'required',
+            'type_id' => 'required',
+            'aadhar' => 'required',
+            'pan' => 'required',
+            'address' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'password' => 'required',
+            'reciptionist_id' => 'nullable|exists:receptioners,id',
+        ]);
 
-    $data['status'] = 1;
-    $data['franchise_id'] = Auth::guard("franchise")->id();
+        $data['status'] = 1;
+        $data['franchise_id'] = Auth::guard("franchise")->id();
 
-    $data['receptionist_id'] = $data['receptionist_id'] ? (int) $data['receptionist_id'] : null;
+        if ($request->image != null) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->storeAs('public/images', $imageName);
+            $data['image'] = $imageName;
+        }
 
-    if ($request->image != null) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->storeAs('public/images', $imageName);
-        $data['image'] = $imageName;
+        Staff::create($data);
+        return redirect()->route('franchise.staff.manage');
     }
-
-    Staff::create($data);
-    return redirect()->route('franchise.staff.manage');
-}
 
     public function delete($id): RedirectResponse
     {
@@ -136,7 +134,7 @@ class FranchiseController extends Controller
     public function insertStaff(Request $req)
     {
         $franchiseId = Auth::guard('franchise')->id();
-        $data['Types'] = Type::all();       
+        $data['Types'] = Type::all();
         $data['receptioners'] = Receptioner::where('franchise_id', $franchiseId)->get();
         return view("franchises.insertStaff", $data);
     }

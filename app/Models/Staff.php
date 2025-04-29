@@ -15,7 +15,7 @@ class Staff extends Authenticatable
     protected $guard = "staff";
     protected $fillable = [
         'franchise_id',
-        'receptionist_id',
+        'reciptionist_id',
         'name',
         'email',
         'contact',

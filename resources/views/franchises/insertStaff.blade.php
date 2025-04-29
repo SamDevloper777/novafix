@@ -120,7 +120,7 @@
                         <label for="inputState" class="text-black-100">Receptionist</label>
                         <div class="flex w-full">
                             <label for="receptionist_id">Assign Receptionist</label>
-                            <select name="receptionist_id" id="receptionist_id" class="form-control">
+                            <select name="reciptionist_id" id="reciptionist_id" class="form-control">
                                 <option value="">None</option>
                                 @foreach ($receptioners as $receptioner)
                                     <option value="{{ $receptioner->id }}">{{ $receptioner->name }}</option>
