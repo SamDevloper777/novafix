@@ -22,7 +22,7 @@
   <!-- /.content-header -->
 
   @php
-    $rep = auth()->user()->id;
+    $rep = Auth::guard('receptioner')->id();
     $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('reciptionist_id', $rep)->get()->count();
     $dateFilter = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
     $ConformCountReq = App\Models\Request::where('status', 1)->where('reciptionist_id', $rep)->get()->count();
@@ -32,6 +32,7 @@
     $PendingCountReq = App\Models\Request::where('status', 0)->where('reciptionist_id', $rep)->get()->count();
     $allReq = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
 
+    
 
   @endphp
 

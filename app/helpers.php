@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 if (! function_exists('countNewRequest')) {
     function countNewRequest($type_id = NULL,$status = NULL) {
-        $recpt = auth()->user()->id;
+        $recpt = Auth::guard('receptioner')->id();
         if($status == NULL){
            
                 $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',NULL)->count();
@@ -98,7 +98,7 @@ for($i = 1; $i <= 12; $i++){
 
 if (! function_exists('CountStaffRequest')) {
     function CountStaffRequest($status="all",$technician=NULL) {
-        $recpt = auth()->user()->id;
+        $recpt = Auth::guard('receptioner')->id();
         if($status=="all" && $technician == null ){
             $count = RequestModel::where('reciptionist_id',$recpt)->where('technician_id',Auth::user()->id)->where('type_id',Auth()->user()->type_id)->count();
         }

@@ -24,7 +24,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/reciving/{id}', 'reciving')->name('receipt.view');
     Route::get('/view', 'view')->name('home.view');
     Route::get('/{id}/address', 'showFranchiseAddress');
-    Route::get('/track-order/{service_code}',  'track')->name('track.order');
+    Route::get('/track-order/{service_code}', 'track')->name('track.order');
     Route::get('/receipt/{itemId}', 'generateGstReceipt')->name('receipt.gst');
     
     // Route::get('/trackRequest', 'trackStatus')->name('track.status');
@@ -38,7 +38,8 @@ Route::controller(RequestController::class)->group(function () {
     Route::get('/requestForm', 'requestForm')->name('request.form');
     Route::post('/requestForm', 'requestCreate')->name('request.create');
     Route::match(["post", "get"], '/trackRequest', 'trackStatus')->name('track.status');
-
+    Route::post('/franchises-by-district', 'getFranchisesByDistrict')->name('franchises.byDistrict');
+    Route::post('/receptionists-by-franchise', 'getReceptionistsByFranchise')->name('receptionists.byFranchise');
 });
 
 
@@ -55,7 +56,7 @@ Route::controller(RequestController::class)->group(function () {
 // });
 Route::prefix('admin')->group(function () {
     Route::match(['get', 'post'], '/login', [AdminController::class, 'adminlogin'])->name('admin.login');
-    
+
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.panel');
         Route::get('/insert-franchises', [AdminController::class, 'insertFranchises'])->name('admin.insertFranchises');
@@ -151,7 +152,7 @@ Route::get('/clear-cache', function () {
     Artisan::call('route:clear');
     Artisan::call('db:seed');
     Artisan::call('storage:link');
-    
+
 
     return "All Caches are cleared by @Sam";
 });
@@ -221,5 +222,5 @@ Route::prefix('franchise')->group(function () {
         // Route::get('/status/{receptioner}', [ReceptionerController::class, "status"])->name('receptioner.status');
 
     });
-   
+
 });
