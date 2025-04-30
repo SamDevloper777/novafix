@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
         </script>
@@ -209,19 +212,19 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 @php
-                    $rep=auth()->guard('receptioner')->user()->id;
-                    $NewCountReq=App\Models\Request::where('technician_id',NULL)->where('reciptionist_id',$rep)->get()->count();
-                    $dateFilter=App\Models\Request::where('reciptionist_id',$rep)->get()->count();
-                    $ConformCountReq=App\Models\Request::where('status',1)->where('reciptionist_id',$rep)->get()->count();
-                    $RejectedCountReq=App\Models\Request::where('status',3)->where('reciptionist_id',$rep)->get()->count();
-                    $WorkdoneCountReq=App\Models\Request::where('status',4)->where('reciptionist_id',$rep)->get()->count();
-                    $DeliveredCountReq=App\Models\Request::where('status',5)->where('reciptionist_id',$rep)->get()->count();
-                    $PendingCountReq=App\Models\Request::where('status',0)->where('reciptionist_id',$rep)->get()->count();
-                    $allReq=App\Models\Request::where('reciptionist_id',$rep)->get()->count();
+                    $rep = auth()->guard('receptioner')->user()->id;
+                    $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('reciptionist_id', $rep)->get()->count();
+                    $dateFilter = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
+                    $ConformCountReq = App\Models\Request::where('status', 1)->where('reciptionist_id', $rep)->get()->count();
+                    $RejectedCountReq = App\Models\Request::where('status', 3)->where('reciptionist_id', $rep)->get()->count();
+                    $WorkdoneCountReq = App\Models\Request::where('status', 4)->where('reciptionist_id', $rep)->get()->count();
+                    $DeliveredCountReq = App\Models\Request::where('status', 5)->where('reciptionist_id', $rep)->get()->count();
+                    $PendingCountReq = App\Models\Request::where('status', 0)->where('reciptionist_id', $rep)->get()->count();
+                    $allReq = App\Models\Request::where('reciptionist_id', $rep)->get()->count();
 
-                
+
                 @endphp
-              
+
 
                 <!-- SidebarSearch Form -->
                 <div class="form-inline">
@@ -404,7 +407,50 @@
     <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
     <script src="{{ asset('js/printThis.js') }}"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Swal === 'undefined') {
+                console.error('SweetAlert2 is not loaded.');
+                return;
+            }
 
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Success!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#662d91'
+                }).then(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 150,
+                        origin: { y: 0.6 }
+                    });
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Error!',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#662d91'
+                });
+            @endif
+
+            @if (session('warning'))
+                Swal.fire({
+                    title: 'Warning!',
+                    text: "{{ session('warning') }}",
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#662d91'
+                });
+            @endif
+            });
+    </script>
     <script>
         $('#print-button').click(function () {
             $('#printable-content').printThis({

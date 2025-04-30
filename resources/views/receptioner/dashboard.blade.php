@@ -2,7 +2,16 @@
 
 @section('content')
   <!-- Content Wrapper. Contains page content -->
-
+  @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+  @if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 <div class="content-header">
   <div class="container-fluid">
       <div class="row mb-2">
@@ -132,36 +141,47 @@
 
                           <!-- Modal for Assigning Technician -->
                           <div class="modal fade" id="exampleModal{{ $item->id }}" tabindex="-1"
-                              aria-labelledby="exampleModalLabel{{ $item->id }}" aria-hidden="true">
-                              <div class="modal-dialog">
-                                  <div class="modal-content">
-                                      <div class="modal-header">
-                                          <h1 class="modal-title fs-5" id="exampleModalLabel{{ $item->id }}">Select Staff</h1>
-                                          <button type="button" class="btn btn-close" data-bs-dismiss="modal"
-                                              aria-label="Close"></button>
-                                      </div>
-                                      <form action="{{ route('receptioner.assignTechnician', $item->id) }}"
-                                          method="POST">
-                                          @csrf
-                                          @method('PATCH')
-                                          <div class="modal-body">
-                                              <select name="technician_id" id="technician_id"
-                                                  class="form-select" required>
-                                                  <option value="">Select Staff</option>
-                                                  @foreach ($staffs as $staff)
-                                                      <option value="{{ $staff->id }}">{{ $staff->name }}</option>
-                                                  @endforeach
-                                              </select>
-                                          </div>
-                                          <div class="modal-footer">
-                                              <button type="button" class="btn btn-secondary"
-                                                  data-bs-dismiss="modal">Close</button>
-                                              <button type="submit" class="btn btn-primary">Assign Technician</button>
-                                          </div>
-                                      </form>
-                                  </div>
-                              </div>
-                          </div>
+                            aria-labelledby="exampleModalLabel{{ $item->id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-lg">
+                                    <div class="modal-header bg-primary text-white">
+                                        <h5 class="modal-title" id="exampleModalLabel{{ $item->id }}">
+                                            Assign Technician
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                        
+                                    <form action="{{ route('receptioner.assignTechnician', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                        
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="technician_id_{{ $item->id }}" class="form-label">Select Technician</label>
+                                                <div class="mb-3">
+                                                  <label for="technician_id_{{ $item->id }}" class="form-label">
+                                                      Technician <span class="text-danger">*</span>
+                                                  </label>
+                                                  <select name="technician_id" id="technician_id_{{ $item->id }}" class="form-select p-2 rounded-3" required>
+                                                      <option value="" disabled selected>Select a technician from the list</option>
+                                                      @foreach ($staffs as $staff)
+                                                          <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                                                      @endforeach
+                                                  </select>
+                                              </div>
+                                              
+                                            </div>
+                                        </div>
+                        
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-success">Assign</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
                       @endforeach
                   </tbody>
               </table>

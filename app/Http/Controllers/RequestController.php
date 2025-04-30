@@ -55,39 +55,15 @@ class RequestController extends Controller
         return response()->json(['success' => false, 'message' => 'Invalid request.'], 400);
     }
 
-    public function getReceptionistsByFranchise(Request $request)
-    {
-        if ($request->ajax() && $request->has('franchise_id') && $request->has('type_id')) {
-            $franchiseId = $request->input('franchise_id');
 
-
-            $receptionists = Receptioner::where('franchise_id', $franchiseId)
-                ->select('id', 'name')
-                ->get();
-
-            \Log::info('Receptionists found: ' . $receptionists->toJson());
-
-            if ($receptionists->isNotEmpty()) {
-                return response()->json([
-                    'success' => true,
-                    'receptionists' => $receptionists
-                ]);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No receptionists found for the selected franchise and type.'
-                ]);
-            }
-        }
-
-        return response()->json(['success' => false, 'message' => 'Invalid request.'], 400);
-    }
     public function requestCreate(Request $request)
-    {
+    {        
         if ($request->ajax() && $request->has('contact')) {
             $contactNumber = $request->input('contact');
+         
 
-            $customer = RequestModel::where('contact', $contactNumber)->first();
+            $query = RequestModel::where('contact', $contactNumber);
+            $customer = $query->first();
 
             if ($customer) {
                 return response()->json([
@@ -104,33 +80,58 @@ class RequestController extends Controller
                     ]
                 ]);
             } else {
-                return response()->json(['success' => false, 'message' => 'Customer not found. Please check the contact number.']);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Customer not found. Please check the contact number.'
+                ], 404);
             }
         }
 
-        $service_code = Str::random(6);
-
+        // Handle form submission to create a new request
         $data = $request->validate([
-            'owner_name' => 'required',
-            'product_name' => 'required',
-            'email' => 'required|email',
-            'contact' => 'required',
+            'owner_name' => 'required|string|max:255',
+            'product_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'contact' => 'required|string|max:20',
             'type_id' => 'required|exists:types,id',
-            'brand' => 'required',
-            'color' => 'required',
-            'problem' => 'required',
-            'district' => 'required',
+            'brand' => 'required|string|max:255',
+            'color' => 'required|string|max:50',
+            'problem' => 'required|string',
+            'district' => 'required|string|max:255',
             'franchise_id' => 'required|exists:franchises,id',
-            'reciptionist_id' => 'required|exists:receptioners,id',
         ]);
 
-        $data['service_code'] = $service_code;
+        $receptionist = Receptioner::where('franchise_id', $data['franchise_id'])->first();
 
+        if (!$receptionist) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No receptionists available for the selected franchise.'
+            ], 422);
+        }
+
+        $data['reciptionist_id'] = $receptionist->id;
+
+        $data['service_code'] = Str::random(6);
+
+        // Create the request
         RequestModel::create($data);
 
-        return view('flashMessage', $data);
+        return view('flashMessage', [
+            'owner_name' => $data['owner_name'],
+            'service_code' => $data['service_code'],
+            'email' => $data['email'],
+            'product_name' => $data['product_name'],
+            'contact' => $data['contact'],
+            'type_id' => $data['type_id'],
+            'brand' => $data['brand'],
+            'color' => $data['color'],
+            'problem' => $data['problem'],
+            'district' => $data['district'],
+            'franchise_id' => $data['franchise_id'],
+            'reciptionist_id' => $data['reciptionist_id'],
+        ]);
     }
-
     public function receptionerRequestDeliver(Request $req, $id)
     {
         $user = Auth::guard('receptioner')->user();

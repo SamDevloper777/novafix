@@ -99,25 +99,13 @@
                         </div>
                         <div class="mb-3 col-12 col-md-4">
                             <label for="franchise_id" class="text-xs font-semibold px-1">Franchise</label>
-                            <select name="franchise_id" id="franchise_id" class="form-select font-semibold text-xl px-1"
-                                onchange="fetchReceptionistsByFranchise()">
+                            <select name="franchise_id" id="franchise_id" class="form-select font-semibold text-xl px-1">
                                 <option value="">Select Franchise</option>
                             </select>
                             @error('franchise_id')
                                 <p class="text-danger small">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div class="mb-3 col-12 col-md-4">
-                            <label for="receptionist_id" class="text-xs font-semibold px-1">Receptionist</label>
-                            <select name="reciptionist_id" id="receptionist_id"
-                                class="form-select font-semibold text-xl px-1">
-                                <option value="">Select Receptionist</option>
-                            </select>
-                            @error('receptionist_id')
-                                <p class="text-danger small">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                     </div>
                     <div class="mb-3">
                         <label for="problem" class="text-xs font-semibold px-1">Problem</label>
@@ -127,7 +115,7 @@
                         @enderror
                     </div>
                     <div id="franchise-list" class="mt-3">
-                        <!-- Franchise and receptionist details will be dynamically inserted here -->
+                        <!-- Franchise details will be dynamically inserted here -->
                     </div>
                     <div class="w-full">
                         <button class="btn btn-success w-100">Raise Request</button>
@@ -151,7 +139,8 @@
                 type: "POST",
                 data: {
                     _token: "{{ csrf_token() }}",
-                    contact: contactNumber
+                    contact: contactNumber,
+                    franchise_id: $('#franchise_id').val() // Include franchise_id for customer lookup
                 },
                 success: function (response) {
                     if (response.success) {
@@ -174,7 +163,6 @@
 
             if (!district) {
                 $('#franchise_id').html('<option value="">Select Franchise</option>');
-                $('#reciptionist_id').html('<option value="">Select Receptionist</option>');
                 return;
             }
 
@@ -192,10 +180,8 @@
                             options += '<option value="' + franchise.id + '">' + franchise.franchise_name + '</option>';
                         });
                         $('#franchise_id').html(options);
-                        $('#reciptionist_id').html('<option value="">Select Receptionist</option>');
                     } else {
                         $('#franchise_id').html('<option value="">No franchises available</option>');
-                        $('#reciptionist_id').html('<option value="">Select Receptionist</option>');
                     }
                 },
                 error: function (xhr) {
@@ -203,42 +189,5 @@
                 }
             });
         }
-
-        function fetchReceptionistsByFranchise() {
-    var franchiseId = document.getElementById('franchise_id').value;
-    var typeId = document.getElementById('type_id').value; // Get selected type_id
-
-    console.log('Franchise selected:', franchiseId, 'Type selected:', typeId);
-
-    if (!franchiseId || !typeId) {
-        $('#receptionist_id').html('<option value="">Select Receptionist</option>');
-        return;
-    }
-
-    $.ajax({
-        url: "{{ route('receptionists.byFranchise') }}",
-        type: "POST",
-        data: {
-            _token: "{{ csrf_token() }}",
-            franchise_id: franchiseId,
-            type_id: typeId // Send type_id to the backend
-        },
-        success: function (response) {
-            console.log('Receptionists response:', response);
-            if (response.success) {
-                var options = '<option value="">Select Receptionist</option>';
-                response.receptionists.forEach(function (receptionist) {
-                    options += '<option value="' + receptionist.id + '">' + receptionist.name + '</option>';
-                });
-                $('#receptionist_id').html(options);
-            } else {
-                $('#receptionist_id').html('<option value="">No receptionists available</option>');
-            }
-        },
-        error: function (xhr) {
-            console.error('Receptionists AJAX error:', xhr.responseText);
-        }
-    });
-}
     </script>
 @endsection

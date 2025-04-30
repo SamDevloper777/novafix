@@ -182,9 +182,7 @@ class ReceptionerController extends Controller
             'technician_id' => $request->technician_id,
             'last_update' => now(),
         ]);
-
-        return redirect()->route('receptioner.panel')->with('success', 'Technician assigned successfully.');
-    }
+        return redirect()->route('receptioner.panel')->with('success', 'Technician assigned successfully.');    }
     public function editRequest(Request $req, $id)
     {
         if ($req->method() == 'POST') {
