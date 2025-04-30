@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Staff;
+use Auth;
 use Livewire\Component;
 use App\Models\Request As RequestModel;
 
@@ -13,7 +14,8 @@ class ViewRequest extends Component
     public function render()
     {
         return view('livewire.view-request',[
-            'requests' => RequestModel::where('technician_id', '<>', null)->where('owner_name',"LIKE","%".$this->search."%")->paginate(8),
+            $recepts = Auth::guard('franchise')->user(),            
+            'requests' => RequestModel::where('franchise_id',$recepts->id)->where('technician_id', '<>', null)->where('owner_name',"LIKE","%".$this->search."%")->paginate(8),
             "staffs" => Staff::all(),
         ]);
     }

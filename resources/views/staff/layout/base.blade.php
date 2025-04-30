@@ -235,7 +235,8 @@
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     New Request
-                                    <span class="right badge badge-danger">{{ CountStaffRequest("all", True)}}</span>
+                                    <span class="right badge badge-danger">{{ countNewRequest("all", true)}}</span>
+                                    
                                 </p> 
                             </a>
                         </li>

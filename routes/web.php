@@ -140,6 +140,7 @@ Route::prefix("crm")->group(function () {
             Route::get("/request/filterbyselect", "filterBySelect")->name("receptioner.request.filterbyselect");
             Route::get("/request/filterbyinput", "filterByInput")->name("receptioner.request.filterbyinput");
             Route::get('/logout', 'receptionerlogout')->name('receptioner.logout');
+            Route::patch('/receptioner/assignTechnician/{id}', 'assignTechnician')->name('receptioner.assignTechnician');
         });
     });
 });

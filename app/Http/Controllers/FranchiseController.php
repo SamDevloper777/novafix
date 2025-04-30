@@ -315,9 +315,9 @@ class FranchiseController extends Controller
 
     private function getRequestsByStatus($status, $title)
     {
-        $receptionerId = Auth::guard('receptioner')->id();
+        $franchiseId = Auth::guard('franchise')->id();
 
-        $data['new'] = RequestModel::where('reciptionist_id', $receptionerId)
+        $data['new'] = RequestModel::where('franchise_id', $franchiseId)
             ->where('status', $status)
             ->orderBy('created_at', 'DESC')
             ->paginate(8);

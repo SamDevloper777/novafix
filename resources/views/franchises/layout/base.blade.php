@@ -38,15 +38,15 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         @php
-            $recept = Auth::guard('receptioner')->id();
-            $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('reciptionist_id',$recept)->get()->count();
-            $dateFilter = App\Models\Request::where('reciptionist_id',$recept)->get()->count();
-            $ConformCountReq = App\Models\Request::where('reciptionist_id',$recept)->where('status', 1)->get()->count();
-            $RejectedCountReq = App\Models\Request::where('reciptionist_id',$recept)->where('status', 3)->get()->count();
-            $WorkdoneCountReq = App\Models\Request::where('reciptionist_id',$recept)->where('status', 4)->get()->count();
-            $DeliveredCountReq = App\Models\Request::where('reciptionist_id',$recept)->where('status', 5)->get()->count();
-            $PendingCountReq = App\Models\Request::where('reciptionist_id',$recept)->where('status', 0)->get()->count();
-            $allReq = App\Models\Request::where('reciptionist_id',$recept)->get()->count();
+            $recept = Auth::guard('franchise')->id();
+            $NewCountReq = App\Models\Request::where('technician_id', NULL)->where('franchise_id',$recept)->get()->count();
+            $dateFilter = App\Models\Request::where('franchise_id',$recept)->get()->count();
+            $ConformCountReq = App\Models\Request::where('franchise_id',$recept)->where('status', 1)->get()->count();
+            $RejectedCountReq = App\Models\Request::where('franchise_id',$recept)->where('status', 3)->get()->count();
+            $WorkdoneCountReq = App\Models\Request::where('franchise_id',$recept)->where('status', 4)->get()->count();
+            $DeliveredCountReq = App\Models\Request::where('franchise_id',$recept)->where('status', 5)->get()->count();
+            $PendingCountReq = App\Models\Request::where('franchise_id',$recept)->where('status', 0)->get()->count();
+            $allReq = App\Models\Request::where('franchise_id',$recept)->get()->count();
         @endphp
 
         <!-- Navbar -->

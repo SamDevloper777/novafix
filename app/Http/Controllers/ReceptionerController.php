@@ -86,6 +86,7 @@ class ReceptionerController extends Controller
         }
         if ($req->method() == 'POST') {
             $receptionerId = Auth::guard('receptioner')->id();
+            $franchiseId = Auth::guard('franchise')->id();
             $date = \Carbon\Carbon::now();
             $service_code = Str::random(6);
 
@@ -108,6 +109,7 @@ class ReceptionerController extends Controller
             $data['service_code'] = $service_code;
             $data['date_of_delivery'] = $date;
             $data['reciptionist_id'] = $receptionerId;
+            $data['franchise_id'] = $franchiseId;
 
             if ($req->image != null) {
                 $img = $req->image;
