@@ -203,8 +203,8 @@ class FranchiseController extends Controller
 
     public function allnewRequest(Request $req)
     {
-        $receptionerId = Auth::guard('receptioner')->id();
-        $data['new'] = RequestModel::where('reciptionist_id', $receptionerId)
+        $receptionerId = Auth::guard('franchise')->id();
+        $data['new'] = RequestModel::where('franchise_id', $receptionerId)
             ->whereNull('technician_id')
             ->orderBy('created_at', 'DESC')
             ->paginate(8);
